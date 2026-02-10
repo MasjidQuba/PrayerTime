@@ -6,7 +6,6 @@
     <title>LIC Digital Display</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
-
         :root {
             --bg-color: #f4f7f9;
             --primary-blue: #1e4571;
@@ -15,100 +14,33 @@
             --text-light: #ffffff;
             --highlight-row: #fff9c4;
         }
-
-        body {
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 15px;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-
-        .header-box {
-            background: var(--primary-blue);
-            border-radius: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 40px;
-            color: white;
-            height: 210px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border: 4px solid var(--gold);
-        }
-
+        body { background-color: var(--bg-color); margin: 0; padding: 15px; height: 100vh; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; overflow: hidden; box-sizing: border-box; }
+        .header-box { background: var(--primary-blue); border-radius: 25px; display: flex; justify-content: space-between; align-items: center; padding: 10px 40px; color: white; height: 210px; border: 4px solid var(--gold); }
         .header-img { height: 160px; width: auto; object-fit: contain; }
-
         .center-content { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; flex-grow: 1; }
         .masjid-label { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; color: var(--text-light); margin-bottom: 2px; }
-
-        #clock { font-size: 5rem; font-weight: 900; line-height: 1; letter-spacing: -2px; }
-
+        #clock { font-size: 7rem; font-weight: 900; line-height: 1; letter-spacing: -2px; }
         .weather-row { display: flex; gap: 15px; align-items: center; margin: 5px 0; font-weight: 800; }
         #temp { font-size: 1.8rem; color: var(--gold); }
         #condition { font-size: 1.1rem; text-transform: uppercase; opacity: 0.9; color: var(--text-light); }
-
         #hijri { font-size: 1.6rem; color: var(--gold); font-weight: 700; }
-
         .prayer-table { width: 100%; margin-top: 10px; border-collapse: separate; border-spacing: 0 8px; table-layout: fixed; }
         .table-header th { font-size: 1.8rem; font-weight: 900; color: var(--primary-blue); text-transform: uppercase; }
-        .prayer-row td {
-            background: white;
-            padding: 16px 10px;
-            text-align: center;
-            font-size: 2.6rem;
-            font-weight: 800;
-            border-bottom: 2px solid var(--gold);
-        }
-        .prayer-row.active td {
-            background: var(--highlight-row) !important;
-            border-top: 6px solid var(--gold);
-            border-bottom: 6px solid var(--gold);
-            transform: scale(1.01);
-            color: #000;
-        }
+        .prayer-row td { background: white; padding: 16px 10px; text-align: center; font-size: 2.6rem; font-weight: 800; border-bottom: 2px solid var(--gold); }
+        .prayer-row.active td { background: var(--highlight-row) !important; border-top: 6px solid var(--gold); border-bottom: 6px solid var(--gold); transform: scale(1.01); color: #000; }
         .prayer-row:last-child td { border-bottom: none; }
         .col-en { text-align: left !important; padding-left: 30px !important; border-radius: 20px 0 0 20px; color: var(--primary-blue); }
         .col-ar { text-align: right !important; padding-right: 30px !important; font-family: 'Amiri', serif; font-size: 3.2rem !important; border-radius: 0 20px 20px 0; color: var(--primary-blue); }
         .col-iqama { color: var(--iqama-green); font-weight: 900; background: #e8f5e9 !important; }
-
         .iqama-text { font-size: 1.9rem !important; }
-
-        .hadith-container {
-            flex-grow: 1;
-            background: var(--primary-blue);
-            border-radius: 25px;
-            margin-top: 10px;
-            padding: 20px 40px;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            border: 3px solid var(--gold);
-        }
+        .hadith-container { flex-grow: 1; background: var(--primary-blue); border-radius: 25px; margin-top: 10px; padding: 20px 40px; color: white; display: flex; flex-direction: column; justify-content: center; text-align: center; border: 3px solid var(--gold); }
         .ar-text { font-family: 'Amiri', serif; font-size: 2.8rem; direction: rtl; line-height: 1.3; margin-bottom: 8px; }
         .en-text { font-size: 1.7rem; font-style: italic; color: #cfd8dc; line-height: 1.3; }
-
-        .countdown-bar {
-            background: #2e7d32;
-            color: white;
-            padding: 10px;
-            border-radius: 15px;
-            text-align: center;
-            margin-top: 10px;
-            font-size: 1.8rem;
-            font-weight: 900;
-            border: 2px solid var(--gold);
-        }
-
+        .countdown-bar { background: #2e7d32; color: white; padding: 10px; border-radius: 15px; text-align: center; margin-top: 10px; font-size: 1.8rem; font-weight: 900; border: 2px solid var(--gold); }
         .donation-bar { background: var(--gold); color: #000; padding: 12px; border-radius: 20px; text-align: center; margin-top: 10px; border: 4px solid var(--primary-blue); }
         .donation-msg { font-size: 1.5rem; font-weight: 900; }
 
+        /* Fixed: Corrected CSS for Donation Overlay */
         #donation-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -122,262 +54,204 @@
             color: white;
             border: 15px solid var(--gold);
             box-sizing: border-box;
+            text-align: center;
         }
-
-        .qr-large {
-            width: 400px;
-            height: 400px;
-            background: white;
-            padding: 20px;
-            border-radius: 40px;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.5);
-            margin: 40px 0;
-        }
-
-        .slide-msg { font-size: 4rem; font-weight: 900; color: var(--gold); }
-        .slide-sub { font-size: 2.5rem; margin-bottom: 10px; opacity: 0.9; }
+        .qr-large { width: 380px; height: 380px; background: white; padding: 20px; border-radius: 40px; margin: 30px 0; }
+        #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s ease-in-out; }
     </style>
 </head>
 <body>
 
-    <div class="header-box">
-        <img src="Muhammad.png" class="header-img" alt="Muhammad SAW">
-        <div class="center-content">
-            <div class="masjid-label">Lakeridge Islamic Center</div>
-            <div id="clock">00:00:00</div>
-            <div class="weather-row">
-                <span id="temp">--°C</span>
-                <span id="condition">Loading...</span>
-            </div>
-            <div id="hijri">-- --- ----</div>
+<div class="header-box">
+    <img src="Muhammad.png" class="header-img" alt="Muhammad SAW">
+    <div class="center-content">
+        <div class="masjid-label">Lakeridge Islamic Center</div>
+        <div id="clock">00:00:00</div>
+        <div class="weather-row"><span id="temp">--°C</span><span id="condition">Loading...</span></div>
+        <div id="hijri">-- --- ----</div>
+    </div>
+    <img src="Allah.png" class="header-img" alt="Allah SWT">
+</div>
+
+<table class="prayer-table">
+    <thead><tr class="table-header"><th style="text-align: left; padding-left: 30px;">Salah</th><th>Starting</th><th style="color: var(--iqama-green);">Iqama</th><th style="text-align: right; padding-right: 30px;">الصلاة</th></tr></thead>
+    <tbody id="prayer-body"></tbody>
+</table>
+
+<div class="hadith-container"><div class="ar-text" id="ar-hadith">...</div><div class="en-text" id="en-hadith">...</div></div>
+<div class="countdown-bar" id="ramadan-countdown">Calculating...</div>
+<div class="donation-bar"><div class="donation-msg">PLEASE DONATE GENEROUSLY • C$ 1.4 MILLION QARDE HASANA<br>🌐 www.ajaxmasjid.ca</div></div>
+
+<div id="donation-overlay">
+    <div style="font-size: 2.5rem;">Lakeridge Islamic Center</div>
+    <div style="font-size: 4rem; font-weight: 900; color: var(--gold);">QARDE HASANA REPAYMENT</div>
+
+    <div style="width: 80%; margin: 30px 0;">
+        <div style="display: flex; justify-content: space-between; font-size: 2rem; font-weight: 800; margin-bottom: 10px;">
+            <span id="raised-text">Raised: $0</span>
+            <span id="remaining-text" style="color: var(--gold);">Remaining: $0</span>
         </div>
-        <img src="Allah.png" class="header-img" alt="Allah SWT">
-    </div>
-
-    <table class="prayer-table">
-        <thead>
-            <tr class="table-header">
-                <th style="text-align: left; padding-left: 30px;">Salah</th>
-                <th>Starting</th>
-                <th style="color: var(--iqama-green);">Iqama</th>
-                <th style="text-align: right; padding-right: 30px;">الصلاة</th>
-            </tr>
-        </thead>
-        <tbody id="prayer-body"></tbody>
-    </table>
-
-    <div class="hadith-container">
-        <div class="ar-text" id="ar-hadith">...</div>
-        <div class="en-text" id="en-hadith">...</div>
-    </div>
-
-    <div class="countdown-bar" id="ramadan-countdown">
-        Calculating Ramadan Countdown...
-    </div>
-
-    <div class="donation-bar">
-        <div class="donation-msg">
-            PLEASE DONATE GENEROUSLY • <b>C$ 1.4 MILLION</b> NEEDED TO PAY QARDE HASANA<br>
-            🌐 www.ajaxmasjid.ca • 📧 info@ajaxmasjid.ca
+        <div style="width: 100%; height: 45px; background: rgba(255,255,255,0.2); border-radius: 25px; border: 3px solid var(--gold); overflow: hidden;">
+            <div id="progress-fill"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 10px; font-weight: 700;">
+            <span id="percent-text" style="font-size: 1.6rem;">0% Completed</span>
+            <span style="font-size: 1.8rem; color: var(--text-light);">GOAL: $1.4M</span>
         </div>
     </div>
 
-    <div id="donation-overlay">
-        <div class="slide-sub">Lakeridge Islamic Center</div>
-        <div class="slide-msg">QARDE HASANA REPAYMENT</div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://app.irm.io/ajaxmasjid.ca/lakeridgeislamiccenter" class="qr-large" alt="Donate">
+    <div style="font-size: 2.5rem; font-weight: 900; color: var(--gold);">SCAN TO DONATE NOW</div>
+</div>
 
-        <div style="width: 80%; margin: 30px 0;">
-            <div style="display: flex; justify-content: space-between; font-size: 2rem; font-weight: 800; margin-bottom: 10px;">
-                <span id="raised-text">Raised: $0</span>
-                <span>Goal: $1.4M</span>
-            </div>
-            <div style="width: 100%; height: 40px; background: rgba(255,255,255,0.2); border-radius: 20px; border: 3px solid var(--gold); overflow: hidden;">
-                <div id="progress-fill" style="width: 0%; height: 100%; background: var(--gold); transition: width 2s ease-in-out;"></div>
-            </div>
-            <div id="percent-text" style="text-align: right; font-size: 1.5rem; margin-top: 5px; font-weight: 700;">0% Completed</div>
-        </div>
+<script>
+    // --- UPDATE THESE TWO VALUES ---
+    const GOAL = 1400000;
+    const RAISED = 450000;
+    // -------------------------------
 
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://app.irm.io/ajaxmasjid.ca/lakeridgeislamiccenter" 
-     class="qr-large" 
-     alt="Scan to Donate">
+    const iqamaTimes = { Fajr: "6:15", Dhuhr: "1:30", Asr: "4:00", Maghrib: "3 mins after", Isha: "8:00" };
+    const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
 
-        <div class="slide-msg" style="font-size: 2.5rem;">SCAN TO DONATE NOW</div>
+    const localHadiths = [
+								        // RAMADAN & FASTING
+								        { ar: "مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ", en: "Whoever fasts Ramadan out of faith and seeking reward, his previous sins will be forgiven.", ref: "Bukhari" },
+								        { ar: "لِلصَّائِمِ فَرْحَتَانِ: فَرْحَةٌ عِنْدَ فِطْرِهِ، وَفَرْحَةٌ عِنْدَ لِقَاءِ رَبِّهِ", en: "The fasting person has two joys: one when he breaks his fast, and one when he meets his Lord.", ref: "Muslim" },
+								        { ar: "الصِّيَامُ جُنَّةٌ", en: "Fasting is a shield.", ref: "Bukhari" },
+								        { ar: "تَسَحَّرُوا فَإِنَّ فِي السُّحُورِ بَرَكَةً", en: "Take Suhoor, for in Suhoor there is blessing.", ref: "Bukhari" },
+								        { ar: "مَنْ لَمْ يَدَعْ قَوْلَ الزُّورِ وَالْعَمَلَ بِهِ فَلَيْسَ لِلَّهِ حَاجَةٌ فِي أَنْ يَدَعَ طَعَامَهُ وَشَرَابَهُ", en: "Whoever does not give up false speech and evil deeds, Allah is not in need of his leaving food and drink.", ref: "Bukhari" },
 
-        <div style="margin-top: 40px; font-size: 1.8rem; font-style: italic; color: var(--gold);">
-            "The believer's shade on the Day of Resurrection will be his charity."
-        </div>
-    </div>
+								        // HYGIENE & PURITY
+								        { ar: "الطُّهُورُ شَطْرُ الإِيمَانِ", en: "Purity is half of faith.", ref: "Muslim" },
+								        { ar: "لَوْلاَ أَنْ أَشُقَّ عَلَى أُمَّتِي لأَمَرْتُهُمْ بِالسِّوَاكِ عِنْدَ كُلِّ صَلاَةٍ", en: "Were it not that I might overburden my followers, I would have commanded them to use the Siwak before every prayer.", ref: "Bukhari" },
+								        { ar: "إِنَّ اللَّهَ جَمِيلٌ يُحِبُّ الْجَمَالَ", en: "Verily, Allah is Beautiful and He loves beauty.", ref: "Muslim" },
+								        { ar: "الْفِطْرَةُ خَمْسٌ: الْخِتَانُ، وَالاِسْتِحْدَادُ، وَقَصُّ الشَّارِبِ، وَتَقْلِيمُ الأَظْفَارِ، وَنَتْفُ الإِبْطِ", en: "Five are the acts of fitra: circumcision, shaving pubic hair, clipping the mustache, cutting the nails, and plucking hair under the armpits.", ref: "Bukhari" },
+								        { ar: "إِذَا اسْتَيْقَظَ أَحَدُكُمْ مِنْ نَوْمِهِ فَلْيَغْسِلْ يَدَهُ قَبْلَ أَنْ يُدْخِلَهَا فِي وَضُوئِهِ", en: "When one of you wakes up from sleep, he should wash his hands before putting them into the water for Wudu.", ref: "Bukhari" },
 
-    <script>
-        // --- FUNDRAISING GOALS (Update these regularly) ---
-        const GOAL_AMOUNT = 1400000;
-        const CURRENT_RAISED = 1000000;
-
-        const iqamaTimes = { Fajr: "6:30", Dhuhr: "1:00", Asr: "4:15", Maghrib: "3 mins after", Isha: "8:00" };
-        const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
-
-        const localHadiths = [
-									        // RAMADAN & FASTING
-									        { ar: "مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ", en: "Whoever fasts Ramadan out of faith and seeking reward, his previous sins will be forgiven.", ref: "Bukhari" },
-									        { ar: "لِلصَّائِمِ فَرْحَتَانِ: فَرْحَةٌ عِنْدَ فِطْرِهِ، وَفَرْحَةٌ عِنْدَ لِقَاءِ رَبِّهِ", en: "The fasting person has two joys: one when he breaks his fast, and one when he meets his Lord.", ref: "Muslim" },
-									        { ar: "الصِّيَامُ جُنَّةٌ", en: "Fasting is a shield.", ref: "Bukhari" },
-									        { ar: "تَسَحَّرُوا فَإِنَّ فِي السُّحُورِ بَرَكَةً", en: "Take Suhoor, for in Suhoor there is blessing.", ref: "Bukhari" },
-									        { ar: "مَنْ لَمْ يَدَعْ قَوْلَ الزُّورِ وَالْعَمَلَ بِهِ فَلَيْسَ لِلَّهِ حَاجَةٌ فِي أَنْ يَدَعَ طَعَامَهُ وَشَرَابَهُ", en: "Whoever does not give up false speech and evil deeds, Allah is not in need of his leaving food and drink.", ref: "Bukhari" },
-
-									        // HYGIENE & PURITY
-									        { ar: "الطُّهُورُ شَطْرُ الإِيمَانِ", en: "Purity is half of faith.", ref: "Muslim" },
-									        { ar: "لَوْلاَ أَنْ أَشُقَّ عَلَى أُمَّتِي لأَمَرْتُهُمْ بِالسِّوَاكِ عِنْدَ كُلِّ صَلاَةٍ", en: "Were it not that I might overburden my followers, I would have commanded them to use the Siwak before every prayer.", ref: "Bukhari" },
-									        { ar: "إِنَّ اللَّهَ جَمِيلٌ يُحِبُّ الْجَمَالَ", en: "Verily, Allah is Beautiful and He loves beauty.", ref: "Muslim" },
-									        { ar: "الْفِطْرَةُ خَمْسٌ: الْخِتَانُ، وَالاِسْتِحْدَادُ، وَقَصُّ الشَّارِبِ، وَتَقْلِيمُ الأَظْفَارِ، وَنَتْفُ الإِبْطِ", en: "Five are the acts of fitra: circumcision, shaving pubic hair, clipping the mustache, cutting the nails, and plucking hair under the armpits.", ref: "Bukhari" },
-									        { ar: "إِذَا اسْتَيْقَظَ أَحَدُكُمْ مِنْ نَوْمِهِ فَلْيَغْسِلْ يَدَهُ قَبْلَ أَنْ يُدْخِلَهَا فِي وَضُوئِهِ", en: "When one of you wakes up from sleep, he should wash his hands before putting them into the water for Wudu.", ref: "Bukhari" },
-
-									        // CIVIC DUTIES & MANNERS
-									        { ar: "خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ", en: "The best of people are those who are most beneficial to people.", ref: "Daraqutni" },
-									        { ar: "لاَ يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ", en: "None of you truly believes until he loves for his brother what he loves for himself.", ref: "Bukhari" },
-									        { ar: "إِنَّمَا بُعِثْتُ لأُتَمِّمَ مَكَارِمَ الأَخْلاَقِ", en: "I was sent only to perfect noble character.", ref: "Al-Muatta" },
-									        { ar: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", en: "Your smiling in the face of your brother is charity.", ref: "Tirmidhi" },
-									        { ar: "إِمَاطَةُ الأَذَى عَنِ الطَّرِيقِ صَدَقَةٌ", en: "Removing harmful things from the road is charity.", ref: "Bukhari" },
-									        { ar: "الْمُسْلِمُ مَنْ سَلِمَ الْمُسْلِمُونَ مِنْ لِسَانِهِ وَيَدِهِ", en: "A Muslim is the one from whose tongue and hands other Muslims are safe.", ref: "Bukhari" },
-									        { ar: "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيُكْرِمْ جَارَهُ", en: "Whoever believes in Allah and the Last Day should be kind to his neighbor.", ref: "Bukhari" },
-									        { ar: "لاَ يَدْخُلُ الْجَنَّةَ مَنْ لاَ يَأْمَنُ جَارُهُ بَوَائِقَهُ", en: "He will not enter Paradise whose neighbor is not secure from his wrongful conduct.", ref: "Muslim" },
-									        { ar: "الدَّالُّ عَلَى الْخَيْرِ كَفَاعِلِهِ", en: "The one who guides to something good has a reward similar to the one who does it.", ref: "Muslim" },
-									        { ar: "كُلُّ مَعْرُوفٍ صَدَقَةٌ", en: "Every good deed is charity.", ref: "Bukhari" },
-									        { ar: "مَنْ لاَ يَرْحَمِ النَّاسَ لاَ يَرْحَمْهُ اللَّهُ", en: "Whoever does not show mercy to people, Allah will not show mercy to him.", ref: "Muslim" },
-									        { ar: "خِيَارُكُمْ أَحَاسِنُكُمْ أَخْلاَقًا", en: "The best among you are those who have the best manners.", ref: "Bukhari" },
-									        { ar: "اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ، وَأَتْبِعِ السَّيِّئَةَ الْحَسَنَةَ تَمْحُهَا", en: "Fear Allah wherever you are, and follow up a bad deed with a good deed and it will wipe it out.", ref: "Tirmidhi" },
-									        { ar: "الْكَلِمَةُ الطَّيِّبَةُ صَدَقَةٌ", en: "A kind word is charity.", ref: "Bukhari" },
-									        { ar: "إِنَّ اللَّهَ يُحِبُّ إِذَا عَمِلَ أَحَدُكُمْ عَمَلاً أَنْ يُتْقِنَهُ", en: "Allah loves that when one of you does a job, he does it with proficiency.", ref: "Tabarani" },
-									        { ar: "لاَ تَغْضَبْ", en: "Do not become angry.", ref: "Bukhari" },
-									        { ar: "الْحَيَاءُ لاَ يَأْتِي إِلاَّ بِخَيْرٍ", en: "Modesty does not bring anything except good.", ref: "Bukhari" },
-									        { ar: "مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ", en: "Whoever follows a path in pursuit of knowledge, Allah will make easy for him a path to Paradise.", ref: "Muslim" },
-									        { ar: "يَسِّرُوا وَلاَ تُعَسِّرُوا، وَبَشِّرُوا وَلاَ تُنَفِّرُوا", en: "Make things easy and do not make them difficult; give glad tidings and do not repel people.", ref: "Bukhari" },
-									        { ar: "الْيَدُ الْعُلْيَا خَيْرٌ مِنَ الْيَدِ السُّفْلَى", en: "The upper hand (the giver) is better than the lower hand (the receiver).", ref: "Bukhari" }
+								        // CIVIC DUTIES & MANNERS
+								        { ar: "خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ", en: "The best of people are those who are most beneficial to people.", ref: "Daraqutni" },
+								        { ar: "لاَ يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ", en: "None of you truly believes until he loves for his brother what he loves for himself.", ref: "Bukhari" },
+								        { ar: "إِنَّمَا بُعِثْتُ لأُتَمِّمَ مَكَارِمَ الأَخْلاَقِ", en: "I was sent only to perfect noble character.", ref: "Al-Muatta" },
+								        { ar: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", en: "Your smiling in the face of your brother is charity.", ref: "Tirmidhi" },
+								        { ar: "إِمَاطَةُ الأَذَى عَنِ الطَّرِيقِ صَدَقَةٌ", en: "Removing harmful things from the road is charity.", ref: "Bukhari" },
+								        { ar: "الْمُسْلِمُ مَنْ سَلِمَ الْمُسْلِمُونَ مِنْ لِسَانِهِ وَيَدِهِ", en: "A Muslim is the one from whose tongue and hands other Muslims are safe.", ref: "Bukhari" },
+								        { ar: "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيُكْرِمْ جَارَهُ", en: "Whoever believes in Allah and the Last Day should be kind to his neighbor.", ref: "Bukhari" },
+								        { ar: "لاَ يَدْخُلُ الْجَنَّةَ مَنْ لاَ يَأْمَنُ جَارُهُ بَوَائِقَهُ", en: "He will not enter Paradise whose neighbor is not secure from his wrongful conduct.", ref: "Muslim" },
+								        { ar: "الدَّالُّ عَلَى الْخَيْرِ كَفَاعِلِهِ", en: "The one who guides to something good has a reward similar to the one who does it.", ref: "Muslim" },
+								        { ar: "كُلُّ مَعْرُوفٍ صَدَقَةٌ", en: "Every good deed is charity.", ref: "Bukhari" },
+								        { ar: "مَنْ لاَ يَرْحَمِ النَّاسَ لاَ يَرْحَمْهُ اللَّهُ", en: "Whoever does not show mercy to people, Allah will not show mercy to him.", ref: "Muslim" },
+								        { ar: "خِيَارُكُمْ أَحَاسِنُكُمْ أَخْلاَقًا", en: "The best among you are those who have the best manners.", ref: "Bukhari" },
+								        { ar: "اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ، وَأَتْبِعِ السَّيِّئَةَ الْحَسَنَةَ تَمْحُهَا", en: "Fear Allah wherever you are, and follow up a bad deed with a good deed and it will wipe it out.", ref: "Tirmidhi" },
+								        { ar: "الْكَلِمَةُ الطَّيِّبَةُ صَدَقَةٌ", en: "A kind word is charity.", ref: "Bukhari" },
+								        { ar: "إِنَّ اللَّهَ يُحِبُّ إِذَا عَمِلَ أَحَدُكُمْ عَمَلاً أَنْ يُتْقِنَهُ", en: "Allah loves that when one of you does a job, he does it with proficiency.", ref: "Tabarani" },
+								        { ar: "لاَ تَغْضَبْ", en: "Do not become angry.", ref: "Bukhari" },
+								        { ar: "الْحَيَاءُ لاَ يَأْتِي إِلاَّ بِخَيْرٍ", en: "Modesty does not bring anything except good.", ref: "Bukhari" },
+								        { ar: "مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ", en: "Whoever follows a path in pursuit of knowledge, Allah will make easy for him a path to Paradise.", ref: "Muslim" },
+								        { ar: "يَسِّرُوا وَلاَ تُعَسِّرُوا، وَبَشِّرُوا وَلاَ تُنَفِّرُوا", en: "Make things easy and do not make them difficult; give glad tidings and do not repel people.", ref: "Bukhari" },
+								        { ar: "الْيَدُ الْعُلْيَا خَيْرٌ مِنَ الْيَدِ السُّفْلَى", en: "The upper hand (the giver) is better than the lower hand (the receiver).", ref: "Bukhari" }
     ];
-        function updateProgressBar() {
-            const percentage = Math.min((CURRENT_RAISED / GOAL_AMOUNT) * 100, 100);
-            document.getElementById('raised-text').innerText = `Raised: $${CURRENT_RAISED.toLocaleString()}`;
-            document.getElementById('percent-text').innerText = `${percentage.toFixed(1)}% Completed`;
-            setTimeout(() => { document.getElementById('progress-fill').style.width = percentage + "%"; }, 500);
+
+    function updateProgressBar() {
+        const remaining = GOAL - RAISED;
+        const percentage = Math.min((RAISED / GOAL) * 100, 100);
+
+        document.getElementById('raised-text').innerText = `Raised: $${RAISED.toLocaleString()}`;
+        document.getElementById('remaining-text').innerText = `Remaining: $${remaining.toLocaleString()}`;
+        document.getElementById('percent-text').innerText = `${percentage.toFixed(1)}% Completed`;
+
+        setTimeout(() => {
+            document.getElementById('progress-fill').style.width = percentage + "%";
+        }, 500);
+    }
+
+    function checkDonationSlide() {
+        const now = new Date();
+        const curMins = now.getHours() * 60 + now.getMinutes();
+        let show = false;
+
+        // Check fixed times
+        Object.values(iqamaTimes).forEach(t => {
+            if(t.includes(':')) {
+                const [h, m] = t.split(':').map(Number);
+                const iqMins = h * 60 + m;
+                // Show 10 mins after for 5 mins
+                if(curMins >= iqMins + 10 && curMins < iqMins + 15) show = true;
+            }
+        });
+
+        // Maghrib check
+        const mAdhan = document.querySelector('.prayer-row:nth-child(4) td:nth-child(2)')?.innerText;
+        if(mAdhan) {
+            const [mh, mm] = mAdhan.split(':').map(Number);
+            const mIq = mh * 60 + mm + 3;
+            if(curMins >= mIq + 10 && curMins < mIq + 15) show = true;
         }
 
-        function checkDonationSlide() {
-            const now = new Date();
-            const curTimeInMinutes = now.getHours() * 60 + now.getMinutes();
-            let showSlide = false;
+        // To test immediately, you can uncomment the line below:
+        // show = true;
 
-            // Check against fixed iqama times
-            Object.values(iqamaTimes).forEach(timeStr => {
-                if (timeStr.includes(':')) {
-                    const [h, m] = timeStr.split(':').map(Number);
-                    const iqamaMins = h * 60 + m;
-                    // Show 10 mins after for 5 mins
-                    if (curTimeInMinutes >= iqamaMins + 10 && curTimeInMinutes < iqamaMins + 15) showSlide = true;
-                }
+        const overlay = document.getElementById('donation-overlay');
+        overlay.style.display = show ? 'flex' : 'none';
+        if(show) updateProgressBar();
+    }
+
+    function updateRamadanCountdown() {
+        const diff = new Date("February 19, 2026") - new Date();
+        const days = Math.ceil(diff / 86400000);
+        const el = document.getElementById('ramadan-countdown');
+        if (days > 0) el.innerText = `🌙 ${days} DAYS UNTIL RAMADAN 1447H`;
+        else el.innerText = `🌙 RAMADAN MUBARAK - DAY ${Math.abs(days) + 1}`;
+    }
+
+    async function updateWeather() {
+        try {
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=43.8384&longitude=-79.0868&current_weather=true`);
+            const d = await res.json();
+            document.getElementById('temp').innerText = Math.round(d.current_weather.temperature) + "°C";
+            document.getElementById('condition').innerText = "Pickering";
+        } catch (e) {}
+    }
+
+    async function updateData() {
+        try {
+            const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=Pickering&country=Canada&method=2&school=1`);
+            const d = await res.json();
+            const t = d.data.timings;
+            document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
+
+            const now = new Date();
+            const cur = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+
+            let idx = 0;
+            const sunrise = t['Sunrise'];
+            if (cur >= sunrise && cur < t['Dhuhr']) {
+                idx = 1; // Highlight Dhuhr next
+            } else {
+                for(let i=0; i<salahList.length; i++) { if(cur >= t[salahList[i].id]) idx = i; }
+            }
+
+            let html = '';
+            salahList.forEach((s, i) => {
+                const active = (i === idx) ? "active" : "";
+                html += `<tr class="prayer-row ${active}"><td class="col-en">${s.id}</td><td>${t[s.id]}</td><td class="col-iqama ${s.id==='Maghrib'?'iqama-text':''}">${iqamaTimes[s.id]}</td><td class="col-ar">${s.ar}</td></tr>`;
             });
+            document.getElementById('prayer-body').innerHTML = html;
+            updateRamadanCountdown();
+        } catch (e) {}
+    }
 
-            // Special check for Maghrib (Sunset Adhan + 3 mins iqama + 10 mins wait)
-            const maghribAdhan = document.querySelector('.prayer-row:nth-child(4) td:nth-child(2)')?.innerText;
-            if (maghribAdhan) {
-                const [mh, mm] = maghribAdhan.split(':').map(Number);
-                const magIqama = mh * 60 + mm + 3;
-                if (curTimeInMinutes >= magIqama + 10 && curTimeInMinutes < magIqama + 15) showSlide = true;
-            }
+    function runClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+        document.getElementById('ar-hadith').innerText = localHadiths[now.getDate() % localHadiths.length].ar;
+        document.getElementById('en-hadith').innerText = `"${localHadiths[now.getDate() % localHadiths.length].en}"`;
+        checkDonationSlide();
+    }
 
-            const overlay = document.getElementById('donation-overlay');
-            if (showSlide) {
-                overlay.style.display = 'flex';
-                updateProgressBar();
-            } else {
-                overlay.style.display = 'none';
-            }
-        }
-
-        function updateRamadanCountdown() {
-            const now = new Date();
-            const ramadanStart = new Date("February 19, 2026 00:00:00");
-            const diff = ramadanStart - now;
-            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-            const el = document.getElementById('ramadan-countdown');
-
-            if (days > 1) {
-                el.innerText = `🌙 ${days} DAYS UNTIL RAMADAN 1447H`;
-                el.style.background = "#2e7d32";
-            } else if (days === 1) {
-                el.innerText = `🌙 RAMADAN BEGINS TOMORROW INSHA'ALLAH`;
-            } else if (days <= 0 && days > -30) {
-                const ramadanDay = Math.abs(days) + 1;
-                el.innerText = `🌙 RAMADAN MUBARAK - DAY ${ramadanDay}`;
-                el.style.background = "var(--primary-blue)";
-                el.style.color = "var(--gold)";
-            } else {
-                el.style.display = "none";
-            }
-        }
-
-        async function updateWeather() {
-            try {
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=43.8384&longitude=-79.0868&current_weather=true`);
-                const data = await res.json();
-                document.getElementById('temp').innerText = Math.round(data.current_weather.temperature) + "°C";
-                const conditions = { 0: "Clear", 1: "Clear", 2: "Partly Cloudy", 3: "Overcast", 45: "Fog", 61: "Rain", 71: "Snow" };
-                document.getElementById('condition').innerText = conditions[data.current_weather.weathercode] || "Pickering";
-            } catch (e) { console.error(e); }
-        }
-
-        async function updateData() {
-            try {
-                const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=Pickering&country=Canada&method=2&school=1`);
-                const data = await res.json();
-                const t = data.data.timings;
-                document.getElementById('hijri').innerText = `${data.data.date.hijri.day} ${data.data.date.hijri.month.en} ${data.data.date.hijri.year}`;
-
-                const now = new Date();
-                const curTime = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-                const sunriseTime = t['Sunrise'];
-
-                let currentIndex = -1;
-                const ishaTime = t['Isha'];
-                const [ishaH, ishaM] = ishaTime.split(':').map(Number);
-                const transitionTime = new Date(); transitionTime.setHours(ishaH + 3, ishaM, 0);
-
-                if (now > transitionTime || curTime < t['Fajr']) {
-                    currentIndex = 0;
-                } else if (curTime >= sunriseTime && curTime < t['Dhuhr']) {
-                    currentIndex = 1;
-                } else {
-                    for (let i = 0; i < salahList.length; i++) {
-                        if (curTime >= t[salahList[i].id]) currentIndex = i;
-                    }
-                }
-
-                let html = '';
-                salahList.forEach((salah, index) => {
-                    const activeClass = (index === currentIndex) ? "active" : "";
-                    const iqamaValue = iqamaTimes[salah.id];
-                    const iqamaClass = (salah.id === 'Maghrib') ? 'col-iqama iqama-text' : 'col-iqama';
-                    html += `<tr class="prayer-row ${activeClass}"><td class="col-en">${salah.id}</td><td>${t[salah.id]}</td><td class="${iqamaClass}">${iqamaValue}</td><td class="col-ar">${salah.ar}</td></tr>`;
-                });
-                document.getElementById('prayer-body').innerHTML = html;
-                updateRamadanCountdown();
-                checkDonationSlide();
-            } catch (e) { console.error(e); }
-        }
-
-        function runClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
-            const hadith = localHadiths[(now.getDate() - 1) % localHadiths.length];
-            document.getElementById('ar-hadith').innerText = hadith.ar;
-            document.getElementById('en-hadith').innerText = `"${hadith.en}"`;
-            checkDonationSlide(); // Continuous check
-        }
-
-        setInterval(runClock, 1000);
-        setInterval(updateData, 60000);
-        setInterval(updateWeather, 600000);
-        runClock(); updateData(); updateWeather();
-    </script>
+    setInterval(runClock, 1000);
+    setInterval(updateData, 60000);
+    setInterval(updateWeather, 600000);
+    runClock(); updateData(); updateWeather(); updateProgressBar();
+</script>
 </body>
 </html>
-
-
