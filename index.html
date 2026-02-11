@@ -172,7 +172,38 @@
             enEl.style.opacity = 1;
         }, 500);
     }
+    
+    function checkDonationSlide() {
+    const now = new Date();
+    const curMins = now.getHours() * 60 + now.getMinutes();
+    let show = false;
 
+    // 1. Check fixed Iqama times (Fajr, Dhuhr, Asr, Isha)
+    Object.keys(iqamaTimes).forEach(key => {
+        const t = iqamaTimes[key];
+        if(t.includes(':')) {
+            const [h, m] = t.split(':').map(Number);
+            const iqMins = h * 60 + m;
+            
+            // Trigger: 10 mins after Iqama, show for 5 minutes
+            if(curMins >= iqMins + 10 && curMins < iqMins + 15) {
+                show = true;
+            }
+        }
+    });
+    // 2. Manual Test Mode (Uncomment the line below to see the bar NOW)
+     show = true; 
+
+    const overlay = document.getElementById('donation-overlay');
+    if (overlay) {
+        if (show) {
+            overlay.style.display = 'flex';
+            updateProgressBar(); // Ensure bar animates when shown
+        } else {
+            overlay.style.display = 'none';
+        }
+    }
+}
     // MAIN CLOCK FUNCTION (Named correctly now)
     function runClock() {
         const now = new Date();
@@ -184,6 +215,7 @@
         const debugEl = document.getElementById('debug-timer');
         if (debugEl) debugEl.innerText = `Next rotation in: ${nextRefresh}s`;
         if (nextRefresh <= 0) updateHadith();
+        checkDonationSlide();
     }
 
     // --- ENGINE START ---
@@ -196,9 +228,11 @@
     updateData(); 
     updateWeather(); 
     updateHadith();
+    
 </script>
 </body>
 </html>
+
 
 
 
