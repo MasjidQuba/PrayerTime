@@ -99,33 +99,36 @@
     }
 
     async function updateData() {
-        try {
-            const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=Pickering&country=Canada&method=2&school=1`);
-            const d = await res.json();
-            const t = d.data.timings;
-            document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
+    try {
+        const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=Pickering&country=Canada&method=2&school=1`);
+        const d = await res.json();
+        const t = d.data.timings;
 
-            const now = new Date();
-            const cur = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+        // ... Hijri logic remains the same ...
 
-            let idx = 0;
-            for(let i=0; i<salahList.length; i++) {
-                if(salahList[i].t === 'p' && cur >= t[salahList[i].id]) idx = i;
+        let html = '';
+        salahList.forEach((s, i) => {
+            const isSun = s.t === 's';
+            const active = (i === idx) ? "active" : "";
+            
+            let adhanTime = t[s.id];
+            let iqamaDisplay = iqamaTimes[s.id];
+
+            // DYNAMIC MAGHRIB LOGIC
+            if (s.id === 'Maghrib') {
+                // Take Sunset/Maghrib Adhan and add 3 minutes for Iqama
+                iqamaDisplay = addMinutes(adhanTime, 3);
             }
 
-            let html = '';
-            salahList.forEach((s, i) => {
-                const isSun = s.t === 's';
-                const active = (i === idx) ? "active" : "";
-                html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
-                    <td class="col-en">${isSun?'Sunrise':s.id}</td>
-                    <td>${t[s.id]}</td>
-                    <td style="color:var(--iqama-green)">${isSun?'Ishraq':iqamaTimes[s.id]}</td>
-                    <td class="col-ar">${s.ar}</td></tr>`;
-            });
-            document.getElementById('prayer-body').innerHTML = html;
-        } catch (e) { console.log("Prayer Data Error"); }
-    }
+            html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
+                <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
+                <td>${adhanTime}</td>
+                <td style="color:var(--iqama-green)">${isSun ? 'Ishraq' : iqamaDisplay}</td>
+                <td class="col-ar">${s.ar}</td></tr>`;
+        });
+        document.getElementById('prayer-body').innerHTML = html;
+    } catch (e) { console.log("Prayer Data Error"); }
+}
 
     async function updateHadith() {
         console.log("Triggering Rotation...");
@@ -204,6 +207,17 @@
         }
     }
 }
+    function addMinutes(timeStr, minsToAdd) {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes + minsToAdd);
+    
+    // Returns time in HH:MM format
+    return date.getHours().toString().padStart(2, '0') + ":" + 
+           date.getMinutes().toString().padStart(2, '0');
+}
+    
     // MAIN CLOCK FUNCTION (Named correctly now)
     function runClock() {
         const now = new Date();
@@ -232,6 +246,7 @@
 </script>
 </body>
 </html>
+
 
 
 
