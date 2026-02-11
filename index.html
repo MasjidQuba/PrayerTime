@@ -127,52 +127,65 @@
         } catch (e) { console.log("Prayer Data Error"); }
     }
 
-    async function updateHadith() {
-        console.log("Rotating Hadith...");
-        const arEl = document.getElementById('ar-hadith');
-        const enEl = document.getElementById('en-hadith');
-        nextRefresh = 60; 
+    let nextRefresh = 60; 
 
-        try {
-            const cacheBuster = new Date().getTime();
-            const res = await fetch(`https://random-hadith-generator.vercel.app/api/hadith/bukhari?t=${cacheBuster}`);
-            if (!res.ok) throw new Error('API Error');
-            const d = await res.json();
+async function updateHadith() {
+    console.log("Triggering Rotation...");
+    
+    // MOVE THIS TO THE TOP: Reset timer immediately so the logic doesn't hang
+    nextRefresh = 60; 
 
-            const arabic = d?.data?.ar;
-            const english = d?.data?.en;
-            const source = d?.data?.book || "Sahih Bukhari";
+    const arEl = document.getElementById('ar-hadith');
+    const enEl = document.getElementById('en-hadith');
 
-            if (arabic && english) {
-                arEl.style.opacity = 0;
-                enEl.style.opacity = 0;
-                setTimeout(() => {
-                    arEl.innerText = arabic;
-                    enEl.innerText = `"${english}" — ${source}`;
-                    arEl.style.opacity = 1;
-                    enEl.style.opacity = 1;
-                }, 500);
-            } else { throw new Error('Incomplete data'); }
-        } catch (e) {
-            console.error(e);
-            arEl.innerText = "لاَ تَبَاغَضُوا، وَلاَ تَحَاسَدُوا، وَلاَ تَدَابَرُوا";
-            enEl.innerText = '"Do not hate one another, do not envy one another, and do not turn your backs on one another." — Sahih Bukhari';
-            arEl.style.opacity = 1;
-            enEl.style.opacity = 1;
+    try {
+        // Add a 5-second timeout to the fetch itself
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        const cacheBuster = new Date().getTime();
+        const res = await fetch(`https://random-hadith-generator.vercel.app/api/hadith/bukhari?t=${cacheBuster}`, { signal: controller.signal });
+        
+        if (!res.ok) throw new Error('API Timeout/Error');
+        
+        const d = await res.json();
+        clearTimeout(timeoutId);
+
+        if (d?.data?.ar && d?.data?.en) {
+            arEl.style.opacity = 0;
+            enEl.style.opacity = 0;
+            
+            setTimeout(() => {
+                arEl.innerText = d.data.ar;
+                enEl.innerText = `"${d.data.en}" — ${d.data.book || "Sahih Bukhari"}`;
+                arEl.style.opacity = 1;
+                enEl.style.opacity = 1;
+            }, 500);
+            return; // Success!
         }
+    } catch (e) {
+        console.log("API failed, rotating to local fallback...");
     }
 
-    function runClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
-        updateRamadan();
-
-        nextRefresh--;
-        const debugEl = document.getElementById('debug-timer');
-        if (debugEl) debugEl.innerText = `Next rotation in: ${nextRefresh}s`;
-        if (nextRefresh <= 0) updateHadith();
-    }
-
+    // FALLBACK: If API fails or times out, pick a random local one
+    // This ensures the Hadith ALWAYS changes even without internet
+    const fallbacks = [
+        { ar: "الدَّالُّ عَلَى الْخَيْرِ كَفَاعِلِهِ", en: "The one who guides to something good has a reward similar to the one who does it." },
+        { ar: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", en: "Your smiling in the face of your brother is charity." },
+        { ar: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", en: "The best among you are those who learn the Quran and teach it." }
+    ];
+    
+    const pick = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+    arEl.style.opacity = 0;
+    enEl.style.opacity = 0;
+    
+    setTimeout(() => {
+        arEl.innerText = pick.ar;
+        enEl.innerText = `"${pick.en}" — Local Fallback`;
+        arEl.style.opacity = 1;
+        enEl.style.opacity = 1;
+    }, 500);
+}
     // --- ENGINE START ---
     setInterval(runClock, 1000);
     setInterval(updateData, 60000);
@@ -186,3 +199,4 @@
 </script>
 </body>
 </html>
+
