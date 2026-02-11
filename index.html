@@ -25,8 +25,8 @@
         .col-en { text-align: left !important; padding-left: 35px !important; border-radius: 20px 0 0 20px; color: var(--primary-blue); }
         .col-ar { text-align: right !important; padding-right: 35px !important; font-family: 'Amiri', serif; font-size: 3.8rem !important; border-radius: 0 20px 20px 0; color: var(--primary-blue); }
         .hadith-container { flex-grow: 1; min-height: 300px; background: var(--primary-blue); border-radius: 25px; margin-top: 15px; padding: 30px; color: white; display: flex; flex-direction: column; justify-content: center; text-align: center; border: 4px solid var(--gold); overflow-y: auto; }
-        .ar-text { font-family: 'Amiri', serif; font-size: 3.0rem; direction: rtl; line-height: 1.4; margin-bottom: 20px; word-wrap: break-word; transition: opacity 0.5s ease-in-out; }
-        .en-text { font-size: 3.0rem; font-style: italic; color: var(--gold); line-height: 1.4; word-wrap: break-word; margin-top: 10px; font-weight: 700; transition: opacity 0.5s ease-in-out; }
+        .ar-text { font-family: 'Amiri', serif; font-size: 2.0rem; direction: rtl; line-height: 1.4; margin-bottom: 20px; word-wrap: break-word; transition: opacity 0.5s ease-in-out; }
+        .en-text { font-size: 2.0rem; font-style: italic; color: var(--gold); line-height: 1.4; word-wrap: break-word; margin-top: 10px; font-weight: 700; transition: opacity 0.5s ease-in-out; }
         .countdown-bar { background: #2e7d32; color: white; padding: 15px; border-radius: 20px; text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 2.2rem; font-weight: 900; border: 4px solid var(--gold); }
         #donation-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, var(--primary-blue) 0%, #0a192f 100%); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; border: 20px solid var(--gold); box-sizing: border-box; text-align: center; }
         #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s ease-in-out; }
@@ -52,11 +52,11 @@
 
 <div class="hadith-container">
     <div class="ar-text" id="ar-hadith">الْحَمْدُ لِلَّهِ</div>
-    <div class="en-text" id="en-hadith">Loading wisdom...</div>
+    <div class="en-text" id="en-hadith">Loading Hadith...</div>
     <div id="debug-timer" style="font-size: 1rem; color: var(--gold); margin-top: 15px; opacity: 0.6;">Next rotation in: 60s</div>
 </div>
 
-<div class="countdown-bar" id="ramadan-countdown">Calculating...</div>
+<div class="countdown-bar" id="ramadan-countdown">Getting Calendar...</div>
 
 <div id="donation-overlay">
     <div style="font-size: 3rem; font-weight: 900; color: var(--gold);">PLEASE DONATE GENEROUSLY</div>
@@ -240,6 +240,7 @@
 </script>
 </body>
 </html>
+
 
 
 
