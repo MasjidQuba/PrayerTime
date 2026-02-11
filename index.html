@@ -93,13 +93,29 @@
     let nextRefresh = 60; 
 
     function updateRamadan() {
-        const diff = new Date("2026-02-19T00:00:00") - new Date();
-        const days = Math.ceil(diff / 86400000);
-        const el = document.getElementById('ramadan-countdown');
-        if (days > 1) el.innerText = `🌙 ${days} DAYS UNTIL RAMADAN 1447H`;
-        else if (days === 1) el.innerText = `🌙 RAMADAN BEGINS TOMORROW`;
-        else el.innerText = `🌙 RAMADAN MUBARAK - DAY ${Math.abs(days) + 1}`;
+    // February is index 1
+    const ramadanDate = new Date(2026, 1, 19); 
+    const now = new Date();
+    
+    // Calculate difference in milliseconds
+    const diff = ramadanDate - now;
+    
+    // Convert to days and round up
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    const el = document.getElementById('ramadan-countdown');
+    
+    if (!el) return;
+
+    if (days > 1) {
+        el.innerText = `🌙 ${days} DAYS UNTIL RAMADAN 1447H`;
+    } else if (days === 1) {
+        el.innerText = `🌙 RAMADAN BEGINS TOMORROW`;
+    } else if (days === 0) {
+        el.innerText = `🌙 RAMADAN MUBARAK - DAY 1`;
+    } else {
+        el.innerText = `🌙 RAMADAN MUBARAK - DAY ${Math.abs(days) + 1}`;
     }
+}
 
     async function updateWeather() {
         try {
@@ -179,9 +195,25 @@
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 4000);
 
-        const res = await fetch(`https://random-hadith-generator.vercel.app/api/hadith/bukhari?t=${cacheBuster}`, { 
-            signal: controller.signal 
-        });
+       // NEW API SOURCE: More stable for GitHub Pages
+const res = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json`);
+const allHadiths = await res.json();
+
+// Pick a random index from the collection
+const randomIndex = Math.floor(Math.random() * allHadiths.hadiths.length);
+const d = allHadiths.hadiths[randomIndex];
+
+// Update the UI (Note: this API uses .text instead of .en)
+if (d && d.text) {
+    arEl.style.opacity = 0;
+    enEl.style.opacity = 0;
+    setTimeout(() => {
+        arEl.innerText = "قَالَ رَسُولُ اللَّهِ ﷺ"; // Default prefix
+        enEl.innerText = `"${d.text}" — Sahih Bukhari`;
+        arEl.style.opacity = 1;
+        enEl.style.opacity = 1;
+    }, 500);
+}
         
         const d = await res.json();
         clearTimeout(timeoutId);
@@ -275,4 +307,5 @@
 </script>
 </body>
 </html>
+
 
