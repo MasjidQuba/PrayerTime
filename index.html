@@ -15,26 +15,19 @@
             --highlight-row: #fff9c4;
         }
         body { background-color: var(--bg-color); margin: 0; padding: 15px; height: 100vh; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; overflow: hidden; box-sizing: border-box; }
-
         .header-box { background: var(--primary-blue); border-radius: 25px; display: flex; justify-content: space-between; align-items: center; padding: 10px 40px; color: white; height: 180px; border: 4px solid var(--gold); }
         .header-img { height: 140px; width: auto; }
         #clock { font-size: 6rem; font-weight: 900; line-height: 1; letter-spacing: -2px; }
-
         .prayer-table { width: 100%; margin-top: 10px; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; }
         .prayer-row td { background: white; padding: 22px 10px; text-align: center; font-size: 3rem; font-weight: 800; border-bottom: 3px solid var(--gold); }
         .prayer-row.active td { background: var(--highlight-row) !important; border-top: 6px solid var(--gold); border-bottom: 6px solid var(--gold); transform: scale(1.02); color: #000; }
         .sunrise-row td { background: #fff3e0; color: #e65100; font-size: 2.5rem; border-bottom: 2px dashed #e65100; opacity: 0.9; }
-
         .col-en { text-align: left !important; padding-left: 35px !important; border-radius: 20px 0 0 20px; color: var(--primary-blue); }
         .col-ar { text-align: right !important; padding-right: 35px !important; font-family: 'Amiri', serif; font-size: 3.8rem !important; border-radius: 0 20px 20px 0; color: var(--primary-blue); }
-
         .hadith-container { flex-grow: 1; min-height: 300px; background: var(--primary-blue); border-radius: 25px; margin-top: 15px; padding: 30px; color: white; display: flex; flex-direction: column; justify-content: center; text-align: center; border: 4px solid var(--gold); overflow-y: auto; }
         .ar-text { font-family: 'Amiri', serif; font-size: 3.0rem; direction: rtl; line-height: 1.4; margin-bottom: 20px; word-wrap: break-word; transition: opacity 0.5s ease-in-out; }
         .en-text { font-size: 3.0rem; font-style: italic; color: var(--gold); line-height: 1.4; word-wrap: break-word; margin-top: 10px; font-weight: 700; transition: opacity 0.5s ease-in-out; }
-
         .countdown-bar { background: #2e7d32; color: white; padding: 15px; border-radius: 20px; text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 2.2rem; font-weight: 900; border: 4px solid var(--gold); }
-
-        /* Donation Overlay Styles */
         #donation-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, var(--primary-blue) 0%, #0a192f 100%); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; border: 20px solid var(--gold); box-sizing: border-box; text-align: center; }
         #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s ease-in-out; }
     </style>
@@ -89,33 +82,20 @@
     const RAISED = 450000;
     const iqamaTimes = { Fajr: "6:30", Dhuhr: "1:00", Asr: "4:15", Maghrib: "Calculated", Isha: "8:00" };
     const salahList = [{id:'Fajr',ar:'الفجر',t:'p'},{id:'Sunrise',ar:'الشروق',t:'s'},{id:'Dhuhr',ar:'الظهر',t:'p'},{id:'Asr',ar:'العصر',t:'p'},{id:'Maghrib',ar:'المغرب',t:'p'},{id:'Isha',ar:'العشاء',t:'p'}];
-    
     let nextRefresh = 60; 
 
     function updateRamadan() {
-    // February is index 1
-    const ramadanDate = new Date(2026, 1, 19); 
-    const now = new Date();
-    
-    // Calculate difference in milliseconds
-    const diff = ramadanDate - now;
-    
-    // Convert to days and round up
-    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    const el = document.getElementById('ramadan-countdown');
-    
-    if (!el) return;
-
-    if (days > 1) {
-        el.innerText = `🌙 ${days} DAYS UNTIL RAMADAN 1447H`;
-    } else if (days === 1) {
-        el.innerText = `🌙 RAMADAN BEGINS TOMORROW`;
-    } else if (days === 0) {
-        el.innerText = `🌙 RAMADAN MUBARAK - DAY 1`;
-    } else {
-        el.innerText = `🌙 RAMADAN MUBARAK - DAY ${Math.abs(days) + 1}`;
+        const ramadanDate = new Date(2026, 1, 19); 
+        const now = new Date();
+        const diff = ramadanDate - now;
+        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+        const el = document.getElementById('ramadan-countdown');
+        if (!el) return;
+        if (days > 1) el.innerText = `🌙 ${days} DAYS UNTIL RAMADAN 1447H`;
+        else if (days === 1) el.innerText = `🌙 RAMADAN BEGINS TOMORROW`;
+        else if (days === 0) el.innerText = `🌙 RAMADAN MUBARAK - DAY 1`;
+        else el.innerText = `🌙 RAMADAN MUBARAK - DAY ${Math.abs(days) + 1}`;
     }
-}
 
     async function updateWeather() {
         try {
@@ -125,7 +105,6 @@
         } catch (e) { console.log("Weather Error"); }
     }
 
-    // FIXED: Corrected time addition helper
     function addMinutes(timeStr, minsToAdd) {
         if(!timeStr) return "--:--";
         const [hours, minutes] = timeStr.split(':').map(Number);
@@ -135,7 +114,6 @@
         return date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0');
     }
 
-    // FIXED: Added missing updateProgressBar function
     function updateProgressBar() {
         const remaining = GOAL - RAISED;
         const percentage = Math.min((RAISED / GOAL) * 100, 100);
@@ -151,26 +129,18 @@
             const d = await res.json();
             const t = d.data.timings;
             document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
-
             const now = new Date();
             const cur = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-
-            // FIXED: Defined idx here to avoid crash
             let idx = 0;
             for(let i=0; i<salahList.length; i++) {
                 if(salahList[i].t === 'p' && cur >= t[salahList[i].id]) idx = i;
             }
-
             let html = '';
             salahList.forEach((s, i) => {
                 const isSun = s.t === 's';
                 const active = (i === idx) ? "active" : "";
                 let iqamaDisplay = isSun ? 'Ishraq' : iqamaTimes[s.id];
-                
-                if (s.id === 'Maghrib') {
-                    iqamaDisplay = addMinutes(t[s.id], 3);
-                }
-
+                if (s.id === 'Maghrib') iqamaDisplay = addMinutes(t[s.id], 3);
                 html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
                     <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
                     <td>${t[s.id]}</td>
@@ -182,92 +152,42 @@
     }
 
     async function updateHadith() {
-    console.log("Rotating Hadith...");
-    const arEl = document.getElementById('ar-hadith');
-    const enEl = document.getElementById('en-hadith');
-    
-    // 1. Reset the timer immediately to prevent logic loops
-    nextRefresh = 900; 
-
-    try {
-        const cacheBuster = new Date().getTime();
-        // Added a shorter 4-second timeout for better UX on slow masjid Wi-Fi
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
-
-       // NEW API SOURCE: More stable for GitHub Pages
-const res = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json`);
-const allHadiths = await res.json();
-
-// Pick a random index from the collection
-const randomIndex = Math.floor(Math.random() * allHadiths.hadiths.length);
-const d = allHadiths.hadiths[randomIndex];
-
-// Update the UI (Note: this API uses .text instead of .en)
-if (d && d.text) {
-    arEl.style.opacity = 0;
-    enEl.style.opacity = 0;
-    setTimeout(() => {
-        arEl.innerText = "قَالَ رَسُولُ اللَّهِ ﷺ"; // Default prefix
-        enEl.innerText = `"${d.text}" — Sahih Bukhari`;
-        arEl.style.opacity = 1;
-        enEl.style.opacity = 1;
-    }, 500);
-}
-        
-        const d = await res.json();
-        clearTimeout(timeoutId);
-
-        // 2. Validate both Arabic and English exist before updating
-        if (d && d.data && d.data.ar && d.data.en) {
-            arEl.style.opacity = 0;
-            enEl.style.opacity = 0;
-            
-            setTimeout(() => {
-                arEl.innerText = d.data.ar;
-                enEl.innerText = `"${d.data.en}" — ${d.data.book || "Sahih Bukhari"}`;
-                arEl.style.opacity = 1;
-                enEl.style.opacity = 1;
-            }, 500);
-        } else {
-            throw new Error("Malformed API data");
+        const arEl = document.getElementById('ar-hadith');
+        const enEl = document.getElementById('en-hadith');
+        nextRefresh = 60; // Testing frequency
+        try {
+            const res = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json`);
+            const allHadiths = await res.json();
+            const randomIndex = Math.floor(Math.random() * allHadiths.hadiths.length);
+            const d = allHadiths.hadiths[randomIndex];
+            if (d && d.text) {
+                arEl.style.opacity = 0; enEl.style.opacity = 0;
+                setTimeout(() => {
+                    arEl.innerText = "قَالَ رَسُولُ اللَّهِ ﷺ"; 
+                    enEl.innerText = `"${d.text}" — Sahih Bukhari`;
+                    arEl.style.opacity = 1; enEl.style.opacity = 1;
+                }, 500);
+            } else { throw new Error(); }
+        } catch (e) {
+            arEl.innerText = "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ";
+            enEl.innerText = '"The best among you are those who learn the Quran and teach it." — Bukhari';
+            arEl.style.opacity = 1; enEl.style.opacity = 1;
         }
-    } catch (e) {
-        console.log("Hadith API failed or timed out. Switching to Local Fallback.");
-        
-        // 3. The "Emergency Exit": If the API fails, immediately clear "Loading wisdom"
-        const fallbacks = [
-            { ar: "الدَّالُّ عَلَى الْخَيْرِ كَفَاعِلِهِ", en: "The one who guides to something good has a reward similar to the one who does it." },
-            { ar: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", en: "The best among you are those who learn the Quran and teach it." }
-        ];
-        const pick = fallbacks[Math.floor(Math.random() * fallbacks.length)];
-        
-        arEl.innerText = pick.ar;
-        enEl.innerText = `"${pick.en}" — Sahih Bukhari (Offline Mode)`;
-        arEl.style.opacity = 1;
-        enEl.style.opacity = 1;
     }
-}
 
     function checkDonationSlide() {
         const now = new Date();
         const curMins = now.getHours() * 60 + now.getMinutes();
         let show = false;
-
-        // FIXED: Test mode set to false so it doesn't stay on forever
-        // Set to true only when you want to see the slide manually
-        let testMode = false; 
-
         Object.keys(iqamaTimes).forEach(key => {
             let t = iqamaTimes[key];
             if(t.includes(':') || key === 'Maghrib') {
-                // For Maghrib, we calculate the trigger mins from the prayer row
                 let iqMins;
                 if(key === 'Maghrib') {
                    const maghribAdhan = document.querySelector('.prayer-row:nth-child(5) td:nth-child(2)')?.innerText;
                    if(maghribAdhan) {
                        const [h,m] = maghribAdhan.split(':').map(Number);
-                       iqMins = h * 60 + m + 3; // Adhan + 3
+                       iqMins = h * 60 + m + 3;
                    }
                 } else {
                     const [h, m] = t.split(':').map(Number);
@@ -276,9 +196,6 @@ if (d && d.text) {
                 if(curMins >= iqMins + 10 && curMins < iqMins + 15) show = true;
             }
         });
-
-        if(testMode) show = true;
-
         const overlay = document.getElementById('donation-overlay');
         if (overlay) {
             overlay.style.display = show ? 'flex' : 'none';
@@ -287,25 +204,20 @@ if (d && d.text) {
     }
 
     function runClock() {
-    const now = new Date();
-    document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
-    
-    // Decrement timer
-    nextRefresh--;
-    if (nextRefresh <= 0) {
-        updateHadith();
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+        updateRamadan();
+        nextRefresh--;
+        const debugEl = document.getElementById('debug-timer');
+        if (debugEl) debugEl.innerText = `Next rotation in: ${nextRefresh}s`;
+        if (nextRefresh <= 0) updateHadith();
+        checkDonationSlide();
     }
-    
-    // ... rest of your functions (updateRamadan, checkDonationSlide) ...
-}
 
     setInterval(runClock, 1000);
     setInterval(updateData, 60000);
     setInterval(updateWeather, 600000);
-
     runClock(); updateData(); updateWeather(); updateHadith();
 </script>
 </body>
 </html>
-
-
