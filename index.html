@@ -97,13 +97,78 @@
         else el.innerText = `🌙 RAMADAN MUBARAK - DAY ${Math.abs(days) + 1}`;
     }
 
-    async function updateWeather() {
-        try {
-            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=43.8384&longitude=-79.0868&current_weather=true`);
-            const d = await res.json();
-            document.getElementById('temp').innerText = Math.round(d.current_weather.temperature) + "°C";
-        } catch (e) { console.log("Weather Error"); }
+    // Global variable to store location to avoid redundant Geo calls
+let userCity = "Pickering"; 
+let userCountry = "Canada";
+
+async function updateLocationAndWeather() {
+    try {
+        // 1. Detect location via IP
+        const geoRes = await fetch('https://ipapi.co/json/');
+        const geoData = await geoRes.json();
+        
+        userCity = geoData.city || "Pickering";
+        userCountry = geoData.country_name || "Canada";
+        const lat = geoData.latitude;
+        const lon = geoData.longitude;
+
+        // 2. Fetch weather using coordinates
+        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const wData = await weatherRes.json();
+        const temp = Math.round(wData.current_weather.temperature);
+        
+        document.getElementById('temp').innerHTML = `${temp}°C | ${userCity}`;
+        
+        // 3. Immediately trigger prayer data update once location is known
+        updateData();
+        
+    } catch (e) {
+        console.log("Geo/Weather Error:", e);
+        // Fallback to Pickering Weather
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=43.8384&longitude=-79.0868&current_weather=true`);
+        const d = await res.json();
+        document.getElementById('temp').innerText = Math.round(d.current_weather.temperature) + "°C | Pickering";
+        updateData();
     }
+}
+
+async function updateData() {
+    try {
+        // Use the detected city/country for prayer times
+        const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${userCity}&country=${userCountry}&method=2&school=1`);
+        const d = await res.json();
+        const t = d.data.timings;
+        
+        document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
+
+        const now = new Date();
+        const cur = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+
+        let idx = 0;
+        for(let i=0; i<salahList.length; i++) {
+            if(salahList[i].t === 'p' && cur >= t[salahList[i].id]) idx = i;
+        }
+
+        let html = '';
+        salahList.forEach((s, i) => {
+            const isSun = s.t === 's';
+            const active = (i === idx) ? "active" : "";
+            let iqamaDisplay = isSun ? 'Ishraq' : iqamaTimes[s.id];
+            
+            // Dynamic Maghrib Iqama (Adhan + 3 mins)
+            if (s.id === 'Maghrib') {
+                iqamaDisplay = addMinutes(t[s.id], 3);
+            }
+
+            html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
+                <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
+                <td>${t[s.id]}</td>
+                <td style="color:var(--iqama-green)">${iqamaDisplay}</td>
+                <td class="col-ar">${s.ar}</td></tr>`;
+        });
+        document.getElementById('prayer-body').innerHTML = html;
+    } catch (e) { console.log("Prayer Data Error"); }
+}
 
     function addMinutes(timeStr, minsToAdd) {
         if(!timeStr) return "--:--";
@@ -121,34 +186,6 @@
         document.getElementById('remaining-text').innerText = `Remaining: $${remaining.toLocaleString()}`;
         document.getElementById('percent-text').innerText = `${percentage.toFixed(1)}% Completed`;
         setTimeout(() => { document.getElementById('progress-fill').style.width = percentage + "%"; }, 500);
-    }
-
-    async function updateData() {
-        try {
-            const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=Pickering&country=Canada&method=2&school=1`);
-            const d = await res.json();
-            const t = d.data.timings;
-            document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
-            const now = new Date();
-            const cur = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-            let idx = 0;
-            for(let i=0; i<salahList.length; i++) {
-                if(salahList[i].t === 'p' && cur >= t[salahList[i].id]) idx = i;
-            }
-            let html = '';
-            salahList.forEach((s, i) => {
-                const isSun = s.t === 's';
-                const active = (i === idx) ? "active" : "";
-                let iqamaDisplay = isSun ? 'Ishraq' : iqamaTimes[s.id];
-                if (s.id === 'Maghrib') iqamaDisplay = addMinutes(t[s.id], 3);
-                html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
-                    <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
-                    <td>${t[s.id]}</td>
-                    <td style="color:var(--iqama-green)">${iqamaDisplay}</td>
-                    <td class="col-ar">${s.ar}</td></tr>`;
-            });
-            document.getElementById('prayer-body').innerHTML = html;
-        } catch (e) { console.log("Prayer Data Error"); }
     }
 
     async function updateHadith() {
@@ -233,13 +270,19 @@
         checkDonationSlide();
     }
 
-    setInterval(runClock, 1000);
-    setInterval(updateData, 60000);
-    setInterval(updateWeather, 600000);
-    runClock(); updateData(); updateWeather(); updateHadith();
+    // Initial Load
+updateLocationAndWeather(); // This will trigger updateData() internally
+updateHadith();
+runClock();
+
+// Intervals
+setInterval(runClock, 1000);
+setInterval(updateData, 60000);
+setInterval(updateLocationAndWeather, 600000); // Check location/weather every 10 mins
 </script>
 </body>
 </html>
+
 
 
 
