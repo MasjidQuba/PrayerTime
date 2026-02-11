@@ -30,6 +30,25 @@
         .countdown-bar { background: #2e7d32; color: white; padding: 15px; border-radius: 20px; text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 2.2rem; font-weight: 900; border: 4px solid var(--gold); }
         #donation-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, var(--primary-blue) 0%, #0a192f 100%); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; border: 20px solid var(--gold); box-sizing: border-box; text-align: center; }
         #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s ease-in-out; }
+        #clock-container {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 15px 40px;
+    border-radius: 25px; /* Rounded corners */
+    border: 3px solid var(--gold); /* Thin gold frame */
+    display: inline-block;
+    min-width: 450px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    margin-bottom: 5px;
+}
+
+#clock {
+    font-size: 7.5rem; /* Large for 55" TV */
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 2px;
+    font-family: 'Inter', sans-serif;
+}
     </style>
 </head>
 <body>
@@ -38,9 +57,21 @@
     <img src="Muhammad.png" class="header-img">
     <div style="text-align: center; flex-grow: 1;">
         <div id="clock">00:00:00</div>
-        <div style="color: var(--gold); font-weight: 800; font-size: 1.8rem;">
-            <span id="temp">--°C</span> | <span id="userCity"></span>
+        <div style="color: var(--gold); font-weigh<div class="header-box">
+    <img src="Muhammad.png" class="header-img">
+    <div style="text-align: center; flex-grow: 1;">
+        <div id="clock-container">
+            <div id="clock">00:00:00</div>
         </div>
+        
+        <div style="color: var(--gold); font-weight: 800; font-size: 2rem; margin-top: 10px;">
+            <span id="temp">--°C</span> | <span id="city-name"></span>
+        </div>
+        <div id="hijri" style="font-size: 1.8rem; font-weight: 700; color: white;">-- --- ----</div>
+    </div>
+    <img src="Allah.png" class="header-img">
+</div>
+        
         <div id="hijri" style="font-size: 1.6rem; font-weight: 700;">-- --- ----</div>
     </div>
     <img src="Allah.png" class="header-img">
@@ -118,6 +149,10 @@ async function updateLocationAndWeather() {
         const temp = Math.round(wData.current_weather.temperature);
         
         document.getElementById('temp').innerHTML = `${temp}°C | ${userCity}`;
+        // Inside updateLocationAndWeather try block:
+
+document.getElementById('temp').innerText = `${temp}°C`;
+document.getElementById('city-name').innerText = userCity;
         
         // 3. Immediately trigger prayer data update once location is known
         updateData();
@@ -282,6 +317,7 @@ setInterval(updateLocationAndWeather, 600000); // Check location/weather every 1
 </script>
 </body>
 </html>
+
 
 
 
