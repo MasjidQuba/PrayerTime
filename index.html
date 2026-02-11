@@ -206,6 +206,25 @@
 	        const pick = backups[Math.floor(Math.random() * backups.length)];
 	        arEl.innerText = pick.ar;
 	        enEl.innerText = `"${pick.en}" — ${pick.book}`;
+            if (d.data && d.data.ar) {
+              arEl.style.opacity = 0;
+              enEl.style.opacity = 0;
+
+          // Identify the source properly
+           const sourceBook = d.data.book || d.data.collection || "Sahih Bukhari";
+
+          setTimeout(() => {
+          arEl.innerText = d.data.ar;
+          // This line ensures we never see "undefined"
+         enEl.innerText = `"${d.data.en}" — ${sourceBook}`;
+        
+        arEl.style.opacity = 1;
+        enEl.style.opacity = 1;
+    }, 500);
+}
+
+
+			
 	        if (debugEl) debugEl.innerText += " (Backup Loaded)";
 	    }
 }
@@ -232,5 +251,6 @@
 </script>
 </body>
 </html>
+
 
 
