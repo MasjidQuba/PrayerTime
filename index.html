@@ -152,28 +152,47 @@
     }
 
     async function updateHadith() {
-        const arEl = document.getElementById('ar-hadith');
-        const enEl = document.getElementById('en-hadith');
-        nextRefresh = 60; // Testing frequency
-        try {
-            const res = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json`);
-            const allHadiths = await res.json();
-            const randomIndex = Math.floor(Math.random() * allHadiths.hadiths.length);
-            const d = allHadiths.hadiths[randomIndex];
-            if (d && d.text) {
-                arEl.style.opacity = 0; enEl.style.opacity = 0;
-                setTimeout(() => {
-                    arEl.innerText = "قَالَ رَسُولُ اللَّهِ ﷺ"; 
-                    enEl.innerText = `"${d.text}" — Sahih Bukhari`;
-                    arEl.style.opacity = 1; enEl.style.opacity = 1;
-                }, 500);
-            } else { throw new Error(); }
-        } catch (e) {
-            arEl.innerText = "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ";
-            enEl.innerText = '"The best among you are those who learn the Quran and teach it." — Bukhari';
-            arEl.style.opacity = 1; enEl.style.opacity = 1;
+    console.log("Rotating Bilingual Hadith...");
+    const arEl = document.getElementById('ar-hadith');
+    const enEl = document.getElementById('en-hadith');
+    nextRefresh = 60; 
+
+    try {
+        // 1. Fetch the English collection
+        const resEn = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json`);
+        const dataEn = await resEn.json();
+        
+        // 2. Pick a random Hadith
+        const randomIndex = Math.floor(Math.random() * dataEn.hadiths.length);
+        const englishHadith = dataEn.hadiths[randomIndex];
+
+        // 3. Fetch the Arabic collection
+        const resAr = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.json`);
+        const dataAr = await resAr.json();
+        const arabicHadith = dataAr.hadiths[randomIndex];
+
+        if (englishHadith && arabicHadith) {
+            arEl.style.opacity = 0;
+            enEl.style.opacity = 0;
+            
+            setTimeout(() => {
+                // Clean up the text (remove any HTML tags if present)
+                arEl.innerText = arabicHadith.text;
+                enEl.innerText = `"${englishHadith.text}" — Sahih Bukhari`;
+                
+                arEl.style.opacity = 1;
+                enEl.style.opacity = 1;
+            }, 500);
         }
+    } catch (e) {
+        console.error("Bilingual Fetch Failed:", e);
+        // Fallback to local hardcoded bilingual hadith
+        arEl.innerText = "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ";
+        enEl.innerText = '"The best among you are those who learn the Quran and teach it." — Bukhari';
+        arEl.style.opacity = 1;
+        enEl.style.opacity = 1;
     }
+}
 
     function checkDonationSlide() {
         const now = new Date();
@@ -221,6 +240,7 @@
 </script>
 </body>
 </html>
+
 
 
 
