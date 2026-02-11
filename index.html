@@ -18,6 +18,49 @@
         
         /* Layout for 55" Vertical */
         .header-box { background: var(--primary-blue); border-radius: 25px; display: flex; justify-content: space-between; align-items: center; padding: 10px 40px; color: white; height: 180px; border: 4px solid var(--gold); }
+       
+        /* New Flex Header */
+.header-box { 
+    height: 220px; 
+    padding: 10px 30px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+}
+
+.clock-section {
+    display: flex;
+    align-items: center;
+    gap: 25px; /* Space between clock and the info sidebar */
+}
+
+.info-sidebar {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 3px solid var(--gold);
+    padding-left: 20px;
+    height: 120px;
+}
+
+/* Fixed Footer */
+.footer-contact {
+    background: var(--primary-blue);
+    color: var(--gold);
+    text-align: center;
+    padding: 10px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-top: 3px solid var(--gold);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+/* Adjust body to prevent footer overlap */
+body { padding-bottom: 60px; }
         .header-img { height: 140px; width: auto; }
         
         #clock-container {
@@ -60,16 +103,26 @@
 
 <div class="header-box">
     <img src="Muhammad.png" class="header-img">
-    <div style="text-align: center; flex-grow: 1;">
+    
+    <div class="clock-section">
         <div id="clock-container">
             <div id="clock">00:00:00</div>
         </div>
-        <div style="color: var(--gold); font-weight: 800; font-size: 2rem; margin-top: 10px;">
-            <span id="temp">--°C</span> | <span id="city-name">Detecting...</span>
+        
+        <div class="info-sidebar">
+            <div style="font-size: 2.2rem; font-weight: 900; color: white;">
+                <span id="temp">--°C</span>
+            </div>
+            <div id="city-name" style="font-size: 1.4rem; color: var(--gold); font-weight: 800;">Detecting...</div>
+            <div id="hijri" style="font-size: 1.6rem; font-weight: 700; color: #fff; margin-top: 5px;">-- --- ----</div>
         </div>
-        <div id="hijri" style="font-size: 1.8rem; font-weight: 700; color: white;">-- --- ----</div>
     </div>
+
     <img src="Allah.png" class="header-img">
+</div>
+
+<div class="footer-contact">
+    Contact: info@ajaxmasjid.ca | www.ajaxmasjid.ca
 </div>
 
 <table class="prayer-table">
@@ -127,24 +180,35 @@
     }
 
     async function updateLocationAndWeather() {
-        try {
-            const geoRes = await fetch('https://ipapi.co/json/');
-            const geoData = await geoRes.json();
-            userCity = geoData.city || "Pickering";
-            userCountry = geoData.country_name || "Canada";
-            
-            const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geoData.latitude}&longitude=${geoData.longitude}&current_weather=true`);
-            const wData = await weatherRes.json();
-            const temp = Math.round(wData.current_weather.temperature);
-            
-            document.getElementById('temp').innerText = `${temp}°C`;
-            document.getElementById('city-name').innerText = userCity;
-            updateData();
-        } catch (e) {
-            console.log("Weather Error:", e);
-            updateData();
-        }
+    const tempEl = document.getElementById('temp');
+    const cityEl = document.getElementById('city-name');
+
+    try {
+        // Set a timeout for the geo-fetch
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+        const geoRes = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+        const geoData = await geoRes.json();
+        clearTimeout(timeoutId);
+
+        userCity = geoData.city || "Pickering";
+        userCountry = geoData.country_name || "Canada";
+        
+        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geoData.latitude}&longitude=${geoData.longitude}&current_weather=true`);
+        const wData = await weatherRes.json();
+        
+        tempEl.innerText = Math.round(wData.current_weather.temperature) + "°C";
+        cityEl.innerText = userCity;
+        
+    } catch (e) {
+        console.log("Geo Timeout/Error, using Pickering fallback");
+        tempEl.innerText = "--°C";
+        cityEl.innerText = "Pickering";
+        // Default Pickering update
+        updateData(); 
     }
+}
 
     async function updateData() {
         try {
@@ -260,3 +324,4 @@
 </script>
 </body>
 </html>
+
