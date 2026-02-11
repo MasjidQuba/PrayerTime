@@ -39,7 +39,7 @@
     <div style="text-align: center; flex-grow: 1;">
         <div id="clock">00:00:00</div>
         <div style="color: var(--gold); font-weight: 800; font-size: 1.8rem;">
-            <span id="temp">--°C</span> | Pickering
+            <span id="temp">--°C</span> | Whitby
         </div>
         <div id="hijri" style="font-size: 1.6rem; font-weight: 700;">-- --- ----</div>
     </div>
@@ -60,7 +60,7 @@
 
 <div id="donation-overlay">
     <div style="font-size: 3rem; font-weight: 900; color: var(--gold);">PLEASE DONATE GENEROUSLY</div>
-    <div style="font-size: 2rem; margin-bottom: 20px;">Qarde Hasana Repayment for New Masjid</div>
+    <div style="font-size: 2rem; margin-bottom: 20px;">Qarde Hasana Repayment for Lakeridge Islamic Center</div>
     <div style="width: 80%; margin: 30px 0;">
         <div style="display: flex; justify-content: space-between; font-size: 2rem; font-weight: 800; margin-bottom: 10px;">
             <span id="raised-text">Raised: $0</span>
@@ -212,7 +212,7 @@
                     const [h, m] = t.split(':').map(Number);
                     iqMins = h * 60 + m;
                 }
-                if(curMins >= iqMins + 2 && curMins < iqMins + 7) show = true;
+                if(curMins >= iqMins + 7 && curMins < iqMins + 15) show = true;
             }
         });
         const overlay = document.getElementById('donation-overlay');
@@ -240,6 +240,7 @@
 </script>
 </body>
 </html>
+
 
 
 
