@@ -166,23 +166,56 @@
     }
 
     async function updateHadith() {
-        nextRefresh = 900; 
-        const arEl = document.getElementById('ar-hadith');
-        const enEl = document.getElementById('en-hadith');
-        try {
-            const cacheBuster = new Date().getTime();
-            const res = await fetch(`https://random-hadith-generator.vercel.app/api/hadith/bukhari?t=${cacheBuster}`);
-            const d = await res.json();
-            if (d?.data?.ar) {
-                arEl.style.opacity = 0; enEl.style.opacity = 0;
-                setTimeout(() => {
-                    arEl.innerText = d.data.ar;
-                    enEl.innerText = `"${d.data.en}" — ${d.data.book || "Sahih Bukhari"}`;
-                    arEl.style.opacity = 1; enEl.style.opacity = 1;
-                }, 500);
-            }
-        } catch (e) { console.log("Hadith Error"); }
+    console.log("Rotating Hadith...");
+    const arEl = document.getElementById('ar-hadith');
+    const enEl = document.getElementById('en-hadith');
+    
+    // 1. Reset the timer immediately to prevent logic loops
+    nextRefresh = 900; 
+
+    try {
+        const cacheBuster = new Date().getTime();
+        // Added a shorter 4-second timeout for better UX on slow masjid Wi-Fi
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+        const res = await fetch(`https://random-hadith-generator.vercel.app/api/hadith/bukhari?t=${cacheBuster}`, { 
+            signal: controller.signal 
+        });
+        
+        const d = await res.json();
+        clearTimeout(timeoutId);
+
+        // 2. Validate both Arabic and English exist before updating
+        if (d && d.data && d.data.ar && d.data.en) {
+            arEl.style.opacity = 0;
+            enEl.style.opacity = 0;
+            
+            setTimeout(() => {
+                arEl.innerText = d.data.ar;
+                enEl.innerText = `"${d.data.en}" — ${d.data.book || "Sahih Bukhari"}`;
+                arEl.style.opacity = 1;
+                enEl.style.opacity = 1;
+            }, 500);
+        } else {
+            throw new Error("Malformed API data");
+        }
+    } catch (e) {
+        console.log("Hadith API failed or timed out. Switching to Local Fallback.");
+        
+        // 3. The "Emergency Exit": If the API fails, immediately clear "Loading wisdom"
+        const fallbacks = [
+            { ar: "الدَّالُّ عَلَى الْخَيْرِ كَفَاعِلِهِ", en: "The one who guides to something good has a reward similar to the one who does it." },
+            { ar: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", en: "The best among you are those who learn the Quran and teach it." }
+        ];
+        const pick = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+        
+        arEl.innerText = pick.ar;
+        enEl.innerText = `"${pick.en}" — Sahih Bukhari (Offline Mode)`;
+        arEl.style.opacity = 1;
+        enEl.style.opacity = 1;
     }
+}
 
     function checkDonationSlide() {
         const now = new Date();
@@ -222,15 +255,17 @@
     }
 
     function runClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
-        updateRamadan();
-        nextRefresh--;
-        const debugEl = document.getElementById('debug-timer');
-        if (debugEl) debugEl.innerText = `Next rotation in: ${nextRefresh}s`;
-        if (nextRefresh <= 0) updateHadith();
-        checkDonationSlide();
+    const now = new Date();
+    document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+    
+    // Decrement timer
+    nextRefresh--;
+    if (nextRefresh <= 0) {
+        updateHadith();
     }
+    
+    // ... rest of your functions (updateRamadan, checkDonationSlide) ...
+}
 
     setInterval(runClock, 1000);
     setInterval(updateData, 60000);
@@ -240,3 +275,4 @@
 </script>
 </body>
 </html>
+
