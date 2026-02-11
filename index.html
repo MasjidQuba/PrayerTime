@@ -79,7 +79,7 @@
     const iqamaTimes = { Fajr: "6:30", Dhuhr: "1:00", Asr: "4:15", Maghrib: "3 mins after", Isha: "8:00" };
     const salahList = [{id:'Fajr',ar:'الفجر',t:'p'},{id:'Sunrise',ar:'الشروق',t:'s'},{id:'Dhuhr',ar:'الظهر',t:'p'},{id:'Asr',ar:'العصر',t:'p'},{id:'Maghrib',ar:'المغرب',t:'p'},{id:'Isha',ar:'العشاء',t:'p'}];
     
-    let nextRefresh = 60; // Testing speed
+    let nextRefresh = 60; // Initial timer value
 
     function updateRamadan() {
         const diff = new Date("2026-02-19T00:00:00") - new Date();
@@ -127,71 +127,71 @@
         } catch (e) { console.log("Prayer Data Error"); }
     }
 
-    let nextRefresh = 60; 
+    async function updateHadith() {
+        console.log("Triggering Rotation...");
+        nextRefresh = 60; // Reset timer immediately
 
-async function updateHadith() {
-    console.log("Triggering Rotation...");
-    
-    // MOVE THIS TO THE TOP: Reset timer immediately so the logic doesn't hang
-    nextRefresh = 60; 
+        const arEl = document.getElementById('ar-hadith');
+        const enEl = document.getElementById('en-hadith');
 
-    const arEl = document.getElementById('ar-hadith');
-    const enEl = document.getElementById('en-hadith');
-
-    try {
-        // Add a 5-second timeout to the fetch itself
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-        const cacheBuster = new Date().getTime();
-        const res = await fetch(`https://random-hadith-generator.vercel.app/api/hadith/bukhari?t=${cacheBuster}`, { signal: controller.signal });
-        
-        if (!res.ok) throw new Error('API Timeout/Error');
-        
-        const d = await res.json();
-        clearTimeout(timeoutId);
-
-        if (d?.data?.ar && d?.data?.en) {
-            arEl.style.opacity = 0;
-            enEl.style.opacity = 0;
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            const cacheBuster = new Date().getTime();
             
-            setTimeout(() => {
-                arEl.innerText = d.data.ar;
-                enEl.innerText = `"${d.data.en}" — ${d.data.book || "Sahih Bukhari"}`;
-                arEl.style.opacity = 1;
-                enEl.style.opacity = 1;
-            }, 500);
-            return; // Success!
-        }
-    } catch (e) {
-        console.log("API failed, rotating to local fallback...");
+            const res = await fetch(`https://random-hadith-generator.vercel.app/api/hadith/bukhari?t=${cacheBuster}`, { signal: controller.signal });
+            const d = await res.json();
+            clearTimeout(timeoutId);
+
+            if (d?.data?.ar && d?.data?.en) {
+                arEl.style.opacity = 0;
+                enEl.style.opacity = 0;
+                setTimeout(() => {
+                    arEl.innerText = d.data.ar;
+                    enEl.innerText = `"${d.data.en}" — ${d.data.book || "Sahih Bukhari"}`;
+                    arEl.style.opacity = 1;
+                    enEl.style.opacity = 1;
+                }, 500);
+                return;
+            }
+        } catch (e) { console.log("API failed, using fallback."); }
+
+        // Fallback Logic
+        const fallbacks = [
+            { ar: "الدَّالُّ عَلَى الْخَيْرِ كَفَاعِلِهِ", en: "The one who guides to something good has a reward similar to the one who does it." },
+            { ar: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", en: "Your smiling in the face of your brother is charity." },
+            { ar: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", en: "The best among you are those who learn the Quran and teach it." }
+        ];
+        const pick = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+        arEl.style.opacity = 0;
+        enEl.style.opacity = 0;
+        setTimeout(() => {
+            arEl.innerText = pick.ar;
+            enEl.innerText = `"${pick.en}" — Local Fallback`;
+            arEl.style.opacity = 1;
+            enEl.style.opacity = 1;
+        }, 500);
     }
 
-    // FALLBACK: If API fails or times out, pick a random local one
-    // This ensures the Hadith ALWAYS changes even without internet
-    const fallbacks = [
-        { ar: "الدَّالُّ عَلَى الْخَيْرِ كَفَاعِلِهِ", en: "The one who guides to something good has a reward similar to the one who does it." },
-        { ar: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", en: "Your smiling in the face of your brother is charity." },
-        { ar: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", en: "The best among you are those who learn the Quran and teach it." }
-    ];
-    
-    const pick = fallbacks[Math.floor(Math.random() * fallbacks.length)];
-    arEl.style.opacity = 0;
-    enEl.style.opacity = 0;
-    
-    setTimeout(() => {
-        arEl.innerText = pick.ar;
-        enEl.innerText = `"${pick.en}" — Local Fallback`;
-        arEl.style.opacity = 1;
-        enEl.style.opacity = 1;
-    }, 500);
-}
+    // MAIN CLOCK FUNCTION (Named correctly now)
+    function runClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+        updateRamadan();
+
+        // Update Hadith Countdown
+        nextRefresh--;
+        const debugEl = document.getElementById('debug-timer');
+        if (debugEl) debugEl.innerText = `Next rotation in: ${nextRefresh}s`;
+        if (nextRefresh <= 0) updateHadith();
+    }
+
     // --- ENGINE START ---
     setInterval(runClock, 1000);
     setInterval(updateData, 60000);
     setInterval(updateWeather, 600000);
 
-    // Initial Load (Run each once on startup)
+    // Initial Load
     runClock(); 
     updateData(); 
     updateWeather(); 
@@ -199,4 +199,5 @@ async function updateHadith() {
 </script>
 </body>
 </html>
+
 
