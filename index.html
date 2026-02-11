@@ -21,18 +21,41 @@
        
         /* New Flex Header */
 .header-box { 
-    height: 220px; 
-    padding: 10px 30px; 
+    height: 240px; 
     display: flex; 
     align-items: center; 
     justify-content: space-between; 
+    padding: 0 40px;
 }
 
 .clock-section {
     display: flex;
     align-items: center;
-    gap: 25px; /* Space between clock and the info sidebar */
+    gap: 20px;
 }
+
+/* Sidebars for Date and Weather */
+.sidebar {
+    text-align: center;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 120px;
+}
+
+.left-sidebar {
+    border-right: 3px solid var(--gold);
+    padding-right: 20px;
+}
+
+.right-sidebar {
+    border-left: 3px solid var(--gold);
+    padding-left: 20px;
+}
+
+.sidebar-main { font-size: 2.2rem; font-weight: 900; color: white; }
+.sidebar-sub { font-size: 1.4rem; color: var(--gold); font-weight: 800; text-transform: uppercase; }
 
 .info-sidebar {
     text-align: left;
@@ -105,16 +128,19 @@ body { padding-bottom: 60px; }
     <img src="Muhammad.png" class="header-img">
     
     <div class="clock-section">
+        <div class="sidebar left-sidebar">
+            <div id="greg-day" class="sidebar-main">--</div>
+            <div id="greg-date" class="sidebar-sub">-- --- ----</div>
+        </div>
+
         <div id="clock-container">
             <div id="clock">00:00:00</div>
         </div>
         
-        <div class="info-sidebar">
-            <div style="font-size: 2.2rem; font-weight: 900; color: white;">
-                <span id="temp">--°C</span>
-            </div>
-            <div id="city-name" style="font-size: 1.4rem; color: var(--gold); font-weight: 800;">Detecting...</div>
-            <div id="hijri" style="font-size: 1.6rem; font-weight: 700; color: #fff; margin-top: 5px;">-- --- ----</div>
+        <div class="sidebar right-sidebar">
+            <div id="temp" class="sidebar-main">--°C</div>
+            <div id="city-name" class="sidebar-sub">Pickering</div>
+            <div id="hijri" style="font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: 5px;">-- --- ----</div>
         </div>
     </div>
 
@@ -180,34 +206,33 @@ body { padding-bottom: 60px; }
     }
 
     async function updateLocationAndWeather() {
-    const tempEl = document.getElementById('temp');
-    const cityEl = document.getElementById('city-name');
-
     try {
-        // Set a timeout for the geo-fetch
+        // Fetch location with a strict 2-second timeout
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000);
-
+        const id = setTimeout(() => controller.abort(), 2000);
+        
         const geoRes = await fetch('https://ipapi.co/json/', { signal: controller.signal });
         const geoData = await geoRes.json();
-        clearTimeout(timeoutId);
+        clearTimeout(id);
 
         userCity = geoData.city || "Pickering";
-        userCountry = geoData.country_name || "Canada";
+        const lat = geoData.latitude || 43.8384;
+        const lon = geoData.longitude || -79.0868;
+
+        const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const wData = await wRes.json();
         
-        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geoData.latitude}&longitude=${geoData.longitude}&current_weather=true`);
-        const wData = await weatherRes.json();
-        
-        tempEl.innerText = Math.round(wData.current_weather.temperature) + "°C";
-        cityEl.innerText = userCity;
-        
+        document.getElementById('temp').innerText = Math.round(wData.current_weather.temperature) + "°C";
+        document.getElementById('city-name').innerText = userCity;
     } catch (e) {
-        console.log("Geo Timeout/Error, using Pickering fallback");
-        tempEl.innerText = "--°C";
-        cityEl.innerText = "Pickering";
-        // Default Pickering update
-        updateData(); 
+        // If anything fails, force Pickering data so it's not blank
+        console.log("Geo/Weather failed, forcing Pickering");
+        const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=43.8384&longitude=-79.0868&current_weather=true`);
+        const wData = await wRes.json();
+        document.getElementById('temp').innerText = Math.round(wData.current_weather.temperature) + "°C";
+        document.getElementById('city-name').innerText = "Pickering";
     }
+    updateData(); // Always update prayer times after weather attempt
 }
 
     async function updateData() {
@@ -308,14 +333,24 @@ body { padding-bottom: 60px; }
     }
 
     function runClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
-        updateRamadan();
-        nextRefresh--;
-        if (document.getElementById('debug-timer')) document.getElementById('debug-timer').innerText = `Next rotation in: ${nextRefresh}s`;
-        if (nextRefresh <= 0) updateHadith();
-        checkDonationSlide();
-    }
+    const now = new Date();
+    
+    // Update Clock
+    document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+
+    // Update Gregorian Date (Left Sidebar)
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    
+    document.getElementById('greg-day').innerText = days[now.getDay()];
+    document.getElementById('greg-date').innerText = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+    // Other existing logic
+    updateRamadan();
+    nextRefresh--;
+    if (nextRefresh <= 0) updateHadith();
+    checkDonationSlide();
+}
 
     setInterval(runClock, 1000);
     setInterval(updateData, 60000);
@@ -324,4 +359,5 @@ body { padding-bottom: 60px; }
 </script>
 </body>
 </html>
+
 
