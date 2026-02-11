@@ -28,25 +28,15 @@
         .col-en { text-align: left !important; padding-left: 35px !important; border-radius: 20px 0 0 20px; color: var(--primary-blue); }
         .col-ar { text-align: right !important; padding-right: 35px !important; font-family: 'Amiri', serif; font-size: 3.8rem !important; border-radius: 0 20px 20px 0; color: var(--primary-blue); }
 
-        .hadith-container {
-            flex-grow: 1;
-            min-height: 300px;
-            background: var(--primary-blue);
-            border-radius: 25px;
-            margin-top: 15px;
-            padding: 30px;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            border: 4px solid var(--gold);
-            overflow-y: auto;
-        }
+        .hadith-container { flex-grow: 1; min-height: 300px; background: var(--primary-blue); border-radius: 25px; margin-top: 15px; padding: 30px; color: white; display: flex; flex-direction: column; justify-content: center; text-align: center; border: 4px solid var(--gold); overflow-y: auto; }
         .ar-text { font-family: 'Amiri', serif; font-size: 3.0rem; direction: rtl; line-height: 1.4; margin-bottom: 20px; word-wrap: break-word; transition: opacity 0.5s ease-in-out; }
         .en-text { font-size: 3.0rem; font-style: italic; color: var(--gold); line-height: 1.4; word-wrap: break-word; margin-top: 10px; font-weight: 700; transition: opacity 0.5s ease-in-out; }
 
         .countdown-bar { background: #2e7d32; color: white; padding: 15px; border-radius: 20px; text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 2.2rem; font-weight: 900; border: 4px solid var(--gold); }
+
+        /* Donation Overlay Styles */
+        #donation-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, var(--primary-blue) 0%, #0a192f 100%); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; border: 20px solid var(--gold); box-sizing: border-box; text-align: center; }
+        #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s ease-in-out; }
     </style>
 </head>
 <body>
@@ -75,11 +65,32 @@
 
 <div class="countdown-bar" id="ramadan-countdown">Calculating...</div>
 
+<div id="donation-overlay">
+    <div style="font-size: 3rem; font-weight: 900; color: var(--gold);">PLEASE DONATE GENEROUSLY</div>
+    <div style="font-size: 2rem; margin-bottom: 20px;">Qarde Hasana Repayment for New Masjid</div>
+    <div style="width: 80%; margin: 30px 0;">
+        <div style="display: flex; justify-content: space-between; font-size: 2rem; font-weight: 800; margin-bottom: 10px;">
+            <span id="raised-text">Raised: $0</span>
+            <span id="remaining-text" style="color: var(--gold);">Remaining: $0</span>
+        </div>
+        <div style="width: 100%; height: 45px; background: rgba(255,255,255,0.2); border-radius: 25px; border: 3px solid var(--gold); overflow: hidden;">
+            <div id="progress-fill"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 10px; font-weight: 700;">
+            <span id="percent-text" style="font-size: 1.6rem;">0% Completed</span>
+            <span style="font-size: 1.8rem;">GOAL: $1.4M</span>
+        </div>
+    </div>
+    <div style="font-size: 2.5rem; font-weight: 800;">www.ajaxmasjid.ca</div>
+</div>
+
 <script>
-    const iqamaTimes = { Fajr: "6:30", Dhuhr: "1:00", Asr: "4:15", Maghrib: "3 mins after", Isha: "8:00" };
+    const GOAL = 1400000;
+    const RAISED = 450000;
+    const iqamaTimes = { Fajr: "6:30", Dhuhr: "1:00", Asr: "4:15", Maghrib: "Calculated", Isha: "8:00" };
     const salahList = [{id:'Fajr',ar:'الفجر',t:'p'},{id:'Sunrise',ar:'الشروق',t:'s'},{id:'Dhuhr',ar:'الظهر',t:'p'},{id:'Asr',ar:'العصر',t:'p'},{id:'Maghrib',ar:'المغرب',t:'p'},{id:'Isha',ar:'العشاء',t:'p'}];
     
-    let nextRefresh = 60; // Initial timer value
+    let nextRefresh = 60; 
 
     function updateRamadan() {
         const diff = new Date("2026-02-19T00:00:00") - new Date();
@@ -98,133 +109,122 @@
         } catch (e) { console.log("Weather Error"); }
     }
 
+    // FIXED: Corrected time addition helper
+    function addMinutes(timeStr, minsToAdd) {
+        if(!timeStr) return "--:--";
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        const date = new Date();
+        date.setHours(hours);
+        date.setMinutes(minutes + minsToAdd);
+        return date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0');
+    }
+
+    // FIXED: Added missing updateProgressBar function
+    function updateProgressBar() {
+        const remaining = GOAL - RAISED;
+        const percentage = Math.min((RAISED / GOAL) * 100, 100);
+        document.getElementById('raised-text').innerText = `Raised: $${RAISED.toLocaleString()}`;
+        document.getElementById('remaining-text').innerText = `Remaining: $${remaining.toLocaleString()}`;
+        document.getElementById('percent-text').innerText = `${percentage.toFixed(1)}% Completed`;
+        setTimeout(() => { document.getElementById('progress-fill').style.width = percentage + "%"; }, 500);
+    }
+
     async function updateData() {
-    try {
-        const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=Pickering&country=Canada&method=2&school=1`);
-        const d = await res.json();
-        const t = d.data.timings;
+        try {
+            const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=Pickering&country=Canada&method=2&school=1`);
+            const d = await res.json();
+            const t = d.data.timings;
+            document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
 
-        // ... Hijri logic remains the same ...
+            const now = new Date();
+            const cur = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
 
-        let html = '';
-        salahList.forEach((s, i) => {
-            const isSun = s.t === 's';
-            const active = (i === idx) ? "active" : "";
-            
-            let adhanTime = t[s.id];
-            let iqamaDisplay = iqamaTimes[s.id];
-
-            // DYNAMIC MAGHRIB LOGIC
-            if (s.id === 'Maghrib') {
-                // Take Sunset/Maghrib Adhan and add 3 minutes for Iqama
-                iqamaDisplay = addMinutes(adhanTime, 3);
+            // FIXED: Defined idx here to avoid crash
+            let idx = 0;
+            for(let i=0; i<salahList.length; i++) {
+                if(salahList[i].t === 'p' && cur >= t[salahList[i].id]) idx = i;
             }
 
-            html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
-                <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
-                <td>${adhanTime}</td>
-                <td style="color:var(--iqama-green)">${isSun ? 'Ishraq' : iqamaDisplay}</td>
-                <td class="col-ar">${s.ar}</td></tr>`;
-        });
-        document.getElementById('prayer-body').innerHTML = html;
-    } catch (e) { console.log("Prayer Data Error"); }
-}
+            let html = '';
+            salahList.forEach((s, i) => {
+                const isSun = s.t === 's';
+                const active = (i === idx) ? "active" : "";
+                let iqamaDisplay = isSun ? 'Ishraq' : iqamaTimes[s.id];
+                
+                if (s.id === 'Maghrib') {
+                    iqamaDisplay = addMinutes(t[s.id], 3);
+                }
+
+                html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
+                    <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
+                    <td>${t[s.id]}</td>
+                    <td style="color:var(--iqama-green)">${iqamaDisplay}</td>
+                    <td class="col-ar">${s.ar}</td></tr>`;
+            });
+            document.getElementById('prayer-body').innerHTML = html;
+        } catch (e) { console.log("Prayer Data Error"); }
+    }
 
     async function updateHadith() {
-        console.log("Triggering Rotation...");
-        nextRefresh = 900; // Reset timer immediately
-
+        nextRefresh = 900; 
         const arEl = document.getElementById('ar-hadith');
         const enEl = document.getElementById('en-hadith');
-
         try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000);
             const cacheBuster = new Date().getTime();
-            
-            const res = await fetch(`https://random-hadith-generator.vercel.app/api/hadith/bukhari?t=${cacheBuster}`, { signal: controller.signal });
+            const res = await fetch(`https://random-hadith-generator.vercel.app/api/hadith/bukhari?t=${cacheBuster}`);
             const d = await res.json();
-            clearTimeout(timeoutId);
-
-            if (d?.data?.ar && d?.data?.en) {
-                arEl.style.opacity = 0;
-                enEl.style.opacity = 0;
+            if (d?.data?.ar) {
+                arEl.style.opacity = 0; enEl.style.opacity = 0;
                 setTimeout(() => {
                     arEl.innerText = d.data.ar;
                     enEl.innerText = `"${d.data.en}" — ${d.data.book || "Sahih Bukhari"}`;
-                    arEl.style.opacity = 1;
-                    enEl.style.opacity = 1;
+                    arEl.style.opacity = 1; enEl.style.opacity = 1;
                 }, 500);
-                return;
             }
-        } catch (e) { console.log("API failed, using fallback."); }
-
-        // Fallback Logic
-        const fallbacks = [
-            { ar: "الدَّالُّ عَلَى الْخَيْرِ كَفَاعِلِهِ", en: "The one who guides to something good has a reward similar to the one who does it." },
-            { ar: "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ", en: "Your smiling in the face of your brother is charity." },
-            { ar: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", en: "The best among you are those who learn the Quran and teach it." }
-        ];
-        const pick = fallbacks[Math.floor(Math.random() * fallbacks.length)];
-        arEl.style.opacity = 0;
-        enEl.style.opacity = 0;
-        setTimeout(() => {
-            arEl.innerText = pick.ar;
-            enEl.innerText = `"${pick.en}" — Sahih Bukhari`;
-            arEl.style.opacity = 1;
-            enEl.style.opacity = 1;
-        }, 500);
+        } catch (e) { console.log("Hadith Error"); }
     }
-    
+
     function checkDonationSlide() {
-    const now = new Date();
-    const curMins = now.getHours() * 60 + now.getMinutes();
-    let show = false;
+        const now = new Date();
+        const curMins = now.getHours() * 60 + now.getMinutes();
+        let show = false;
 
-    // 1. Check fixed Iqama times (Fajr, Dhuhr, Asr, Isha)
-    Object.keys(iqamaTimes).forEach(key => {
-        const t = iqamaTimes[key];
-        if(t.includes(':')) {
-            const [h, m] = t.split(':').map(Number);
-            const iqMins = h * 60 + m;
-            
-            // Trigger: 10 mins after Iqama, show for 5 minutes
-            if(curMins >= iqMins + 10 && curMins < iqMins + 15) {
-                show = true;
+        // FIXED: Test mode set to false so it doesn't stay on forever
+        // Set to true only when you want to see the slide manually
+        let testMode = false; 
+
+        Object.keys(iqamaTimes).forEach(key => {
+            let t = iqamaTimes[key];
+            if(t.includes(':') || key === 'Maghrib') {
+                // For Maghrib, we calculate the trigger mins from the prayer row
+                let iqMins;
+                if(key === 'Maghrib') {
+                   const maghribAdhan = document.querySelector('.prayer-row:nth-child(5) td:nth-child(2)')?.innerText;
+                   if(maghribAdhan) {
+                       const [h,m] = maghribAdhan.split(':').map(Number);
+                       iqMins = h * 60 + m + 3; // Adhan + 3
+                   }
+                } else {
+                    const [h, m] = t.split(':').map(Number);
+                    iqMins = h * 60 + m;
+                }
+                if(curMins >= iqMins + 10 && curMins < iqMins + 15) show = true;
             }
-        }
-    });
-    // 2. Manual Test Mode (Uncomment the line below to see the bar NOW)
-     show = true; 
+        });
 
-    const overlay = document.getElementById('donation-overlay');
-    if (overlay) {
-        if (show) {
-            overlay.style.display = 'flex';
-            updateProgressBar(); // Ensure bar animates when shown
-        } else {
-            overlay.style.display = 'none';
+        if(testMode) show = true;
+
+        const overlay = document.getElementById('donation-overlay');
+        if (overlay) {
+            overlay.style.display = show ? 'flex' : 'none';
+            if (show) updateProgressBar();
         }
     }
-}
-    function addMinutes(timeStr, minsToAdd) {
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    const date = new Date();
-    date.setHours(hours);
-    date.setMinutes(minutes + minsToAdd);
-    
-    // Returns time in HH:MM format
-    return date.getHours().toString().padStart(2, '0') + ":" + 
-           date.getMinutes().toString().padStart(2, '0');
-}
-    
-    // MAIN CLOCK FUNCTION (Named correctly now)
+
     function runClock() {
         const now = new Date();
         document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
         updateRamadan();
-
-        // Update Hadith Countdown
         nextRefresh--;
         const debugEl = document.getElementById('debug-timer');
         if (debugEl) debugEl.innerText = `Next rotation in: ${nextRefresh}s`;
@@ -232,23 +232,11 @@
         checkDonationSlide();
     }
 
-    // --- ENGINE START ---
     setInterval(runClock, 1000);
     setInterval(updateData, 60000);
     setInterval(updateWeather, 600000);
 
-    // Initial Load
-    runClock(); 
-    updateData(); 
-    updateWeather(); 
-    updateHadith();
-    
+    runClock(); updateData(); updateWeather(); updateHadith();
 </script>
 </body>
 </html>
-
-
-
-
-
-
