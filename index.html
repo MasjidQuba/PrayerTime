@@ -178,7 +178,7 @@
     function checkDonationSlide() {
         const now = new Date();
         const curMins = now.getHours() * 60 + now.getMinutes();
-        let show = false;
+        let show = true;
         Object.keys(iqamaTimes).forEach(key => {
             let t = iqamaTimes[key];
             if(t.includes(':') || key === 'Maghrib') {
@@ -221,3 +221,4 @@
 </script>
 </body>
 </html>
+
