@@ -178,7 +178,7 @@
     function checkDonationSlide() {
         const now = new Date();
         const curMins = now.getHours() * 60 + now.getMinutes();
-        let show = true;
+        let show = false;
         Object.keys(iqamaTimes).forEach(key => {
             let t = iqamaTimes[key];
             if(t.includes(':') || key === 'Maghrib') {
@@ -193,7 +193,7 @@
                     const [h, m] = t.split(':').map(Number);
                     iqMins = h * 60 + m;
                 }
-                if(curMins >= iqMins + 10 && curMins < iqMins + 15) show = true;
+                if(curMins >= iqMins + 2 && curMins < iqMins + 7) show = true;
             }
         });
         const overlay = document.getElementById('donation-overlay');
@@ -221,4 +221,5 @@
 </script>
 </body>
 </html>
+
 
