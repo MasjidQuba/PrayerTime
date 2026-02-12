@@ -26,32 +26,49 @@
     align-items: center; 
     justify-content: space-between; 
     padding: 0 40px;
+    overflow: hidden;
 }
 
 .clock-section {
     display: flex;
     align-items: center;
-    gap: 20px;
+    justify-content: center;
+    width: 900px; /* Locked width for the entire center area */
 }
 
-/* Sidebars for Date and Weather */
+/* Sidebars with fixed widths to prevent pushing the clock */
 .sidebar {
+    width: 220px; /* Fixed width */
     text-align: center;
-    min-width: 180px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 120px;
+    flex-shrink: 0; /* Prevents squeezing */
 }
 
-.left-sidebar {
-    border-right: 3px solid var(--gold);
-    padding-right: 20px;
+.left-sidebar { border-right: 3px solid var(--gold); }
+.right-sidebar { border-left: 3px solid var(--gold); }
+
+#clock-container {
+    background-color: #000000;
+    color: #ffffff;
+    width: 480px; /* Fixed width for the black box */
+    height: 140px;
+    border-radius: 20px;
+    border: 3px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 20px;
+    flex-shrink: 0;
 }
 
-.right-sidebar {
-    border-left: 3px solid var(--gold);
-    padding-left: 20px;
+#clock {
+    font-size: 7.5rem;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums; /* Critical: Forces all numbers to be the same width */
+    font-family: 'Inter', sans-serif;
 }
 
 .sidebar-main { font-size: 2.2rem; font-weight: 900; color: white; }
@@ -129,8 +146,8 @@ body { padding-bottom: 60px; }
     
     <div class="clock-section">
         <div class="sidebar left-sidebar">
-            <div id="greg-day" class="sidebar-main">--</div>
-            <div id="greg-date" class="sidebar-sub">-- --- ----</div>
+            <div id="greg-day" class="sidebar-main">Wednesday</div>
+            <div id="greg-date" class="sidebar-sub">11 Feb 2026</div>
         </div>
 
         <div id="clock-container">
@@ -143,6 +160,9 @@ body { padding-bottom: 60px; }
             <div id="hijri" style="font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: 5px;">-- --- ----</div>
         </div>
     </div>
+
+    <img src="Allah.png" class="header-img">
+</div>
 
     <img src="Allah.png" class="header-img">
 </div>
@@ -359,5 +379,6 @@ body { padding-bottom: 60px; }
 </script>
 </body>
 </html>
+
 
 
