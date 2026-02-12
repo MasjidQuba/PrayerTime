@@ -107,7 +107,13 @@ body { padding-bottom: 60px; }
 
         .prayer-table { width: 100%; margin-top: 10px; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; }
         .prayer-row td { background: white; padding: 22px 10px; text-align: center; font-size: 3rem; font-weight: 800; border-bottom: 3px solid var(--gold); }
-        .prayer-row.active td { background: var(--highlight-row) !important; border-top: 6px solid var(--gold); border-bottom: 6px solid var(--gold); transform: scale(1.02); color: #000; }
+           .prayer-row.active td { 
+            background: var(--highlight-row) !important; 
+            border-top: 4px solid var(--gold); 
+            border-bottom: 4px solid var(--gold); 
+            color: #000;
+            /* Removed transform: scale(1.02) to prevent flickering */
+        }
         .sunrise-row td { background: #fff3e0; color: #e65100; font-size: 2.5rem; border-bottom: 2px dashed #e65100; opacity: 0.9; }
 
         .col-en { text-align: left !important; padding-left: 35px !important; border-radius: 20px 0 0 20px; color: var(--primary-blue); }
@@ -243,11 +249,18 @@ body { padding-bottom: 60px; }
             
             document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
             const now = new Date();
-            const cur = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+            const cur = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
 
             let idx = 0;
-            for(let i=0; i<salahList.length; i++) {
-                if(salahList[i].t === 'p' && cur >= t[salahList[i].id]) idx = i;
+            // We check every item in the list, regardless of type 'p' or 's'
+            for (let i = 0; i < salahList.length; i++) {
+                const prayerId = salahList[i].id;
+                const prayerTime = t[prayerId];
+                
+                // If current time is past this prayer's time, mark it as the current active one
+                if (cur >= prayerTime) {
+                    idx = i;
+                }
             }
 
             let html = '';
@@ -359,6 +372,7 @@ body { padding-bottom: 60px; }
 </script>
 </body>
 </html>
+
 
 
 
