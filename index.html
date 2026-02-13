@@ -180,43 +180,54 @@
 }
 
     async function updateData() {
-        try {
-            const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${userCity}&country=${userCountry}&method=2&school=1`);
-            const d = await res.json();
-            const t = d.data.timings;
-            
-            document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
-            const now = new Date();
-            const cur = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+    try {
+        const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${userCity}&country=${userCountry}&method=2&school=1`);
+        const d = await res.json();
+        const t = d.data.timings;
+        
+        document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
+        const now = new Date();
+        const cur = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
 
-            let idx = 0;
-            for (let i = 0; i < salahList.length; i++) {
-                if (cur >= t[salahList[i].id]) idx = i;
+        let idx = 0;
+        for (let i = 0; i < salahList.length; i++) {
+            if (cur >= t[salahList[i].id]) idx = i;
+        }
+
+        let html = '';
+        salahList.forEach((s, i) => {
+            const isSun = s.t === 's';
+            const active = (i === idx) ? "active" : "";
+            
+            // ADHAN: From API
+            let adhanDisplay = format12Hour(t[s.id]);
+            
+            // IQAMA: From local config or calculation
+            let iqamaDisplay;
+            if (isSun) {
+                iqamaDisplay = 'Ishraq';
+            } else if (s.id === 'Maghrib') {
+                // Calculate 3 mins after Adhan
+                const [h, m] = t[s.id].split(':').map(Number);
+                const magDate = new Date();
+                magDate.setHours(h); 
+                magDate.setMinutes(m + 3);
+                iqamaDisplay = format12Hour(`${magDate.getHours()}:${magDate.getMinutes()}`);
+            } else {
+                iqamaDisplay = format12Hour(iqamaTimes[s.id]);
             }
 
-            let html = '';
-            salahList.forEach((s, i) => {
-                const isSun = s.t === 's';
-                const active = (i === idx) ? "active" : "";
-                let adhanTime = t[s.id];
-                let iqamaDisplay = isSun ? 'Ishraq' : format12Hour(iqamaTimes[s.id]);
-                
-                if (s.id === 'Maghrib') {
-                    const [h, m] = adhanTime.split(':').map(Number);
-                    const magDate = new Date();
-                    magDate.setHours(h); magDate.setMinutes(m + 3);
-                    iqamaDisplay = format12Hour(`${magDate.getHours()}:${magDate.getMinutes()}`);
-                }
-
-                html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
-                    <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
-                    <td>${format12Hour(adhanTime)}</td>
-                    <td style="color:var(--iqama-green)">${iqamaDisplay}</td>
-                    <td class="col-ar">${s.ar}</td></tr>`;
-            });
-            document.getElementById('prayer-body').innerHTML = html;
-        } catch (e) { console.log("Prayer Error"); }
+            html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
+                <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
+                <td>${adhanDisplay}</td>
+                <td style="color:var(--iqama-green)">${iqamaDisplay}</td>
+                <td class="col-ar">${s.ar}</td></tr>`;
+        });
+        document.getElementById('prayer-body').innerHTML = html;
+    } catch (e) { 
+        console.error("Prayer Update Error:", e); 
     }
+}
 
     async function updateHadith() {
         const arEl = document.getElementById('ar-hadith');
@@ -290,5 +301,6 @@
 </script>
 </body>
 </html>
+
 
 
