@@ -268,18 +268,38 @@ body { padding-bottom: 60px; }
                 const isSun = s.t === 's';
                 const active = (i === idx) ? "active" : "";
                 let iqamaDisplay = isSun ? 'Ishraq' : iqamaTimes[s.id];
+                let adhan24 = t[s.id];
+                let iqama24 = isSun ? 'Ishraq' : iqamaTimes[s.id];
+
+                // Dynamic Maghrib Iqama (still calculated in 24h first)
+                if (s.id === 'Maghrib') {
+                    iqama24 = addMinutes(adhan24, 3);
+                }
+                
+                // Convert both to 12-hour format for the UI
+                let adhanDisplay = format12Hour(adhan24);
+                let iqamaDisplay = iqama24 === 'Ishraq' ? 'Ishraq' : format12Hour(iqama24);
                 if (s.id === 'Maghrib') iqamaDisplay = addMinutes(t[s.id], 3);
 
                 html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
-                    <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
-                    <td>${t[s.id]}</td>
-                    <td style="color:var(--iqama-green)">${iqamaDisplay}</td>
-                    <td class="col-ar">${s.ar}</td></tr>`;
+                <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
+                <td>${adhanDisplay}</td>
+                <td style="color:var(--iqama-green)">${iqamaDisplay}</td>
+                <td class="col-ar">${s.ar}</td></tr>`;
             });
+            
             document.getElementById('prayer-body').innerHTML = html;
         } catch (e) { console.log("Prayer Data Error"); }
     }
 
+    function format12Hour(timeStr) {
+    if (!timeStr || !timeStr.includes(':')) return timeStr;
+    let [hours, minutes] = timeStr.split(':').map(Number);
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12; // Converts 0 to 12 and 13 to 1
+    return `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+}
+  
     function addMinutes(timeStr, minsToAdd) {
         if(!timeStr) return "--:--";
         const [hours, minutes] = timeStr.split(':').map(Number);
@@ -354,7 +374,13 @@ body { padding-bottom: 60px; }
     // Update Gregorian Date (Left Sidebar)
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
+    // Updated for 12-hour format with AM/PM
+    document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        second: '2-digit', 
+        hour12: true 
+    });
     document.getElementById('greg-day').innerText = days[now.getDay()];
     document.getElementById('greg-date').innerText = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
 
@@ -372,6 +398,7 @@ body { padding-bottom: 60px; }
 </script>
 </body>
 </html>
+
 
 
 
