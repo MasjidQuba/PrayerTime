@@ -159,12 +159,25 @@
     }
 
     function format12Hour(timeStr) {
-        if (!timeStr || !timeStr.includes(':')) return timeStr;
-        let [hours, minutes] = timeStr.split(':').map(Number);
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-        return `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    // 1. Safety check: if it's empty or doesn't have a colon, return it as is
+    if (!timeStr || typeof timeStr !== 'string' || !timeStr.includes(':')) {
+        return timeStr || "--:--";
     }
+
+    try {
+        let [hours, minutes] = timeStr.split(':').map(Number);
+        
+        // 2. Check if the split actually resulted in numbers
+        if (isNaN(hours) || isNaN(minutes)) return timeStr;
+
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12; // Converts 0 to 12 and 13+ to 1-11
+        
+        return `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    } catch (e) {
+        return timeStr; // Fallback to original string if error occurs
+    }
+}
 
     async function updateData() {
         try {
@@ -277,4 +290,5 @@
 </script>
 </body>
 </html>
+
 
