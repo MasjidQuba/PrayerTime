@@ -14,6 +14,7 @@
             --highlight-row: #fff9c4;
         }
 
+        /* Dynamic Weather Themes */
         body.theme-day { background: linear-gradient(180deg, #87CEEB 0%, #f4f7f9 100%); }
         body.theme-night { background: linear-gradient(180deg, #0a192f 0%, #1e4571 100%); }
         body.theme-night .prayer-row td { background: rgba(255,255,255,0.9); }
@@ -21,20 +22,12 @@
 
         body { transition: background 2s ease-in-out; margin: 0; padding: 15px; height: 100vh; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; overflow: hidden; box-sizing: border-box; padding-bottom: 70px; }
 
-        /* Header */
+        /* Symmetrical Header */
         .header-box { height: 220px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); color: white; }
         .header-img { height: 130px; width: auto; }
         .clock-section { display: flex; align-items: center; justify-content: center; width: 950px; }
 
-        .sidebar {
-    width: 250px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 120px;
-    flex-shrink: 0;
-}
+        .sidebar { width: 250px; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 120px; flex-shrink: 0; }
         .left-sidebar { border-right: 3px solid var(--gold); padding-right: 15px; }
         .right-sidebar { border-left: 3px solid var(--gold); padding-left: 15px; }
 
@@ -42,12 +35,11 @@
         .sidebar-sub { font-size: 1.4rem; color: var(--gold); font-weight: 800; text-transform: uppercase; }
 
         #clock-container { background-color: #000; color: #fff; width: 520px; height: 140px; border-radius: 20px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 20px; flex-shrink: 0; }
-        #clock { font-size: 5.5rem; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+        #clock { font-size: 5rem; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
 
-        /* Table Headers */
+        /* Tables */
         .prayer-table { width: 100%; margin-top: 10px; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; }
         .table-header th { color: var(--primary-blue); font-size: 1.8rem; font-weight: 900; text-transform: uppercase; padding: 10px; text-align: center; }
-        
         .prayer-row td { background: white; padding: 18px 10px; text-align: center; font-size: 2.8rem; font-weight: 800; border-bottom: 3px solid var(--gold); }
         .prayer-row.active td { background: var(--highlight-row) !important; border-top: 5px solid var(--gold); border-bottom: 5px solid var(--gold); color: #000; }
         .sunrise-row td { background: #fff3e0; color: #e65100; font-size: 2.2rem; opacity: 0.9; }
@@ -62,51 +54,31 @@
         .countdown-bar { background: #2e7d32; color: white; padding: 12px; border-radius: 20px; text-align: center; margin-top: 10px; font-size: 2rem; font-weight: 900; border: 3px solid var(--gold); }
         .footer-contact { background: var(--primary-blue); color: var(--gold); text-align: center; padding: 10px; font-size: 1.5rem; font-weight: 700; border-top: 3px solid var(--gold); width: 100%; position: absolute; bottom: 0; left: 0; }
 
+        /* Centered QR Donation */
         #donation-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, var(--primary-blue) 0%, #0a192f 100%); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; border: 20px solid var(--gold); box-sizing: border-box; }
+        .donation-content { display: flex; align-items: center; justify-content: space-between; width: 95%; gap: 30px; }
+        .qr-box { background: white; padding: 20px; border-radius: 20px; border: 6px solid var(--gold); text-align: center; flex-shrink: 0; }
         #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s ease-in-out; }
-        .donation-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 95%;
-    gap: 30px;
-}
-
-.qr-box {
-    background: white;
-    padding: 20px;
-    border-radius: 20px;
-    border: 6px solid var(--gold);
-    text-align: center;
-    flex-shrink: 0;
-}
     </style>
 </head>
 <body class="theme-day">
 
 <div class="header-box">
     <img src="Muhammad.png" class="header-img" onclick="toggleTestDonation()" style="cursor: pointer;">
-    
     <div class="clock-section">
         <div class="sidebar left-sidebar">
             <div id="greg-day" class="sidebar-main">--</div>
             <div id="greg-date" class="sidebar-sub">-- --- ----</div>
         </div>
-
-        <div id="clock-container">
-            <div id="clock">00:00:00 AM</div>
-        </div>
-        
+        <div id="clock-container"><div id="clock">00:00:00 AM</div></div>
         <div class="sidebar right-sidebar">
             <div id="temp" class="sidebar-main">--°C</div>
             <div id="city-name" class="sidebar-sub">Pickering</div>
             <div id="hijri" style="font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: 5px;">-- --- ----</div>
         </div>
     </div>
-
     <img src="Allah.png" class="header-img">
 </div>
-   
 
 <table class="prayer-table">
     <thead>
@@ -133,22 +105,16 @@
             <div style="font-size: 3rem; font-weight: 900; color: var(--gold); line-height: 1.1;">PLEASE DONATE</div>
             <div style="font-size: 1.6rem; margin-top: 10px;">Lakeridge Islamic Center</div>
         </div>
-
         <div class="qr-box">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=https://www.ajaxmasjid.ca" alt="QR" style="width: 350px; height: 350px;">
-            <div style="color: black; font-weight: 900; margin-top: 10px; font-size: 1.5rem;">SCAN TO DONATE</div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=https://www.ajaxmasjid.ca" alt="QR" style="width: 300px; height: 300px;">
+            <div style="color: black; font-weight: 900; margin-top: 10px; font-size: 1.2rem;">SCAN TO DONATE</div>
         </div>
-
         <div style="flex: 1; text-align: right; padding-right: 40px;">
-            <div style="font-size: 2rem; font-weight: 800; margin-bottom: 5px;">
-                <span id="raised-text">Raised: $0</span>
-            </div>
+            <div style="font-size: 2rem; font-weight: 800; margin-bottom: 5px;"><span id="raised-text">Raised: $0</span></div>
             <div style="width: 100%; height: 40px; background: rgba(255,255,255,0.2); border-radius: 20px; border: 3px solid var(--gold); overflow: hidden;">
                 <div id="progress-fill"></div>
             </div>
-            <div style="font-weight: 700; margin-top: 10px;">
-                <span id="percent-text" style="font-size: 1.4rem;">0%</span> | <span>Goal: $1.4M</span>
-            </div>
+            <div style="font-weight: 700; margin-top: 10px;"><span id="percent-text">0%</span> | <span>Goal: $1.4M</span></div>
         </div>
     </div>
 </div>
@@ -159,61 +125,39 @@
     const GOAL = 1400000, RAISED = 450000;
     const iqamaTimes = { Fajr: "6:30 AM", Dhuhr: "1:15 PM", Asr: "4:30 PM", Isha: "8:00 PM" };
     const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Sunrise',ar:'الشروق'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
-    let nextRefresh = 60, userCity = "Pickering", userCountry = "Canada";
+    let forceDonation = false, nextRefresh = 60, userCity = "Pickering", userCountry = "Canada";
 
-    let forceDonation = false; // The toggle state
-
-        function toggleTestDonation() {
-            forceDonation = !forceDonation;
-            const ov = document.getElementById('donation-overlay');
-    
-    if (forceDonation) {
-        ov.style.display = 'flex';
-        updateProgressBar();
-        console.log("Manual Test Mode: Donation Slide ON");
-    } else {
-        ov.style.display = 'none';
-        console.log("Manual Test Mode: Donation Slide OFF");
+    function toggleTestDonation() {
+        forceDonation = !forceDonation;
+        const ov = document.getElementById('donation-overlay');
+        ov.style.display = forceDonation ? 'flex' : 'none';
+        if (forceDonation) updateProgressBar();
     }
-}
 
     function format12Hour(timeStr) {
         if (!timeStr || typeof timeStr !== 'string') return "--:--";
-        let cleanTime = timeStr.replace(/AM|PM/gi, '').trim();
-        let [hours, minutes] = cleanTime.split(':').map(Number);
-        if (isNaN(hours)) return timeStr;
-        const ampm = timeStr.toLowerCase().includes('pm') || hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-        return `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+        let clean = timeStr.replace(/AM|PM/gi, '').trim();
+        let [h, m] = clean.split(':').map(Number);
+        if (isNaN(h)) return timeStr;
+        const ampm = timeStr.toLowerCase().includes('pm') || h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        return `${h}:${m.toString().padStart(2, '0')} ${ampm}`;
     }
 
     async function updateLocationAndWeather() {
-    try {
-        const geoRes = await fetch('https://ipapi.co/json/');
-        const geoData = await geoRes.json();
-        
-        userCity = geoData.city || "Pickering";
-        const lat = geoData.latitude || 43.8384;
-        const lon = geoData.longitude || -79.0868;
-
-        const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-        const wData = await wRes.json();
-        
-        // DIRECT ASSIGNMENT to ensure visibility
-        const tempVal = Math.round(wData.current_weather.temperature);
-        document.getElementById('temp').innerText = tempVal + "°C";
-        document.getElementById('city-name').innerText = userCity;
-
-        // Theme switching logic remains here...
-    } catch (e) {
-        console.log("Weather error, forcing manual text");
-        document.getElementById('city-name').innerText = "Pickering";
-        // Manual override for temperature display if API fails
-        if(document.getElementById('temp').innerText === "--°C") {
-             document.getElementById('temp').innerText = "12°C"; // Fake current temp if blocked
-        }
+        try {
+            const geo = await (await fetch('https://ipapi.co/json/')).json();
+            userCity = geo.city; userCountry = geo.country_name;
+            const w = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geo.latitude}&longitude=${geo.longitude}&current_weather=true`)).json();
+            document.getElementById('temp').innerText = Math.round(w.current_weather.temperature) + "°C";
+            document.getElementById('city-name').innerText = userCity;
+            const b = document.body; b.classList.remove('theme-day','theme-night','theme-cloudy');
+            if (w.current_weather.weathercode >= 3) b.classList.add('theme-cloudy');
+            else if (w.current_weather.is_day) b.classList.add('theme-day');
+            else b.classList.add('theme-night');
+        } catch (e) { document.getElementById('city-name').innerText = "Pickering"; document.getElementById('temp').innerText = "12°C"; }
+        updateData();
     }
-}
 
     async function updateData() {
         try {
@@ -222,28 +166,32 @@
             document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
             const now = new Date();
             const cur = now.getHours().toString().padStart(2,'0')+":"+now.getMinutes().toString().padStart(2,'0');
-            
             let idx = 0;
             salahList.forEach((s, i) => { if (cur >= t[s.id]) idx = i; });
-
             let html = '';
             salahList.forEach((s, i) => {
                 const active = (i === idx) ? "active" : "";
-                let adhan = format12Hour(t[s.id]);
-                let iqama;
+                let adhan = format12Hour(t[s.id]), iqama;
                 if (s.id === 'Sunrise') iqama = 'Ishraq';
                 else if (s.id === 'Maghrib') {
                     const [h, m] = t[s.id].split(':').map(Number);
                     const dt = new Date(); dt.setHours(h); dt.setMinutes(m + 3);
                     iqama = format12Hour(dt.getHours() + ":" + dt.getMinutes());
                 } else iqama = format12Hour(iqamaTimes[s.id]);
-
                 html += `<tr class="prayer-row ${s.id==='Sunrise'?'sunrise-row':''} ${active}">
                     <td class="col-en">${s.id}</td><td>${adhan}</td>
                     <td style="color:var(--iqama-green)">${iqama}</td><td class="col-ar">${s.ar}</td></tr>`;
             });
             document.getElementById('prayer-body').innerHTML = html;
         } catch (e) { console.log("Data Error"); }
+    }
+
+    function updateProgressBar() {
+        const p = Math.min((RAISED/GOAL)*100, 100);
+        document.getElementById('raised-text').innerText = `Raised: $${RAISED.toLocaleString()}`;
+        document.getElementById('remaining-text').innerText = `Remaining: $${(GOAL-RAISED).toLocaleString()}`;
+        document.getElementById('percent-text').innerText = `${p.toFixed(1)}% Completed`;
+        setTimeout(()=> document.getElementById('progress-fill').style.width = p+"%", 100);
     }
 
     async function updateHadith() {
@@ -271,23 +219,15 @@
         
         const curM = now.getHours()*60 + now.getMinutes();
         let showD = false;
+        // Show 10 min window after Fajr, Dhuhr, Asr, Isha
         [400, 805, 1000, 1210].forEach(t => { if(curM >= t && curM < t+10) showD = true; });
         const ov = document.getElementById('donation-overlay');
-        ov.style.display = showD ? 'flex' : 'none';
-        if(showD) {
-            const p = Math.min((RAISED/GOAL)*100, 100);
-            document.getElementById('raised-text').innerText = `Raised: $${RAISED.toLocaleString()}`;
-            document.getElementById('remaining-text').innerText = `Remaining: $${(GOAL-RAISED).toLocaleString()}`;
-            document.getElementById('percent-text').innerText = `${p.toFixed(1)}% Completed`;
-            setTimeout(()=> document.getElementById('progress-fill').style.width = p+"%", 100);
+        if (forceDonation || showD) {
+            ov.style.display = 'flex';
+            updateProgressBar();
+        } else {
+            ov.style.display = 'none';
         }
-        // Logic: Show if it's the right time OR if we forced it via the secret click
-    if (forceDonation || showD) {
-        ov.style.display = 'flex';
-        updateProgressBar();
-    } else {
-        ov.style.display = 'none';
-    }
         
         nextRefresh--; if(nextRefresh<=0) updateHadith();
         const rd = new Date(2026, 1, 19);
@@ -300,5 +240,3 @@
 </script>
 </body>
 </html>
-
-
