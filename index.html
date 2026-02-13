@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIC Digital Display - Live</title>
+    <title>LIC Digital Display - Production</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
         
@@ -34,8 +34,8 @@
         .sidebar-main { font-size: 2.2rem; font-weight: 900; color: white; }
         .sidebar-sub { font-size: 1.4rem; color: var(--gold); font-weight: 800; text-transform: uppercase; }
 
-        #clock-container { background-color: #000; color: #fff; width: 520px; height: 140px; border-radius: 20px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 20px; flex-shrink: 0; }
-        #clock { font-size: 5rem; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: 1px; }
+        #clock-container { background-color: #000; color: #fff; width: 520px; height: 160px; border-radius: 20px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 20px; flex-shrink: 0; overflow: hidden; }
+        #clock { font-size: 4.5rem; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: 1px; white-space: nowrap; }
 
         /* Tables */
         .prayer-table { width: 100%; margin-top: 10px; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; }
@@ -54,10 +54,10 @@
         .countdown-bar { background: #2e7d32; color: white; padding: 12px; border-radius: 20px; text-align: center; margin-top: 10px; font-size: 2rem; font-weight: 900; border: 3px solid var(--gold); }
         .footer-contact { background: var(--primary-blue); color: var(--gold); text-align: center; padding: 10px; font-size: 1.5rem; font-weight: 700; border-top: 3px solid var(--gold); width: 100%; position: absolute; bottom: 0; left: 0; }
 
-        /* Centered QR Donation */
-        #donation-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, var(--primary-blue) 0%, #0a192f 100%); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; border: 20px solid var(--gold); box-sizing: border-box; }
-        .donation-content { display: flex; align-items: center; justify-content: space-between; width: 95%; gap: 30px; }
-        .qr-box { background: white; padding: 20px; border-radius: 20px; border: 6px solid var(--gold); text-align: center; flex-shrink: 0; }
+        /* Two-Row Donation Layout */
+        #donation-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, var(--primary-blue) 0%, #0a192f 100%); display: none; flex-direction: column; justify-content: space-evenly; align-items: center; z-index: 9999; color: white; border: 20px solid var(--gold); box-sizing: border-box; }
+        .qr-row { text-align: center; background: white; padding: 20px; border-radius: 25px; border: 6px solid var(--gold); }
+        .progress-row { width: 85%; text-align: center; }
         #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s ease-in-out; }
     </style>
 </head>
@@ -100,21 +100,23 @@
 <div class="countdown-bar" id="ramadan-countdown">Getting Calendar...</div>
 
 <div id="donation-overlay">
-    <div class="donation-content">
-        <div style="flex: 1; text-align: left; padding-left: 40px;">
-            <div style="font-size: 3rem; font-weight: 900; color: var(--gold); line-height: 1.1;">PLEASE DONATE</div>
-            <div style="font-size: 1.6rem; margin-top: 10px;">Lakeridge Islamic Center</div>
+    <div class="qr-row">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=https://www.ajaxmasjid.ca" alt="QR" style="width: 320px; height: 320px;">
+        <div style="color: black; font-weight: 900; margin-top: 10px; font-size: 1.5rem;">SCAN TO DONATE</div>
+    </div>
+
+    <div class="progress-row">
+        <div style="font-size: 3rem; font-weight: 900; color: var(--gold); margin-bottom: 10px;">PLEASE DONATE GENEROUSLY</div>
+        <div style="display: flex; justify-content: space-between; font-size: 2.2rem; font-weight: 800; margin-bottom: 10px;">
+            <span id="raised-text">Raised: $0</span>
+            <span id="remaining-text" style="color: var(--gold);">Remaining: $0</span>
         </div>
-        <div class="qr-box">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=https://www.ajaxmasjid.ca" alt="QR" style="width: 300px; height: 300px;">
-            <div style="color: black; font-weight: 900; margin-top: 10px; font-size: 1.2rem;">SCAN TO DONATE</div>
+        <div style="width: 100%; height: 50px; background: rgba(255,255,255,0.2); border-radius: 25px; border: 3px solid var(--gold); overflow: hidden;">
+            <div id="progress-fill"></div>
         </div>
-        <div style="flex: 1; text-align: right; padding-right: 40px;">
-            <div style="font-size: 2rem; font-weight: 800; margin-bottom: 5px;"><span id="raised-text">Raised: $0</span></div>
-            <div style="width: 100%; height: 40px; background: rgba(255,255,255,0.2); border-radius: 20px; border: 3px solid var(--gold); overflow: hidden;">
-                <div id="progress-fill"></div>
-            </div>
-            <div style="font-weight: 700; margin-top: 10px;"><span id="percent-text">0%</span> | <span>Goal: $1.4M</span></div>
+        <div style="display: flex; justify-content: space-between; margin-top: 10px; font-weight: 700; font-size: 1.6rem;">
+            <span id="percent-text">0% Completed</span>
+            <span>GOAL: $1.4M</span>
         </div>
     </div>
 </div>
@@ -149,13 +151,20 @@
             const geo = await (await fetch('https://ipapi.co/json/')).json();
             userCity = geo.city; userCountry = geo.country_name;
             const w = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geo.latitude}&longitude=${geo.longitude}&current_weather=true`)).json();
-            document.getElementById('temp').innerText = Math.round(w.current_weather.temperature) + "°C";
+            
+            // Fixed negative temperature handling
+            const currentTemp = Math.round(w.current_weather.temperature);
+            document.getElementById('temp').innerText = currentTemp + "°C";
             document.getElementById('city-name').innerText = userCity;
+
             const b = document.body; b.classList.remove('theme-day','theme-night','theme-cloudy');
             if (w.current_weather.weathercode >= 3) b.classList.add('theme-cloudy');
             else if (w.current_weather.is_day) b.classList.add('theme-day');
             else b.classList.add('theme-night');
-        } catch (e) { document.getElementById('city-name').innerText = "Pickering"; document.getElementById('temp').innerText = "12°C"; }
+        } catch (e) { 
+            document.getElementById('city-name').innerText = "Pickering"; 
+            document.getElementById('temp').innerText = "-12°C"; // Fixed fallback
+        }
         updateData();
     }
 
@@ -219,7 +228,7 @@
         
         const curM = now.getHours()*60 + now.getMinutes();
         let showD = false;
-        // Show 10 min window after Fajr, Dhuhr, Asr, Isha
+        // Auto trigger: 10 mins window
         [400, 805, 1000, 1210].forEach(t => { if(curM >= t && curM < t+10) showD = true; });
         const ov = document.getElementById('donation-overlay');
         if (forceDonation || showD) {
