@@ -186,6 +186,21 @@ body { padding-bottom: 60px; }
         </div>
     </div>
     <div style="font-size: 3rem; font-weight: 800;">www.ajaxmasjid.ca</div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 50px; width: 90%;">
+    <div style="flex: 1; text-align: left; padding-left: 50px;">
+        <div style="font-size: 3.5rem; font-weight: 900; color: var(--gold); line-height: 1.1;">PLEASE DONATE GENEROUSLY</div>
+        <div style="font-size: 1.8rem; margin-top: 10px;">Qarde Hasana Repayment - Lakeridge Islamic Center</div>
+        
+        <div id="progress-container" style="margin-top: 30px;">
+             </div>
+    </div>
+
+    <div style="background: white; padding: 20px; border-radius: 20px; border: 5px solid var(--gold);">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.ajaxmasjid.ca" 
+             alt="Donate QR" style="width: 300px; height: 300px;">
+        <div style="color: black; font-weight: 900; margin-top: 10px; font-size: 1.5rem;">SCAN TO DONATE</div>
+    </div>
+</div>
 </div>
 
 <script>
@@ -318,25 +333,36 @@ body { padding-bottom: 60px; }
     }
 
     async function updateHadith() {
-        const arEl = document.getElementById('ar-hadith');
-        const enEl = document.getElementById('en-hadith');
-        nextRefresh = 60; 
-        try {
-            const resEn = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json`);
-            const dataEn = await resEn.json();
-            const randomIndex = Math.floor(Math.random() * dataEn.hadiths.length);
-            
-            const resAr = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.json`);
-            const dataAr = await resAr.json();
+    const arEl = document.getElementById('ar-hadith');
+    const enEl = document.getElementById('en-hadith');
+    nextRefresh = 900; 
 
-            arEl.style.opacity = 0; enEl.style.opacity = 0;
-            setTimeout(() => {
-                arEl.innerText = dataAr.hadiths[randomIndex].text;
-                enEl.innerText = `"${dataEn.hadiths[randomIndex].text}" — Sahih Bukhari`;
-                arEl.style.opacity = 1; enEl.style.opacity = 1;
-            }, 500);
-        } catch (e) { console.log("Hadith Error"); }
+    try {
+        const resEn = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json`);
+        const dataEn = await resEn.json();
+        const resAr = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.json`);
+        const dataAr = await resAr.json();
+
+        // FILTER: Find only short Hadiths (under 200 chars)
+        const shortHadiths = dataEn.hadiths.filter(h => h.text.length < 200 && h.text.length > 20);
+        const randomIndex = Math.floor(Math.random() * shortHadiths.length);
+        
+        // Match the English short hadith back to its original index for Arabic
+        const originalIndex = dataEn.hadiths.indexOf(shortHadiths[randomIndex]);
+        const englishText = dataEn.hadiths[originalIndex].text;
+        const arabicText = dataAr.hadiths[originalIndex].text;
+
+        arEl.style.opacity = 0; enEl.style.opacity = 0;
+        setTimeout(() => {
+            arEl.innerText = arabicText;
+            enEl.innerText = `"${englishText}" — Sahih Bukhari`;
+            arEl.style.opacity = 1; enEl.style.opacity = 1;
+        }, 500);
+    } catch (e) {
+        arEl.innerText = "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ";
+        enEl.innerText = '"The best among you are those who learn the Quran and teach it." — Bukhari';
     }
+}
 
     function checkDonationSlide() {
         const now = new Date();
@@ -398,6 +424,7 @@ body { padding-bottom: 60px; }
 </script>
 </body>
 </html>
+
 
 
 
