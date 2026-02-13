@@ -14,117 +14,38 @@
             --text-light: #ffffff;
             --highlight-row: #fff9c4;
         }
-        body { background-color: var(--bg-color); margin: 0; padding: 15px; height: 100vh; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; overflow: hidden; box-sizing: border-box; }
+        body { background-color: var(--bg-color); margin: 0; padding: 15px; height: 100vh; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; overflow: hidden; box-sizing: border-box; padding-bottom: 70px; }
         
-        /* Layout for 55" Vertical */
-        .header-box { background: var(--primary-blue); border-radius: 25px; display: flex; justify-content: space-between; align-items: center; padding: 10px 40px; color: white; height: 180px; border: 4px solid var(--gold); }
-       
-        /* New Flex Header */
-.header-box { 
-    height: 240px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    padding: 0 40px;
-    overflow: hidden;
-}
-
-.clock-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 900px; /* Locked width for the entire center area */
-}
-
-/* Sidebars with fixed widths to prevent pushing the clock */
-.sidebar {
-    width: 220px; /* Fixed width */
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 120px;
-    flex-shrink: 0; /* Prevents squeezing */
-}
-
-.left-sidebar { border-right: 3px solid var(--gold); }
-.right-sidebar { border-left: 3px solid var(--gold); }
-
-#clock-container {
-    background-color: #000000;
-    color: #ffffff;
-    width: 480px; /* Fixed width for the black box */
-    height: 140px;
-    border-radius: 20px;
-    border: 3px solid var(--gold);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 20px;
-    flex-shrink: 0;
-}
-
-#clock {
-    font-size: 6.5rem;
-    font-weight: 900;
-    font-variant-numeric: tabular-nums; /* Critical: Forces all numbers to be the same width */
-    font-family: 'Inter', sans-serif;
-}
-
-.sidebar-main { font-size: 2.2rem; font-weight: 900; color: white; }
-.sidebar-sub { font-size: 1.4rem; color: var(--gold); font-weight: 800; text-transform: uppercase; }
-
-.info-sidebar {
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-left: 3px solid var(--gold);
-    padding-left: 20px;
-    height: 120px;
-}
-
-/* Fixed Footer */
-.footer-contact {
-    background: var(--primary-blue);
-    color: var(--gold);
-    text-align: center;
-    padding: 10px;
-    font-size: 1.5rem;
-    font-weight: 700;
-    border-top: 3px solid var(--gold);
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-}
-
-/* Adjust body to prevent footer overlap */
-body { padding-bottom: 60px; }
+        /* Header & Sidebar Logic */
+        .header-box { height: 240px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); color: white; overflow: hidden; }
         .header-img { height: 140px; width: auto; }
-        
-     
+        .clock-section { display: flex; align-items: center; justify-content: center; width: 950px; }
+        .sidebar { width: 220px; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 120px; flex-shrink: 0; }
+        .left-sidebar { border-right: 3px solid var(--gold); }
+        .right-sidebar { border-left: 3px solid var(--gold); }
+        .sidebar-main { font-size: 2.2rem; font-weight: 900; color: white; }
+        .sidebar-sub { font-size: 1.4rem; color: var(--gold); font-weight: 800; text-transform: uppercase; }
 
+        #clock-container { background-color: #000000; color: #ffffff; width: 520px; height: 150px; border-radius: 20px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 20px; flex-shrink: 0; }
+        #clock { font-size: 6.5rem; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: 2px; }
+
+        /* Tables & Content */
         .prayer-table { width: 100%; margin-top: 10px; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; }
         .prayer-row td { background: white; padding: 22px 10px; text-align: center; font-size: 3rem; font-weight: 800; border-bottom: 3px solid var(--gold); }
-           .prayer-row.active td { 
-            background: var(--highlight-row) !important; 
-            border-top: 4px solid var(--gold); 
-            border-bottom: 4px solid var(--gold); 
-            color: #000;
-            /* Removed transform: scale(1.02) to prevent flickering */
-        }
+        .prayer-row.active td { background: var(--highlight-row) !important; border-top: 4px solid var(--gold); border-bottom: 4px solid var(--gold); color: #000; }
         .sunrise-row td { background: #fff3e0; color: #e65100; font-size: 2.5rem; border-bottom: 2px dashed #e65100; opacity: 0.9; }
-
         .col-en { text-align: left !important; padding-left: 35px !important; border-radius: 20px 0 0 20px; color: var(--primary-blue); }
         .col-ar { text-align: right !important; padding-right: 35px !important; font-family: 'Amiri', serif; font-size: 3.8rem !important; border-radius: 0 20px 20px 0; color: var(--primary-blue); }
 
-        .hadith-container { flex-grow: 1; min-height: 300px; background: var(--primary-blue); border-radius: 25px; margin-top: 15px; padding: 30px; color: white; display: flex; flex-direction: column; justify-content: center; text-align: center; border: 4px solid var(--gold); overflow-y: auto; }
-        .ar-text { font-family: 'Amiri', serif; font-size: 1.8rem; direction: rtl; line-height: 1.4; margin-bottom: 20px; word-wrap: break-word; transition: opacity 0.5s ease-in-out; }
-        .en-text { font-size: 1.8rem; font-style: italic; color: var(--gold); line-height: 1.4; word-wrap: break-word; margin-top: 10px; font-weight: 700; transition: opacity 0.5s ease-in-out; }
+        .hadith-container { flex-grow: 1; min-height: 320px; background: var(--primary-blue); border-radius: 25px; margin-top: 15px; padding: 30px; color: white; display: flex; flex-direction: column; justify-content: center; text-align: center; border: 4px solid var(--gold); overflow-y: auto; }
+        .ar-text { font-family: 'Amiri', serif; font-size: 2.8rem; direction: rtl; line-height: 1.4; margin-bottom: 20px; transition: opacity 0.5s ease-in-out; }
+        .en-text { font-size: 2.2rem; font-style: italic; color: var(--gold); line-height: 1.4; transition: opacity 0.5s ease-in-out; font-weight: 700; }
 
-        .countdown-bar { background: #2e7d32; color: white; padding: 15px; border-radius: 20px; text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 2.2rem; font-weight: 900; border: 4px solid var(--gold); }
-        #donation-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, var(--primary-blue) 0%, #0a192f 100%); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; border: 20px solid var(--gold); box-sizing: border-box; text-align: center; }
+        .countdown-bar { background: #2e7d32; color: white; padding: 15px; border-radius: 20px; text-align: center; margin-top: 15px; margin-bottom: 10px; font-size: 2.2rem; font-weight: 900; border: 4px solid var(--gold); }
+        .footer-contact { background: var(--primary-blue); color: var(--gold); text-align: center; padding: 10px; font-size: 1.6rem; font-weight: 700; border-top: 3px solid var(--gold); width: 100%; position: absolute; bottom: 0; left: 0; }
+
+        /* Donation Overlay */
+        #donation-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, var(--primary-blue) 0%, #0a192f 100%); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; border: 25px solid var(--gold); box-sizing: border-box; }
         #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s ease-in-out; }
     </style>
 </head>
@@ -132,29 +53,21 @@ body { padding-bottom: 60px; }
 
 <div class="header-box">
     <img src="Muhammad.png" class="header-img">
-    
     <div class="clock-section">
         <div class="sidebar left-sidebar">
-            <div id="greg-day" class="sidebar-main">Wednesday</div>
-            <div id="greg-date" class="sidebar-sub">11 Feb 2026</div>
+            <div id="greg-day" class="sidebar-main">--</div>
+            <div id="greg-date" class="sidebar-sub">-- --- ----</div>
         </div>
-
         <div id="clock-container">
-            <div id="clock">00:00:00</div>
+            <div id="clock">00:00:00 AM</div>
         </div>
-        
         <div class="sidebar right-sidebar">
             <div id="temp" class="sidebar-main">--°C</div>
             <div id="city-name" class="sidebar-sub">Pickering</div>
             <div id="hijri" style="font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: 5px;">-- --- ----</div>
         </div>
     </div>
-
     <img src="Allah.png" class="header-img">
-</div>
-
-<div class="footer-contact">
-    Contact: info@ajaxmasjid.ca | www.ajaxmasjid.ca
 </div>
 
 <table class="prayer-table">
@@ -170,43 +83,40 @@ body { padding-bottom: 60px; }
 <div class="countdown-bar" id="ramadan-countdown">Getting Calendar...</div>
 
 <div id="donation-overlay">
-    <div style="font-size: 3.5rem; font-weight: 900; color: var(--gold);">PLEASE DONATE GENEROUSLY</div>
-    <div style="font-size: 2.2rem; margin-bottom: 20px;">Qarde Hasana Repayment for Lakeridge Islamic Center</div>
-    <div style="width: 85%; margin: 30px 0;">
-        <div style="display: flex; justify-content: space-between; font-size: 2.5rem; font-weight: 800; margin-bottom: 10px;">
-            <span id="raised-text">Raised: $0</span>
-            <span id="remaining-text" style="color: var(--gold);">Remaining: $0</span>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 60px; width: 95%;">
+        <div style="flex: 1.5; text-align: left; padding-left: 50px;">
+            <div style="font-size: 4rem; font-weight: 900; color: var(--gold); line-height: 1.1;">PLEASE DONATE GENEROUSLY</div>
+            <div style="font-size: 2rem; margin-top: 10px; margin-bottom: 40px;">Qarde Hasana Repayment - Lakeridge Islamic Center</div>
+            
+            <div style="display: flex; justify-content: space-between; font-size: 2.5rem; font-weight: 800; margin-bottom: 10px;">
+                <span id="raised-text">Raised: $0</span>
+                <span id="remaining-text" style="color: var(--gold);">Remaining: $0</span>
+            </div>
+            <div style="width: 100%; height: 55px; background: rgba(255,255,255,0.2); border-radius: 30px; border: 4px solid var(--gold); overflow: hidden;">
+                <div id="progress-fill"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 15px; font-weight: 700;">
+                <span id="percent-text" style="font-size: 2rem;">0% Completed</span>
+                <span style="font-size: 2rem;">GOAL: $1.4M</span>
+            </div>
         </div>
-        <div style="width: 100%; height: 50px; background: rgba(255,255,255,0.2); border-radius: 25px; border: 3px solid var(--gold); overflow: hidden;">
-            <div id="progress-fill"></div>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-top: 15px; font-weight: 700;">
-            <span id="percent-text" style="font-size: 1.8rem;">0% Completed</span>
-            <span style="font-size: 2rem;">GOAL: $1.4M</span>
-        </div>
-    </div>
-    <div style="font-size: 3rem; font-weight: 800;">www.ajaxmasjid.ca</div>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 50px; width: 90%;">
-    <div style="flex: 1; text-align: left; padding-left: 50px;">
-        <div style="font-size: 3.5rem; font-weight: 900; color: var(--gold); line-height: 1.1;">PLEASE DONATE GENEROUSLY</div>
-        <div style="font-size: 1.8rem; margin-top: 10px;">Qarde Hasana Repayment - Lakeridge Islamic Center</div>
-        
-        <div id="progress-container" style="margin-top: 30px;">
-             </div>
-    </div>
 
-    <div style="background: white; padding: 20px; border-radius: 20px; border: 5px solid var(--gold);">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.ajaxmasjid.ca" 
-             alt="Donate QR" style="width: 300px; height: 300px;">
-        <div style="color: black; font-weight: 900; margin-top: 10px; font-size: 1.5rem;">SCAN TO DONATE</div>
+        <div style="background: white; padding: 25px; border-radius: 25px; border: 6px solid var(--gold); text-align: center;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=https://www.ajaxmasjid.ca" 
+                 alt="Donate QR" style="width: 350px; height: 350px;">
+            <div style="color: black; font-weight: 900; margin-top: 15px; font-size: 1.8rem;">SCAN TO DONATE</div>
+        </div>
     </div>
 </div>
+
+<div class="footer-contact">
+    Contact: info@ajaxmasjid.ca | www.ajaxmasjid.ca
 </div>
 
 <script>
     const GOAL = 1400000;
     const RAISED = 450000;
-    const iqamaTimes = { Fajr: "6:30", Dhuhr: "1:00", Asr: "4:15", Maghrib: "Calculated", Isha: "8:00" };
+    const iqamaTimes = { Fajr: "6:30", Dhuhr: "1:15", Asr: "4:30", Maghrib: "Calculated", Isha: "8:00" };
     const salahList = [{id:'Fajr',ar:'الفجر',t:'p'},{id:'Sunrise',ar:'الشروق',t:'s'},{id:'Dhuhr',ar:'الظهر',t:'p'},{id:'Asr',ar:'العصر',t:'p'},{id:'Maghrib',ar:'المغرب',t:'p'},{id:'Isha',ar:'العشاء',t:'p'}];
     
     let nextRefresh = 60;
@@ -222,39 +132,39 @@ body { padding-bottom: 60px; }
         if (!el) return;
         if (days > 1) el.innerText = `🌙 ${days} DAYS UNTIL RAMADAN 1447H`;
         else if (days === 1) el.innerText = `🌙 RAMADAN BEGINS TOMORROW`;
-        else if (days === 0) el.innerText = `🌙 RAMADAN MUBARAK - DAY 1`;
-        else el.innerText = `🌙 RAMADAN MUBARAK - DAY ${Math.abs(days) + 1}`;
+        else el.innerText = `🌙 RAMADAN MUBARAK`;
     }
 
     async function updateLocationAndWeather() {
-    try {
-        // Fetch location with a strict 2-second timeout
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), 2000);
-        
-        const geoRes = await fetch('https://ipapi.co/json/', { signal: controller.signal });
-        const geoData = await geoRes.json();
-        clearTimeout(id);
+        try {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), 2500);
+            const geoRes = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+            const geoData = await geoRes.json();
+            clearTimeout(id);
 
-        userCity = geoData.city || "Pickering";
-        const lat = geoData.latitude || 43.8384;
-        const lon = geoData.longitude || -79.0868;
+            userCity = geoData.city || "Pickering";
+            const lat = geoData.latitude || 43.8384;
+            const lon = geoData.longitude || -79.0868;
 
-        const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-        const wData = await wRes.json();
-        
-        document.getElementById('temp').innerText = Math.round(wData.current_weather.temperature) + "°C";
-        document.getElementById('city-name').innerText = userCity;
-    } catch (e) {
-        // If anything fails, force Pickering data so it's not blank
-        console.log("Geo/Weather failed, forcing Pickering");
-        const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=43.8384&longitude=-79.0868&current_weather=true`);
-        const wData = await wRes.json();
-        document.getElementById('temp').innerText = Math.round(wData.current_weather.temperature) + "°C";
-        document.getElementById('city-name').innerText = "Pickering";
+            const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+            const wData = await wRes.json();
+            
+            document.getElementById('temp').innerText = Math.round(wData.current_weather.temperature) + "°C";
+            document.getElementById('city-name').innerText = userCity;
+        } catch (e) {
+            document.getElementById('city-name').innerText = "Pickering";
+        }
+        updateData();
     }
-    updateData(); // Always update prayer times after weather attempt
-}
+
+    function format12Hour(timeStr) {
+        if (!timeStr || !timeStr.includes(':')) return timeStr;
+        let [hours, minutes] = timeStr.split(':').map(Number);
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        return `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    }
 
     async function updateData() {
         try {
@@ -267,61 +177,54 @@ body { padding-bottom: 60px; }
             const cur = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
 
             let idx = 0;
-            // We check every item in the list, regardless of type 'p' or 's'
             for (let i = 0; i < salahList.length; i++) {
-                const prayerId = salahList[i].id;
-                const prayerTime = t[prayerId];
-                
-                // If current time is past this prayer's time, mark it as the current active one
-                if (cur >= prayerTime) {
-                    idx = i;
-                }
+                if (cur >= t[salahList[i].id]) idx = i;
             }
 
             let html = '';
             salahList.forEach((s, i) => {
                 const isSun = s.t === 's';
                 const active = (i === idx) ? "active" : "";
-                let iqamaDisplay = isSun ? 'Ishraq' : iqamaTimes[s.id];
-                let adhan24 = t[s.id];
-                let iqama24 = isSun ? 'Ishraq' : iqamaTimes[s.id];
-
-                // Dynamic Maghrib Iqama (still calculated in 24h first)
-                if (s.id === 'Maghrib') {
-                    iqama24 = addMinutes(adhan24, 3);
-                }
+                let adhanTime = t[s.id];
+                let iqamaDisplay = isSun ? 'Ishraq' : format12Hour(iqamaTimes[s.id]);
                 
-                // Convert both to 12-hour format for the UI
-                let adhanDisplay = format12Hour(adhan24);
-                let iqamaDisplay = iqama24 === 'Ishraq' ? 'Ishraq' : format12Hour(iqama24);
-                if (s.id === 'Maghrib') iqamaDisplay = addMinutes(t[s.id], 3);
+                if (s.id === 'Maghrib') {
+                    const [h, m] = adhanTime.split(':').map(Number);
+                    const magDate = new Date();
+                    magDate.setHours(h); magDate.setMinutes(m + 3);
+                    iqamaDisplay = format12Hour(`${magDate.getHours()}:${magDate.getMinutes()}`);
+                }
 
                 html += `<tr class="prayer-row ${isSun?'sunrise-row':''} ${active}">
-                <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
-                <td>${adhanDisplay}</td>
-                <td style="color:var(--iqama-green)">${iqamaDisplay}</td>
-                <td class="col-ar">${s.ar}</td></tr>`;
+                    <td class="col-en">${isSun ? 'Sunrise' : s.id}</td>
+                    <td>${format12Hour(adhanTime)}</td>
+                    <td style="color:var(--iqama-green)">${iqamaDisplay}</td>
+                    <td class="col-ar">${s.ar}</td></tr>`;
             });
-            
             document.getElementById('prayer-body').innerHTML = html;
-        } catch (e) { console.log("Prayer Data Error"); }
+        } catch (e) { console.log("Prayer Error"); }
     }
 
-    function format12Hour(timeStr) {
-    if (!timeStr || !timeStr.includes(':')) return timeStr;
-    let [hours, minutes] = timeStr.split(':').map(Number);
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12; // Converts 0 to 12 and 13 to 1
-    return `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
-}
-  
-    function addMinutes(timeStr, minsToAdd) {
-        if(!timeStr) return "--:--";
-        const [hours, minutes] = timeStr.split(':').map(Number);
-        const date = new Date();
-        date.setHours(hours);
-        date.setMinutes(minutes + minsToAdd);
-        return date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0');
+    async function updateHadith() {
+        const arEl = document.getElementById('ar-hadith');
+        const enEl = document.getElementById('en-hadith');
+        nextRefresh = 900; 
+        try {
+            const resEn = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json`);
+            const dataEn = await resEn.json();
+            const resAr = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.json`);
+            const dataAr = await resAr.json();
+
+            const shortHadiths = dataEn.hadiths.filter(h => h.text.length < 220 && h.text.length > 30);
+            const randomIndex = dataEn.hadiths.indexOf(shortHadiths[Math.floor(Math.random() * shortHadiths.length)]);
+
+            arEl.style.opacity = 0; enEl.style.opacity = 0;
+            setTimeout(() => {
+                arEl.innerText = dataAr.hadiths[randomIndex].text;
+                enEl.innerText = `"${dataEn.hadiths[randomIndex].text}" — Sahih Bukhari`;
+                arEl.style.opacity = 1; enEl.style.opacity = 1;
+            }, 500);
+        } catch (e) { console.log("Hadith Error"); }
     }
 
     function updateProgressBar() {
@@ -329,59 +232,18 @@ body { padding-bottom: 60px; }
         document.getElementById('raised-text').innerText = `Raised: $${RAISED.toLocaleString()}`;
         document.getElementById('remaining-text').innerText = `Remaining: $${(GOAL - RAISED).toLocaleString()}`;
         document.getElementById('percent-text').innerText = `${percentage.toFixed(1)}% Completed`;
-        setTimeout(() => { document.getElementById('progress-fill').style.width = percentage + "%"; }, 500);
+        setTimeout(() => { document.getElementById('progress-fill').style.width = percentage + "%"; }, 100);
     }
-
-    async function updateHadith() {
-    const arEl = document.getElementById('ar-hadith');
-    const enEl = document.getElementById('en-hadith');
-    nextRefresh = 900; 
-
-    try {
-        const resEn = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json`);
-        const dataEn = await resEn.json();
-        const resAr = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.json`);
-        const dataAr = await resAr.json();
-
-        // FILTER: Find only short Hadiths (under 200 chars)
-        const shortHadiths = dataEn.hadiths.filter(h => h.text.length < 200 && h.text.length > 20);
-        const randomIndex = Math.floor(Math.random() * shortHadiths.length);
-        
-        // Match the English short hadith back to its original index for Arabic
-        const originalIndex = dataEn.hadiths.indexOf(shortHadiths[randomIndex]);
-        const englishText = dataEn.hadiths[originalIndex].text;
-        const arabicText = dataAr.hadiths[originalIndex].text;
-
-        arEl.style.opacity = 0; enEl.style.opacity = 0;
-        setTimeout(() => {
-            arEl.innerText = arabicText;
-            enEl.innerText = `"${englishText}" — Sahih Bukhari`;
-            arEl.style.opacity = 1; enEl.style.opacity = 1;
-        }, 500);
-    } catch (e) {
-        arEl.innerText = "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ";
-        enEl.innerText = '"The best among you are those who learn the Quran and teach it." — Bukhari';
-    }
-}
 
     function checkDonationSlide() {
         const now = new Date();
         const curMins = now.getHours() * 60 + now.getMinutes();
         let show = false;
-        Object.keys(iqamaTimes).forEach(key => {
-            let t = iqamaTimes[key];
-            let iqMins;
-            if(key === 'Maghrib') {
-                const maghribAdhan = document.querySelector('.prayer-row:nth-child(5) td:nth-child(2)')?.innerText;
-                if(maghribAdhan) {
-                    const [h,m] = maghribAdhan.split(':').map(Number);
-                    iqMins = h * 60 + m + 3;
-                }
-            } else if(t.includes(':')) {
-                const [h, m] = t.split(':').map(Number);
-                iqMins = h * 60 + m;
-            }
-            if(iqMins && curMins >= iqMins + 7 && curMins < iqMins + 15) show = true;
+
+        // Check for 10 mins after Iqama trigger
+        const iqamaPairs = { Fajr: 390, Dhuhr: 795, Asr: 990, Isha: 1200 }; // Minutes from midnight
+        Object.values(iqamaPairs).forEach(m => {
+            if(curMins >= m + 10 && curMins < m + 20) show = true;
         });
 
         const overlay = document.getElementById('donation-overlay');
@@ -392,44 +254,26 @@ body { padding-bottom: 60px; }
     }
 
     function runClock() {
-    const now = new Date();
-    
-    // Update Clock
-    document.getElementById('clock').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
 
-    // Update Gregorian Date (Left Sidebar)
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    // Updated for 12-hour format with AM/PM
-    document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute: '2-digit', 
-        second: '2-digit', 
-        hour12: true 
-    });
-    document.getElementById('greg-day').innerText = days[now.getDay()];
-    document.getElementById('greg-date').innerText = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        document.getElementById('greg-day').innerText = days[now.getDay()];
+        document.getElementById('greg-date').innerText = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
 
-    // Other existing logic
-    updateRamadan();
-    nextRefresh--;
-    if (nextRefresh <= 0) updateHadith();
-    checkDonationSlide();
-}
+        nextRefresh--;
+        if (document.getElementById('debug-timer')) document.getElementById('debug-timer').innerText = `Next rotation in: ${nextRefresh}s`;
+        if (nextRefresh <= 0) updateHadith();
+        checkDonationSlide();
+        updateRamadan();
+    }
 
     setInterval(runClock, 1000);
     setInterval(updateData, 60000);
     setInterval(updateLocationAndWeather, 600000);
+
     updateLocationAndWeather(); updateHadith(); runClock();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
