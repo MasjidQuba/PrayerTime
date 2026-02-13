@@ -61,7 +61,7 @@
 <body class="theme-day">
 
 <div class="header-box">
-    <img src="Muhammad.png" class="header-img">
+    <img src="Muhammad.png" class="header-img" onclick="toggleTestDonation()" style="cursor: pointer;">
     <div class="clock-section">
         <div class="sidebar left-sidebar">
             <div id="greg-day" class="sidebar-main">--</div>
@@ -127,6 +127,22 @@
     const iqamaTimes = { Fajr: "6:30 AM", Dhuhr: "1:15 PM", Asr: "4:30 PM", Isha: "8:00 PM" };
     const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Sunrise',ar:'الشروق'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
     let nextRefresh = 60, userCity = "Pickering", userCountry = "Canada";
+
+    let forceDonation = false; // The toggle state
+
+        function toggleTestDonation() {
+            forceDonation = !forceDonation;
+            const ov = document.getElementById('donation-overlay');
+    
+    if (forceDonation) {
+        ov.style.display = 'flex';
+        updateProgressBar();
+        console.log("Manual Test Mode: Donation Slide ON");
+    } else {
+        ov.style.display = 'none';
+        console.log("Manual Test Mode: Donation Slide OFF");
+    }
+}
 
     function format12Hour(timeStr) {
         if (!timeStr || typeof timeStr !== 'string') return "--:--";
@@ -219,6 +235,13 @@
             document.getElementById('percent-text').innerText = `${p.toFixed(1)}% Completed`;
             setTimeout(()=> document.getElementById('progress-fill').style.width = p+"%", 100);
         }
+        // Logic: Show if it's the right time OR if we forced it via the secret click
+    if (forceDonation || showD) {
+        ov.style.display = 'flex';
+        updateProgressBar();
+    } else {
+        ov.style.display = 'none';
+    }
         
         nextRefresh--; if(nextRefresh<=0) updateHadith();
         const rd = new Date(2026, 1, 19);
@@ -231,3 +254,4 @@
 </script>
 </body>
 </html>
+
