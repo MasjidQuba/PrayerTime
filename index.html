@@ -7,14 +7,26 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
         :root {
-            --bg-color: #f4f7f9;
-            --primary-blue: #1e4571;
-            --gold: #d4af37;
-            --iqama-green: #2e7d32;
-            --text-light: #ffffff;
-            --highlight-row: #fff9c4;
-        }
-        body { background-color: var(--bg-color); margin: 0; padding: 15px; height: 100vh; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; overflow: hidden; box-sizing: border-box; padding-bottom: 70px; }
+    --primary-blue: #1e4571;
+    --gold: #d4af37;
+    --iqama-green: #2e7d32;
+    --highlight-row: #fff9c4;
+    --overlay-bg: rgba(255, 255, 255, 0.8);
+}
+        /* Day Theme (Light Blue/Clear) */
+body.theme-day { background: linear-gradient(180deg, #87CEEB 0%, #f4f7f9 100%); }
+/* Night Theme (Dark Navy) */
+body.theme-night { background: linear-gradient(180deg, #0a192f 0%, #1e4571 100%); }
+body.theme-night .prayer-row td { background: rgba(255,255,255,0.9); }
+/* Overcast/Rainy Theme (Gray/Blue) */
+body.theme-cloudy { background: linear-gradient(180deg, #708090 0%, #bdc3c7 100%); }
+
+body { 
+    transition: background 2s ease-in-out; /* Smooth transition when weather changes */
+    margin: 0; padding: 15px; height: 100vh; display: flex; 
+    flex-direction: column; font-family: 'Inter', sans-serif; 
+    overflow: hidden; box-sizing: border-box; padding-bottom: 70px; 
+}
         
         /* Header & Sidebar Logic */
         .header-box { height: 240px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); color: white; overflow: hidden; }
@@ -136,28 +148,37 @@
     }
 
     async function updateLocationAndWeather() {
-        try {
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), 2500);
-            const geoRes = await fetch('https://ipapi.co/json/', { signal: controller.signal });
-            const geoData = await geoRes.json();
-            clearTimeout(id);
+    try {
+        const geoRes = await fetch('https://ipapi.co/json/');
+        const geoData = await geoRes.json();
+        userCity = geoData.city || "Pickering";
+        
+        const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geoData.latitude}&longitude=${geoData.longitude}&current_weather=true`);
+        const wData = await wRes.json();
+        
+        const temp = Math.round(wData.current_weather.temperature);
+        const conditionCode = wData.current_weather.weathercode; // WMO Code
+        const isDay = wData.current_weather.is_day; // 1 for day, 0 for night
 
-            userCity = geoData.city || "Pickering";
-            const lat = geoData.latitude || 43.8384;
-            const lon = geoData.longitude || -79.0868;
+        document.getElementById('temp').innerText = `${temp}°C`;
+        document.getElementById('city-name').innerText = userCity;
 
-            const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-            const wData = await wRes.json();
-            
-            document.getElementById('temp').innerText = Math.round(wData.current_weather.temperature) + "°C";
-            document.getElementById('city-name').innerText = userCity;
-        } catch (e) {
-            document.getElementById('city-name').innerText = "Pickering";
+        // Apply Dynamic Theme
+        const body = document.body;
+        body.classList.remove('theme-day', 'theme-night', 'theme-cloudy');
+
+        if (conditionCode >= 3) {
+            body.classList.add('theme-cloudy'); // Cloudy, Fog, or Rain
+        } else if (isDay === 1) {
+            body.classList.add('theme-day');
+        } else {
+            body.classList.add('theme-night');
         }
-        updateData();
-    }
 
+    } catch (e) {
+        document.body.classList.add('theme-day'); // Default fallback
+    }
+}
     function format12Hour(timeStr) {
     // 1. Safety check: if it's empty or doesn't have a colon, return it as is
     if (!timeStr || typeof timeStr !== 'string' || !timeStr.includes(':')) {
@@ -301,6 +322,7 @@
 </script>
 </body>
 </html>
+
 
 
 
