@@ -280,4 +280,32 @@
     function checkDonationSlide() {
         const now = new Date();
         const curMins = now.getHours() * 60 + now.getMinutes();
-        let show =
+        let show = false;
+        const iqamaPairs = { Fajr: 390, Dhuhr: 795, Asr: 990, Isha: 1200 }; 
+        Object.values(iqamaPairs).forEach(m => { if(curMins >= m + 10 && curMins < m + 20) show = true; });
+        const overlay = document.getElementById('donation-overlay');
+        if (overlay) { overlay.style.display = show ? 'flex' : 'none'; if (show) updateProgressBar(); }
+    }
+
+    function runClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+
+        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        document.getElementById('greg-day').innerText = days[now.getDay()];
+        document.getElementById('greg-date').innerText = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+        nextRefresh--;
+        if (nextRefresh <= 0) updateHadith();
+        checkDonationSlide();
+        updateRamadan();
+    }
+
+    setInterval(runClock, 1000);
+    setInterval(updateData, 60000);
+    setInterval(updateLocationAndWeather, 600000);
+    updateLocationAndWeather(); updateHadith(); runClock(); updateData();
+</script>
+</body>
+</html>
