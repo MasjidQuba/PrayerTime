@@ -230,7 +230,7 @@
         const curM = now.getHours()*60 + now.getMinutes();
         let showD = false;
         // Auto trigger: 10 mins window
-        [400, 805, 1000, 1210].forEach(t => { if(curM >= t && curM < t+10) showD = true; });
+        [400, 805, 1000, 1210].forEach(t => { if(curM >= t+6 && curM < t+16) showD = true; });
         const ov = document.getElementById('donation-overlay');
         if (forceDonation || showD) {
             ov.style.display = 'flex';
@@ -250,6 +250,7 @@
 </script>
 </body>
 </html>
+
 
 
 
