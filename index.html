@@ -170,7 +170,7 @@
 
     async function updateData() {
         try {
-            const d = await (await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${userCity}&country=${userCountry}&method=2`)).json();
+            const d = await (await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${userCity}&country=${userCountry}&method=1`)).json();
             const t = d.data.timings;
             document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
             const now = new Date();
@@ -249,5 +249,6 @@
 </script>
 </body>
 </html>
+
 
 
