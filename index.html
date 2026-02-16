@@ -169,32 +169,47 @@
     }
 
     async function updateData() {
-        try {
+    try {
+        // FIXED: Using backticks for template literals and school=1 for Hanafi
+        const url = `https://api.aladhan.com/v1/timingsByCity?city=${userCity}&country=${userCountry}&method=1&school=1`;
+        const response = await fetch(url);
+        const d = await response.json();
+        
+        const t = d.data.timings;
+        document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
+        
+        const now = new Date();
+        const curMinutes = now.getHours() * 60 + now.getMinutes();
+        
+        let idx = 0;
+        let html = '';
+        
+        salahList.forEach((s, i) => {
+            const [p_h, p_m] = t[s.id].split(':').map(Number);
+            const pMinutes = p_h * 60 + p_m;
             
-            const d = await (await fetch('https://api.aladhan.com/v1/timingsByCity?city=${userCity}&country=${userCountry}&method=1&school=1')).json();
-            const t = d.data.timings;
-            document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
-            const now = new Date();
-            const cur = now.getHours().toString().padStart(2,'0')+":"+now.getMinutes().toString().padStart(2,'0');
-            let idx = 0;
-            salahList.forEach((s, i) => { if (cur >= t[s.id]) idx = i; });
-            let html = '';
-            salahList.forEach((s, i) => {
-                const active = (i === idx) ? "active" : "";
-                let adhan = format12Hour(t[s.id]), iqama;
-                if (s.id === 'Sunrise') iqama = 'Ishraq';
-                else if (s.id === 'Maghrib') {
-                    const [h, m] = t[s.id].split(':').map(Number);
-                    const dt = new Date(); dt.setHours(h); dt.setMinutes(m + 3);
-                    iqama = format12Hour(dt.getHours() + ":" + dt.getMinutes());
-                } else iqama = format12Hour(iqamaTimes[s.id]);
-                html += `<tr class="prayer-row ${s.id==='Sunrise'?'sunrise-row':''} ${active}">
-                    <td class="col-en">${s.id}</td><td>${adhan}</td>
-                    <td style="color:var(--iqama-green)">${iqama}</td><td class="col-ar">${s.ar}</td></tr>`;
-            });
-            document.getElementById('prayer-body').innerHTML = html;
-        } catch (e) { console.log("Data Error"); }
-    }
+            // Determine if this is the current active prayer
+            if (curMinutes >= pMinutes) idx = i;
+        });
+
+        salahList.forEach((s, i) => {
+            const active = (i === idx) ? "active" : "";
+            let adhan = format12Hour(t[s.id]), iqama;
+            
+            if (s.id === 'Sunrise') iqama = 'Ishraq';
+            else if (s.id === 'Maghrib') {
+                const [h, m] = t[s.id].split(':').map(Number);
+                const dt = new Date(); dt.setHours(h); dt.setMinutes(m + 3);
+                iqama = format12Hour(dt.getHours() + ":" + dt.getMinutes());
+            } else iqama = format12Hour(iqamaTimes[s.id]);
+            
+            html += `<tr class="prayer-row ${s.id==='Sunrise'?'sunrise-row':''} ${active}">
+                <td class="col-en">${s.id}</td><td>${adhan}</td>
+                <td style="color:var(--iqama-green)">${iqama}</td><td class="col-ar">${s.ar}</td></tr>`;
+        });
+        document.getElementById('prayer-body').innerHTML = html;
+    } catch (e) { console.log("Data Error:", e); }
+}
 
     function updateProgressBar() {
         const p = Math.min((RAISED/GOAL)*100, 100);
@@ -250,6 +265,7 @@
 </script>
 </body>
 </html>
+
 
 
 
