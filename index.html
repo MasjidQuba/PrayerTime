@@ -171,7 +171,7 @@
     async function updateData() {
     try {
         // FIXED: Using backticks for template literals and school=1 for Hanafi
-        const url = 'https://api.aladhan.com/v1/timingsByCity?city=${userCity}&country=${userCountry}&method=1&school=1';
+        const url = `https://api.aladhan.com/v1/timingsByCity?city=${userCity}&country=${userCountry}&method=1&school=1`;
         const response = await fetch(url);
         const d = await response.json();
         
@@ -265,6 +265,7 @@
 </script>
 </body>
 </html>
+
 
 
 
