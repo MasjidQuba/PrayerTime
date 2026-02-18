@@ -175,7 +175,7 @@
         const d = await response.json();
         
         const t = d.data.timings;
-        document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
+        document.getElementById('hijri').innerText = `${d.data.date.hijri.day-1} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
         
         const now = new Date();
         const curMinutes = now.getHours() * 60 + now.getMinutes();
@@ -264,6 +264,7 @@
 </script>
 </body>
 </html>
+
 
 
 
