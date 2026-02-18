@@ -85,7 +85,7 @@
             <th style="text-align: left; padding-left: 30px;">Salah</th>
             <th>Starting Time</th>
             <th>Iqamah Time</th>
-            <th style="text-align: right; padding-right: 30px; font-size:2.2rem;">الصلاة</th>
+            <th style="text-align: right; padding-right: 30px; font-size:2.5rem;">الصلاة</th>
         </tr>
     </thead>
     <tbody id="prayer-body"></tbody>
@@ -124,7 +124,7 @@
 
 <script>
     const GOAL = 1400000, RAISED = 100000;
-    const iqamaTimes = { Fajr: "6:15 AM", Dhuhr: "1:00 PM", Asr: "4:45 PM", Isha: "8:00 PM" };
+    const iqamaTimes = { Fajr: "6:15 AM", Dhuhr: "1:00 PM", Asr: "4:30 PM", Isha: "8:00 PM" };
     const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Sunrise',ar:'الشروق'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
     let forceDonation = false, nextRefresh = 60, userCity = "Pickering", userCountry = "Canada";
 
@@ -161,8 +161,8 @@
             else if (w.current_weather.is_day) b.classList.add('theme-day');
             else b.classList.add('theme-night');
         } catch (e) { 
-            document.getElementById('city-name').innerText = "Pickering"; 
-            document.getElementById('temp').innerText = "-12°C"; // Fixed fallback
+            document.getElementById('city-name').innerText = "Error"; 
+            document.getElementById('temp').innerText = "Err"; // Fixed fallback
         }
         updateData();
     }
@@ -264,6 +264,7 @@
 </script>
 </body>
 </html>
+
 
 
 
