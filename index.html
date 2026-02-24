@@ -282,19 +282,38 @@
     }
 
     async function updateHadith() {
-        try {
-            const [en, ar] = await Promise.all([
-                fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json`).then(r => r.json()),
-                fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.json`).then(r => r.json())
-            ]);
-            const shorts = en.hadiths.filter(h => h.text.length < 200 && h.text.length > 30);
-            const rand = Math.floor(Math.random() * shorts.length);
-            const origIdx = en.hadiths.indexOf(shorts[rand]);
-            document.getElementById('ar-hadith').innerText = ar.hadiths[origIdx].text;
-            document.getElementById('en-hadith').innerText = `"${en.hadiths[origIdx].text}" — Bukhari`;
-        } catch (e) { console.log("Hadith Error"); }
-        nextRefresh = 900;
+    try {
+        // Cache-busting URL to force a fresh fetch
+        const timestamp = new Date().getTime();
+        const [enRes, arRes] = await Promise.all([
+            fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.min.json?v=${timestamp}`),
+            fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.min.json?v=${timestamp}`)
+        ]);
+
+        const enData = await enRes.json();
+        const arData = await arRes.json();
+
+        // Filter for short hadiths to ensure they fit on your display
+        const shorts = enData.hadiths.filter(h => h.text.length < 250 && h.text.length > 40);
+        
+        // Pick a random index
+        const rand = Math.floor(Math.random() * shorts.length);
+        const selectedEn = shorts[rand];
+        
+        // Find the matching Arabic text using the unique hadith number
+        const selectedAr = arData.hadiths.find(h => h.hadithnumber === selectedEn.hadithnumber);
+
+        document.getElementById('ar-hadith').innerText = selectedAr ? selectedAr.text : "الْحَمْدُ لِلَّهِ";
+        document.getElementById('en-hadith').innerText = `"${selectedEn.text}" — Sahih Bukhari`;
+        
+        console.log("Hadith updated successfully.");
+    } catch (e) { 
+        console.error("Hadith Error:", e); 
+        document.getElementById('en-hadith').innerText = "Prophet Muhammad (ﷺ) said: 'Make things easy and do not make them difficult.'";
     }
+    // Set timer for next refresh (15 minutes)
+    nextRefresh = 900; 
+}
 
     function runClock() {
         const now = new Date();
@@ -327,6 +346,7 @@
 </script>
 </body>
 </html>
+
 
 
 
