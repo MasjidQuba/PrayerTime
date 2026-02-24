@@ -174,13 +174,19 @@
         updateData();
     }
 
-    async function updateData() {
+   async function updateData() {
     try {
-        // FIXED: Using backticks for template literals and school=1 for Hanafi
-        const url = `https://api.aladhan.com/v1/timingsByCity?city=${userCity}&country=${userCountry}&method=1&school=1&adjustment=-1&calendarMethod=MATHEMATICAL`;
+        // 1. Get coordinates from the weather/location logic
+        // If geo detection hasn't run yet, we default to Whitby
+        const lat = 43.8975; 
+        const lng = -78.9429;
+
+        // 2. Updated URL for 15-degree Fajr
+        // method=99 (Custom), methodSettings=FajrAngle,Maghrib,IshaAngle
+        const url = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=99&methodSettings=15,null,17.5&school=1`;
+        
         const response = await fetch(url);
         const d = await response.json();
-        
         const t = d.data.timings;
         
         document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
@@ -194,8 +200,6 @@
         salahList.forEach((s, i) => {
             const [p_h, p_m] = t[s.id].split(':').map(Number);
             const pMinutes = p_h * 60 + p_m;
-            
-            // Determine if this is the current active prayer
             if (curMinutes >= pMinutes) idx = i;
         });
 
@@ -272,6 +276,7 @@
 </script>
 </body>
 </html>
+
 
 
 
