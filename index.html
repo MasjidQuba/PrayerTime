@@ -152,27 +152,78 @@
         return `${h}:${m.toString().padStart(2, '0')} ${ampm}`;
     }
 
-    async function updateLocationAndWeather() {
-        try {
-            const geo = await (await fetch('https://ipapi.co/json/')).json();
-            userCity = geo.city; userCountry = geo.country_name;
-            const w = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geo.latitude}&longitude=${geo.longitude}&current_weather=true`)).json();
-            
-            // Fixed negative temperature handling
-            const currentTemp = Math.round(w.current_weather.temperature);
-            document.getElementById('temp').innerText = currentTemp + "°C";
-            document.getElementById('city-name').innerText = userCity;
+   async function updateLocationAndWeather() {
+    // 1. Fixed Whitby Coordinates (Prevents IP-detection errors)
+    const lat = 43.8975; 
+    const lng = -78.9429;
+    const city = "Whitby";
+    const country = "Canada";
 
-            const b = document.body; b.classList.remove('theme-day','theme-night','theme-cloudy');
-            if (w.current_weather.weathercode >= 3) b.classList.add('theme-cloudy');
-            else if (w.current_weather.is_day) b.classList.add('theme-day');
-            else b.classList.add('theme-night');
-        } catch (e) { 
-            document.getElementById('city-name').innerText = "Error"; 
-            document.getElementById('temp').innerText = "Err"; // Fixed fallback
-        }
-        updateData();
+    try {
+        // 2. Fetch Weather (Updated to use 'current' parameter instead of 'current_weather')
+        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,is_day,weather_code&timezone=America/Toronto`;
+        const wRes = await fetch(weatherUrl);
+        const wData = await wRes.json();
+        
+        // Handling negative numbers correctly for the display
+        const currentTemp = Math.round(wData.current.temperature_2m);
+        document.getElementById('temp').innerText = currentTemp + "°C";
+        document.getElementById('city-name').innerText = city;
+
+        // Dynamic Background Themes
+        const b = document.body;
+        b.classList.remove('theme-day', 'theme-night', 'theme-cloudy');
+        if (wData.current.weather_code >= 3) b.classList.add('theme-cloudy');
+        else if (wData.current.is_day) b.classList.add('theme-day');
+        else b.classList.add('theme-night');
+
+    } catch (e) {
+        console.error("Weather Error:", e);
+        document.getElementById('temp').innerText = "--°C";
     }
+
+    // 3. Fetch Prayer Times (15° Fajr Override)
+    try {
+        const prayerUrl = `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=99&methodSettings=15,null,17.5&school=1`;
+        const pRes = await fetch(prayerUrl);
+        const d = await pRes.json();
+        const t = d.data.timings;
+
+        // Update Hijri Date
+        document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
+
+        const now = new Date();
+        const curMin = now.getHours() * 60 + now.getMinutes();
+        let idx = 0;
+        let html = '';
+
+        // Find active prayer
+        salahList.forEach((s, i) => {
+            const [h, m] = t[s.id].split(':').map(Number);
+            if (curMin >= (h * 60 + m)) idx = i;
+        });
+
+        // Build Table
+        salahList.forEach((s, i) => {
+            const active = (i === idx) ? "active" : "";
+            let adhan = format12Hour(t[s.id]), iqama;
+            
+            if (s.id === 'Sunrise') iqama = 'Ishraq';
+            else if (s.id === 'Maghrib') {
+                const [h, m] = t[s.id].split(':').map(Number);
+                const dt = new Date(); dt.setHours(h); dt.setMinutes(m + 3);
+                iqama = format12Hour(dt.getHours() + ":" + dt.getMinutes());
+            } else iqama = format12Hour(iqamaTimes[s.id]);
+            
+            html += `<tr class="prayer-row ${s.id==='Sunrise'?'sunrise-row':''} ${active}">
+                <td class="col-en">${s.id}</td><td>${adhan}</td>
+                <td style="color:var(--iqama-green)">${iqama}</td><td class="col-ar">${s.ar}</td></tr>`;
+        });
+        document.getElementById('prayer-body').innerHTML = html;
+    } catch (e) {
+        console.error("Prayer Data Error:", e);
+    }
+}
 
    async function updateData() {
     try {
@@ -276,6 +327,7 @@
 </script>
 </body>
 </html>
+
 
 
 
