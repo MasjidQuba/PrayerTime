@@ -148,4 +148,43 @@
             salahList.forEach((s, i) => {
                 const active = (i === activeIdx) ? "active" : "";
                 let iqama = (s.id === 'Sunrise') ? 'Ishraq' : (s.id === 'Maghrib' ? 'Adhan + 5m' : iqamaTimes[s.id]);
-                html += `<tr class="prayer-row ${active}"><td class="col-en">${s.id}</td><td>${format12Hour(t[s.id])}</td><td style="color:var(--iqama-green)">${
+                html += `<tr class="prayer-row ${active}"><td class="col-en">${s.id}</td><td>${format12Hour(t[s.id])}</td><td style="color:var(--iqama-green)">${iqama}</td><td class="col-ar">${s.ar}</td></tr>`;
+            });
+            document.getElementById('prayer-body').innerHTML = html;
+        } catch (e) { console.error("Prayer Error"); }
+    }
+
+    function runClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', second:'2-digit', hour12:true });
+        
+        // Update Big Dates
+        document.getElementById('big-day').innerText = now.toLocaleDateString('en-US', { weekday: 'long' });
+        document.getElementById('big-greg').innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        // Event handling
+        const box = document.getElementById('quran-box');
+        if (now <= EVENT_DATE) {
+            box.style.display = 'block';
+            document.getElementById('quran-msg').innerText = EVENT_MSG;
+        } else {
+            box.style.display = 'none';
+        }
+    }
+
+    // Auto-update checker for GitHub
+    let initialTag = "";
+    async function autoRefresh() {
+        const res = await fetch(window.location.href, { method: 'HEAD' });
+        const etag = res.headers.get('etag');
+        if (!initialTag) initialTag = etag;
+        else if (initialTag !== etag) location.reload();
+    }
+
+    setInterval(runClock, 1000);
+    setInterval(updateData, 300000); // 5 mins
+    setInterval(autoRefresh, 60000); // 1 min check for GitHub code changes
+    updateData(); runClock();
+</script>
+</body>
+</html>
