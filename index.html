@@ -159,7 +159,7 @@
             let html = '';
             salahList.forEach((s, i) => {
                 const active = (i === activeIdx) ? "active" : "";
-                let iqama = (s.id === 'Sunrise') ? 'Ishraq' : (s.id === 'Maghrib' ? 'Adhan + 5m' : iqamaTimes[s.id]);
+                let iqama = (s.id === 'Sunrise') ? 'Ishraq' : (s.id === 'Maghrib' ? 'Adhan + 3m' : iqamaTimes[s.id]);
                 html += `<tr class="prayer-row ${active}"><td class="col-en">${s.id}</td><td>${format12Hour(t[s.id])}</td><td style="color:var(--iqama-green)">${iqama}</td><td class="col-ar">${s.ar}</td></tr>`;
             });
             document.getElementById('prayer-body').innerHTML = html;
