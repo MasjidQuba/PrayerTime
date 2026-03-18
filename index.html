@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="600"> <title>LIC Digital Display - Auto-Update Edition</title>
+    <title>LIC Digital Display - Large Date Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
         
@@ -18,63 +18,76 @@
         /* Themes */
         body.theme-day { background: linear-gradient(180deg, #87CEEB 0%, #f4f7f9 100%); }
         body.theme-night { background: linear-gradient(180deg, #0a192f 0%, #1e4571 100%); }
-        body.theme-night .prayer-row td { background: rgba(255,255,255,0.9); }
 
-        /* Header */
-        .header-box { height: 140px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); color: white; flex-shrink: 0; }
-        .header-img { height: 100px; cursor: pointer; }
-        #clock-container { background-color: #000; color: #fff; width: 310px; height: 110px; border-radius: 20px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; margin: 0 20px; flex-shrink: 0; }
-        #clock { font-size: 2.8rem; font-weight: 900; }
+        /* Compact Header */
+        .header-box { height: 110px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; background: var(--primary-blue); border-radius: 20px; border: 3px solid var(--gold); color: white; flex-shrink: 0; }
+        .header-img { height: 80px; cursor: pointer; }
+        #clock-container { background-color: #000; color: #fff; width: 340px; height: 85px; border-radius: 15px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        #clock { font-size: 3rem; font-weight: 900; }
 
-        .sidebar { width: 140px; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 120px; }
-        .sidebar-main { font-size: 1.4rem; font-weight: 900; }
-        .sidebar-sub { font-size: 1.1rem; color: var(--gold); font-weight: 800; text-transform: uppercase; }
+        /* NEW: Dedicated Big Date Row */
+        .date-row { 
+            display: flex; justify-content: space-around; align-items: center;
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+            margin-top: 10px; padding: 15px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.3);
+            flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .date-item { text-align: center; flex: 1; }
+        .date-label { font-size: 1.2rem; font-weight: 800; color: var(--primary-blue); text-transform: uppercase; margin-bottom: 5px; letter-spacing: 2px; }
+        .date-main { font-size: 3.5rem; font-weight: 900; color: #000; text-shadow: 1px 1px 2px rgba(255,255,255,0.5); }
+        body.theme-night .date-main { color: #fff; }
+        body.theme-night .date-label { color: var(--gold); }
 
-        /* Table */
+        /* Stretched Prayer Table */
         .prayer-table { width: 100%; flex-grow: 1; margin-top: 10px; border-collapse: separate; border-spacing: 0 8px; table-layout: fixed; }
-        .table-header th { color: var(--primary-blue); font-size: 1.6rem; font-weight: 900; text-transform: uppercase; padding: 5px; }
-        .prayer-row td { background: white; height: 10vh; text-align: center; font-size: 3rem; font-weight: 800; border-bottom: 4px solid var(--gold); }
-        .prayer-row.active td { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; color: #000; border-top: 5px solid #b8860b; border-bottom: 5px solid #b8860b; }
+        .table-header th { color: var(--primary-blue); font-size: 1.5rem; font-weight: 900; text-transform: uppercase; padding-bottom: 5px; }
+        .prayer-row td { background: white; height: 9vh; text-align: center; font-size: 3rem; font-weight: 800; border-bottom: 4px solid var(--gold); }
+        .prayer-row.active td { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; color: #000; border-top: 4px solid #b8860b; border-bottom: 4px solid #b8860b; }
         
         .col-en { text-align: left !important; padding-left: 40px !important; border-radius: 20px 0 0 20px; color: var(--primary-blue); }
         .col-ar { text-align: right !important; padding-right: 40px !important; font-family: 'Amiri', serif; font-size: 3.5rem !important; border-radius: 0 20px 20px 0; color: var(--primary-blue); }
 
         /* Notification */
-        #quran-box { 
-            background: #1b5e20; color: white; padding: 15px; border-radius: 20px; 
-            text-align: center; margin-top: 10px; border: 4px solid var(--gold);
-            display: none; /* Hidden by default, shown by JS if date is valid */
-        }
-        .quran-text-ar { font-family: 'Amiri', serif; font-size: 2.2rem; display: block; }
+        #quran-box { background: #1b5e20; color: white; padding: 15px; border-radius: 20px; text-align: center; margin-top: 10px; border: 4px solid var(--gold); display: none; }
         .quran-text-en { font-size: 1.8rem; font-weight: 900; color: var(--gold); }
 
-        .footer-contact { background: var(--primary-blue); color: var(--gold); text-align: center; padding: 8px; font-size: 1.2rem; font-weight: 700; margin-top: 10px; border-radius: 15px; }
+        .footer-contact { background: var(--primary-blue); color: var(--gold); text-align: center; padding: 10px; font-size: 1.3rem; font-weight: 700; border-radius: 15px; margin-top: 5px; }
     </style>
 </head>
 <body class="theme-day">
 
 <div class="header-box">
     <img src="Muhammad.png" class="header-img" onclick="location.reload()">
-    <div class="clock-section" style="display:flex; align-items:center;">
-        <div class="sidebar" style="border-right: 3px solid var(--gold); padding-right:15px;">
-            <div id="greg-day" class="sidebar-main">--</div>
-            <div id="greg-date" class="sidebar-sub">-- --- ----</div>
-        </div>
+    <div style="display:flex; align-items:center; gap: 30px;">
         <div id="clock-container"><div id="clock">00:00:00 AM</div></div>
-        <div class="sidebar" style="border-left: 3px solid var(--gold); padding-left:15px;">
-            <div id="temp" class="sidebar-main">--°C</div>
-            <div id="city-name" class="sidebar-sub">Whitby</div>
-            <div id="hijri" style="font-size: 1.1rem; color: #fff;">-- --- ----</div>
+        <div style="text-align: left;">
+            <div id="temp" style="font-size: 2rem; font-weight: 900;">--°C</div>
+            <div id="city-name" style="font-size: 1rem; color: var(--gold); font-weight: 800;">WHITBY, ON</div>
         </div>
     </div>
     <img src="Allah.png" class="header-img">
+</div>
+
+<div class="date-row">
+    <div class="date-item">
+        <div class="date-label">Gregorian Date</div>
+        <div id="big-greg" class="date-main">-- --- ----</div>
+    </div>
+    <div class="date-item" style="border-left: 2px solid var(--gold); border-right: 2px solid var(--gold);">
+        <div class="date-label">Day of Week</div>
+        <div id="big-day" class="date-main">----</div>
+    </div>
+    <div class="date-item">
+        <div class="date-label">Hijri Date</div>
+        <div id="big-hijri" class="date-main">-- --- ----</div>
+    </div>
 </div>
 
 <table class="prayer-table">
     <thead>
         <tr class="table-header">
             <th style="text-align: left; padding-left: 40px;">Salah</th>
-            <th>Starting</th>
+            <th>Adhan</th>
             <th>Iqamah</th>
             <th style="text-align: right; padding-right: 40px;">الصلاة</th>
         </tr>
@@ -83,20 +96,19 @@
 </table>
 
 <div id="quran-box">
-    <span class="quran-text-ar">خَتْمُ القُرْآنِ الكَرِيمِ</span>
+    <span class="quran-text-ar" style="font-family: 'Amiri', serif; font-size: 2rem; display:block;">خَتْمُ القُرْآنِ الكَرِيمِ</span>
     <span id="quran-msg" class="quran-text-en"></span>
 </div>
 
-<div class="footer-contact">info@ajaxmasjid.ca | www.ajaxmasjid.ca</div>
+<div class="footer-contact">info@ajaxmasjid.ca | Lakeridge Islamic Centre</div>
 
 <script>
-    // --- SETTINGS ---
     const iqamaTimes = { Fajr: "6:30 AM", Dhuhr: "2:00 PM", Asr: "6:00 PM", Isha: "9:15 PM" };
     const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Sunrise',ar:'الشروق'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
     
-    // Change this date for the next event!
-    const EVENT_DATE = new Date("March 14, 2026 23:00:00"); 
-    const EVENT_MSG = "Khatmul Quran for 2nd Taraweeh on March 14, 2026 at 11:00pm InshaAllah.";
+    // Future Event Setting
+    const EVENT_DATE = new Date("March 28, 2026 23:00:00"); 
+    const EVENT_MSG = "Khatmul Quran for Final Taraweeh on March 28, 2026 InshaAllah.";
 
     function format12Hour(timeStr) {
         if (!timeStr) return "--:--";
@@ -109,20 +121,20 @@
     async function updateData() {
         const lat = 43.8975, lng = -78.9429;
         
-        // 1. Weather
         try {
-            const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,is_day,weather_code&timezone=America/Toronto`);
+            const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,is_day&timezone=America/Toronto`);
             const wData = await wRes.json();
             document.getElementById('temp').innerText = Math.round(wData.current.temperature_2m) + "°C";
             document.body.className = wData.current.is_day ? 'theme-day' : 'theme-night';
         } catch (e) { console.error("Weather Error"); }
 
-        // 2. Prayers
         try {
             const pRes = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=99&methodSettings=15,null,17.5&school=1`);
             const d = await pRes.json();
             const t = d.data.timings;
-            document.getElementById('hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
+            
+            // Set Big Hijri Date
+            document.getElementById('big-hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
 
             const now = new Date();
             const curMin = now.getHours() * 60 + now.getMinutes();
@@ -136,49 +148,4 @@
             salahList.forEach((s, i) => {
                 const active = (i === activeIdx) ? "active" : "";
                 let iqama = (s.id === 'Sunrise') ? 'Ishraq' : (s.id === 'Maghrib' ? 'Adhan + 5m' : iqamaTimes[s.id]);
-                html += `<tr class="prayer-row ${active}"><td class="col-en">${s.id}</td><td>${format12Hour(t[s.id])}</td><td style="color:var(--iqama-green)">${iqama}</td><td class="col-ar">${s.ar}</td></tr>`;
-            });
-            document.getElementById('prayer-body').innerHTML = html;
-        } catch (e) { console.error("Prayer Error"); }
-    }
-
-    function handleEvent() {
-        const now = new Date();
-        const box = document.getElementById('quran-box');
-        // Only show if today is before or on the event date
-        if (now <= EVENT_DATE) {
-            box.style.display = 'block';
-            document.getElementById('quran-msg').innerText = EVENT_MSG;
-        } else {
-            box.style.display = 'none';
-        }
-    }
-
-    function runClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', second:'2-digit', hour12:true });
-        document.getElementById('greg-day').innerText = now.toLocaleDateString('en-US', { weekday: 'long' });
-        document.getElementById('greg-date').innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        handleEvent();
-    }
-
-    // --- AUTO-UPDATE GITHUB PAGES ---
-    let lastModified = "";
-    async function checkVersion() {
-        try {
-            const response = await fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' });
-            const currentModified = response.headers.get('last-modified');
-            if (lastModified && lastModified !== currentModified) {
-                location.reload(); // Refresh if code changed on GitHub
-            }
-            lastModified = currentModified;
-        } catch (e) {}
-    }
-
-    setInterval(runClock, 1000);
-    setInterval(updateData, 300000); // 5 mins
-    setInterval(checkVersion, 60000); // Check for code updates every minute
-    updateData(); runClock();
-</script>
-</body>
-</html>
+                html += `<tr class="prayer-row ${active}"><td class="col-en">${s.id}</td><td>${format12Hour(t[s.id])}</td><td style="color:var(--iqama-green)">${
