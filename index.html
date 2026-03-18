@@ -182,15 +182,31 @@
     }
 
     let initialTag = "";
-    async function autoRefresh() {
-        try {
-            const res = await fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' });
-            const etag = res.headers.get('etag');
-            if (!initialTag) initialTag = etag;
-            else if (initialTag !== etag) location.reload();
-        } catch(e) {}
-    }
+    let currentContentHash = "";
 
+async function autoRefresh() {
+    try {
+        // We add a random number (?v=...) to the URL to force GitHub to bypass its cache
+        const cacheBuster = Math.random();
+        const res = await fetch(window.location.href + "?v=" + cacheBuster, { 
+            method: 'GET', 
+            headers: { 'Cache-Control': 'no-cache' } 
+        });
+        
+        const text = await res.text();
+        // We create a simple hash of the file content
+        const newHash = text.length.toString(); 
+
+        if (currentContentHash === "") {
+            currentContentHash = newHash;
+        } else if (currentContentHash !== newHash) {
+            console.log("New code detected on GitHub! Refreshing...");
+            window.location.reload(true); // true forces a reload from server
+        }
+    } catch(e) {
+        console.error("Update check failed", e);
+    }
+}
     setInterval(runClock, 1000);
     setInterval(updateData, 300000); 
     setInterval(autoRefresh, 60000); 
