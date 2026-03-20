@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIC Digital Display - Animated Eid Greetings</title>
+    <title>LIC Digital Display - Daily Production</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
         
@@ -15,119 +15,95 @@
 
         body { transition: background 2s ease-in-out; margin: 0; padding: 15px; height: 100vh; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; overflow: hidden; box-sizing: border-box; }
 
+        /* Themes */
         body.theme-day { background: linear-gradient(180deg, #87CEEB 0%, #f4f7f9 100%); }
         body.theme-night { background: linear-gradient(180deg, #0a192f 0%, #1e4571 100%); }
 
-        .header-box { height: 95px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; background: var(--primary-blue); border-radius: 20px; border: 3px solid var(--gold); color: white; flex-shrink: 0; }
-        .header-img { height: 70px; cursor: pointer; }
-        #clock-container { background-color: #000; color: #fff; width: 320px; height: 75px; border-radius: 15px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; }
-        #clock { font-size: 2.8rem; font-weight: 900; }
+        /* Header */
+        .header-box { height: 110px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; background: var(--primary-blue); border-radius: 20px; border: 3px solid var(--gold); color: white; flex-shrink: 0; }
+        .header-img { height: 80px; cursor: pointer; }
+        #clock-container { background-color: #000; color: #fff; width: 340px; height: 85px; border-radius: 15px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        #clock { font-size: 3rem; font-weight: 900; }
 
-        .date-row { display: flex; justify-content: space-around; align-items: center; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); margin-top: 8px; padding: 8px; border-radius: 15px; border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0; }
-        .date-main { font-size: 2.4rem; font-weight: 900; color: #000; }
+        /* Date Row */
+        .date-row { 
+            display: flex; justify-content: space-around; align-items: center;
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+            margin-top: 10px; padding: 12px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.3);
+            flex-shrink: 0;
+        }
+        .date-item { text-align: center; flex: 1; }
+        .date-label { font-size: 1rem; font-weight: 800; color: var(--primary-blue); text-transform: uppercase; margin-bottom: 2px; }
+        .date-main { font-size: 2.8rem; font-weight: 900; color: #000; }
         body.theme-night .date-main { color: #fff; }
+        body.theme-night .date-label { color: var(--gold); }
 
-        .prayer-table { width: 100%; margin-top: 8px; border-collapse: separate; border-spacing: 0 8px; table-layout: fixed; flex-grow: 1; }
-        .table-header th { background: var(--primary-blue); color: #ffffff; font-size: 1.4rem; font-weight: 900; text-transform: uppercase; padding: 10px; border-bottom: 3px solid var(--gold); border-radius: 8px; }
-        .prayer-row td { background: white; height: 7.5vh; text-align: center; font-size: 2.7rem; font-weight: 800; border-bottom: 3px solid var(--gold); vertical-align: middle; }
-        .prayer-row.active td { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; color: #000; border-top: 3px solid #b8860b; border-bottom: 3px solid #b8860b; }
-        .col-en { text-align: left !important; padding-left: 35px !important; border-radius: 15px 0 0 15px; color: var(--primary-blue); font-size: 2.3rem !important; }
-        .col-ar { text-align: right !important; padding-right: 35px !important; font-family: 'Amiri', serif; font-size: 3rem !important; border-radius: 0 15px 15px 0; color: var(--primary-blue); line-height: 1.1; }
-
-        /* ANIMATED EID BOX */
-        #quran-box { 
-            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%); 
-            color: white; padding: 15px 25px; border-radius: 20px; 
-            text-align: center; margin-top: 10px; border: 4px solid var(--gold); 
-            display: flex; flex-direction: column; justify-content: center; 
-            flex-shrink: 0; min-height: 180px; position: relative;
-            overflow: hidden; animation: boxGlow 3s infinite alternate;
+        /* PRAYER TABLE - Full Height Focus */
+        .prayer-table { width: 100%; flex-grow: 1; margin-top: 15px; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; }
+        
+        .table-header th { 
+            background: var(--primary-blue); color: #ffffff; font-size: 1.8rem; 
+            font-weight: 900; text-transform: uppercase; padding: 15px; 
+            border-bottom: 4px solid var(--gold); border-radius: 10px;
         }
+        .header-ar { color: var(--gold) !important; font-family: 'Amiri', serif; font-size: 2.5rem !important; }
 
-        @keyframes boxGlow {
-            0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
-            100% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.6); }
-        }
+        .prayer-row td { background: white; height: 9.5vh; text-align: center; font-size: 3.2rem; font-weight: 800; border-bottom: 4px solid var(--gold); vertical-align: middle; }
+        .prayer-row.active td { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; color: #000; border-top: 4px solid #b8860b; border-bottom: 4px solid #b8860b; }
+        
+        .col-en { text-align: left !important; padding-left: 45px !important; border-radius: 20px 0 0 20px; color: var(--primary-blue); font-size: 2.8rem !important; }
+        .col-ar { text-align: right !important; padding-right: 45px !important; font-family: 'Amiri', serif; font-size: 3.8rem !important; border-radius: 0 20px 20px 0; color: var(--primary-blue); line-height: 1.1; }
 
-        /* Arabic Animation */
-        .eid-greeting-ar {
-            font-family: 'Amiri', serif; font-size: 3.2rem; color: var(--gold);
-            height: 60px; display: flex; align-items: center; justify-content: center;
-            animation: fadeInOut 5s infinite; margin-bottom: 5px;
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; transform: translateY(10px); }
-            20%, 80% { opacity: 1; transform: translateY(0); }
-        }
-
-        .eid-location { font-size: 1.4rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
-        .eid-times { font-size: 2.2rem; font-weight: 900; color: #fff; margin-bottom: 8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-
-        .footer-contact { background: var(--primary-blue); color: var(--gold); text-align: center; padding: 6px; font-size: 1.1rem; font-weight: 700; border-radius: 10px; margin-top: 8px; }
+        .footer-contact { background: var(--primary-blue); color: var(--gold); text-align: center; padding: 12px; font-size: 1.4rem; font-weight: 700; border-radius: 15px; margin-top: 15px; }
     </style>
 </head>
 <body class="theme-day">
 
 <div class="header-box">
     <img src="Muhammad.png" class="header-img" onclick="location.reload()">
-    <div style="display:flex; align-items:center; gap: 20px;">
+    <div style="display:flex; align-items:center; gap: 30px;">
         <div id="clock-container"><div id="clock">00:00:00 AM</div></div>
         <div style="text-align: left;">
-            <div id="temp" style="font-size: 1.8rem; font-weight: 900;">--°C</div>
-            <div id="city-name" style="font-size: 0.9rem; color: var(--gold); font-weight: 800;">WHITBY, ON</div>
+            <div id="temp" style="font-size: 2rem; font-weight: 900;">--°C</div>
+            <div id="city-name" style="font-size: 1rem; color: var(--gold); font-weight: 800;">WHITBY, ON</div>
         </div>
     </div>
     <img src="Allah.png" class="header-img">
 </div>
 
 <div class="date-row">
-    <div class="date-item">Gregorian: <span id="big-greg" class="date-main">-- --- ----</span></div>
-    <div class="date-item">Day: <span id="big-day" class="date-main">----</span></div>
-    <div class="date-item">Hijri: <span id="big-hijri" class="date-main">-- --- ----</span></div>
+    <div class="date-item">
+        <div class="date-label">Gregorian</div>
+        <div id="big-greg" class="date-main">-- --- ----</div>
+    </div>
+    <div class="date-item" style="border-left: 2px solid var(--gold); border-right: 2px solid var(--gold);">
+        <div class="date-label">Day</div>
+        <div id="big-day" class="date-main">----</div>
+    </div>
+    <div class="date-item">
+        <div class="date-label">Hijri</div>
+        <div id="big-hijri" class="date-main">-- --- ----</div>
+    </div>
 </div>
 
 <table class="prayer-table">
     <thead>
         <tr class="table-header">
-            <th style="text-align: left; padding-left: 35px;">Salah</th>
+            <th style="text-align: left; padding-left: 45px;">Salah</th>
             <th>Adhan</th>
             <th>Iqamah</th>
-            <th style="text-align: right; padding-right: 35px; font-family: 'Amiri', serif; font-size: 2rem;">الصلاة</th>
+            <th class="header-ar" style="text-align: right; padding-right: 45px;">الصلاة</th>
         </tr>
     </thead>
     <tbody id="prayer-body"></tbody>
 </table>
-
-<div id="quran-box">
-    <div id="greeting-ar" class="eid-greeting-ar">عيد مبارك</div>
-    
-    <div class="eid-location">Main Location Timings</div>
-    <div class="eid-times">7:45 AM, 8:45 AM, 9:45 AM, 10:45 AM</div>
-    
-    <div style="border-top: 1px solid rgba(255,255,255,0.2); width: 60%; margin: 5px auto;"></div>
-    
-    <div class="eid-location" style="margin-top: 5px;">Audley Recreation Centre (Friday Only)</div>
-    <div class="eid-times">8:15 AM, 9:15 AM, 10:15 AM</div>
-</div>
 
 <div class="footer-contact">info@ajaxmasjid.ca | Lakeridge Islamic Centre</div>
 
 <script>
     const iqamaTimes = { Fajr: "6:30 AM", Dhuhr: "2:00 PM", Asr: "6:00 PM", Isha: "9:15 PM" };
     const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Sunrise',ar:'الشروق'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
-    const EVENT_EXPIRY = new Date("March 31, 2026 13:00:00"); 
-
-    // Arabic Greeting Cycle
-    const greetings = ["عيد مبارك", "تقبل الله منا ومنكم", "كل عام وأنتم بخير"];
-    let greetIdx = 0;
-    function cycleGreetings() {
-        greetIdx = (greetIdx + 1) % greetings.length;
-        const el = document.getElementById('greeting-ar');
-        el.innerText = greetings[greetIdx];
-    }
-    setInterval(cycleGreetings, 5000);
-
+    
     function format12Hour(timeStr) {
         if (!timeStr) return "--:--";
         let [h, m] = timeStr.split(':').map(Number);
@@ -174,17 +150,16 @@
         document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', second:'2-digit', hour12:true });
         document.getElementById('big-day').innerText = now.toLocaleDateString('en-US', { weekday: 'long' });
         document.getElementById('big-greg').innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        const box = document.getElementById('quran-box');
-        box.style.display = (now <= EVENT_EXPIRY) ? 'flex' : 'none';
     }
 
+    let initialHash = "";
     async function autoRefresh() {
         try {
             const cacheBuster = Math.random();
             const res = await fetch(window.location.href + "?v=" + cacheBuster, { method: 'GET', headers: { 'Cache-Control': 'no-cache' } });
             const text = await res.text();
-            if (window.currentContentHash && window.currentContentHash !== text.length.toString()) window.location.reload(true);
-            window.currentContentHash = text.length.toString();
+            if (initialHash && initialHash !== text.length.toString()) window.location.reload(true);
+            initialHash = text.length.toString();
         } catch(e) {}
     }
 
