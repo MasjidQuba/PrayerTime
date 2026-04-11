@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIC Digital Display - Fundraising Tracker</title>
+    <title>LIC Digital Display - Large Font Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
         
@@ -30,30 +30,39 @@
         .date-main { font-size: 2.2rem; font-weight: 900; color: #000; }
         body.theme-night .date-main { color: #fff; }
 
-        /* Prayer Table */
-        .prayer-table { width: 100%; margin-top: 8px; border-collapse: separate; border-spacing: 0 6px; table-layout: fixed; flex-grow: 1; }
-        .table-header th { background: var(--primary-blue); color: #ffffff; font-size: 1.4rem; font-weight: 900; text-transform: uppercase; padding: 10px; border-bottom: 3px solid var(--gold); border-radius: 8px; }
-        .prayer-row td { background: white; height: 7vh; text-align: center; font-size: 2.6rem; font-weight: 800; border-bottom: 3px solid var(--gold); vertical-align: middle; }
-        .prayer-row.active td { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; color: #000; border-top: 3px solid #b8860b; border-bottom: 3px solid #b8860b; }
-        .col-en { text-align: left !important; padding-left: 35px !important; border-radius: 15px 0 0 15px; color: var(--primary-blue); }
-        .col-ar { text-align: right !important; padding-right: 35px !important; font-family: 'Amiri', serif; font-size: 2.8rem !important; border-radius: 0 15px 15px 0; color: var(--primary-blue); line-height: 1.1; }
+        /* Prayer Table - ENLARGED FOR 40FT VIEWING */
+        .prayer-table { width: 100%; margin-top: 8px; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; flex-grow: 1; }
+        .table-header th { background: var(--primary-blue); color: #ffffff; font-size: 1.6rem; font-weight: 900; text-transform: uppercase; padding: 10px; border-bottom: 3px solid var(--gold); border-radius: 8px; }
+        
+        /* Row height increased to accommodate massive fonts */
+        .prayer-row td { background: white; height: 9vh; text-align: center; font-size: 3.8rem; font-weight: 900; border-bottom: 4px solid var(--gold); vertical-align: middle; }
+        
+        .prayer-row.active td { 
+            background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; 
+            color: #000; 
+            border-top: 4px solid #b8860b; 
+            border-bottom: 4px solid #b8860b;
+            transform: scale(1.01); /* Subtle pop for active prayer */
+        }
+
+        .col-en { text-align: left !important; padding-left: 45px !important; border-radius: 15px 0 0 15px; color: var(--primary-blue); font-size: 3.5rem !important; }
+        .col-ar { text-align: right !important; padding-right: 45px !important; font-family: 'Amiri', serif; font-size: 4.5rem !important; border-radius: 0 15px 15px 0; color: var(--primary-blue); line-height: 1; }
 
         /* FUNDRAISING PROGRESS BOX */
         #donation-box { 
             background: #1b5e20; color: white; padding: 15px 30px; 
             border-radius: 20px; text-align: center; margin-top: 10px; 
             border: 4px solid var(--gold); display: flex; flex-direction: column; 
-            justify-content: center; flex-shrink: 0; min-height: 160px;
+            justify-content: center; flex-shrink: 0; min-height: 150px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
 
         .donate-title { font-size: 2.2rem; font-weight: 900; color: var(--gold); text-transform: uppercase; margin-bottom: 5px; }
         .donate-msg { font-size: 1.6rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
 
-        /* Progress Bar Styles */
-        .progress-container { width: 100%; background: rgba(255, 255, 255, 0.2); height: 35px; border-radius: 17px; border: 2px solid var(--gold); overflow: hidden; position: relative; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold) 0%, #fffde7 100%); width: 0%; transition: width 2s ease-in-out; box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
-        .progress-text { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 1.4rem; z-index: 2; }
+        .progress-container { width: 100%; background: rgba(255, 255, 255, 0.2); height: 40px; border-radius: 20px; border: 2px solid var(--gold); overflow: hidden; position: relative; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold) 0%, #fffde7 100%); width: 0%; transition: width 2s ease-in-out; }
+        .progress-text { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 1.6rem; z-index: 2; }
 
         .footer-contact { background: var(--primary-blue); color: var(--gold); text-align: center; padding: 6px; font-size: 1.1rem; font-weight: 700; border-radius: 10px; margin-top: 8px; }
     </style>
@@ -81,10 +90,10 @@
 <table class="prayer-table">
     <thead>
         <tr class="table-header">
-            <th style="text-align: left; padding-left: 35px;">Salah</th>
+            <th style="text-align: left; padding-left: 45px;">Salah</th>
             <th>Adhan</th>
             <th>Iqamah</th>
-            <th style="text-align: right; padding-right: 35px; font-family: 'Amiri', serif; font-size: 2rem;">الصلاة</th>
+            <th style="text-align: right; padding-right: 45px; font-family: 'Amiri', serif; font-size: 2.2rem;">الصلاة</th>
         </tr>
     </thead>
     <tbody id="prayer-body"></tbody>
@@ -102,11 +111,10 @@
 <div class="footer-contact">info@ajaxmasjid.ca | Lakeridge Islamic Centre</div>
 
 <script>
-    // --- FUNDRAISING SETTINGS ---
     const GOAL = 2500000;
-    const RAISED = 1200000; // Update this number as donations come in!
+    const RAISED = 1200000; 
 
-    const iqamaTimes = { Fajr: "6:15 AM", Dhuhr: "2:00 PM", Asr: "6:15 PM", Isha: "9:30 PM" };
+    const iqamaTimes = { Fajr: "6:00 AM", Dhuhr: "2:00 PM", Asr: "6:30 PM", Isha: "9:45 PM" };
     const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Sunrise',ar:'الشروق'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
 
     function updateProgressBar() {
@@ -177,7 +185,7 @@
     setInterval(updateData, 300000); 
     setInterval(checkVer, 60000); 
     updateData(); runClock(); 
-    setTimeout(updateProgressBar, 1000); // Small delay to allow the animation to be seen
+    setTimeout(updateProgressBar, 1000); 
 </script>
 </body>
 </html>
