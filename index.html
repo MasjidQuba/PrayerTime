@@ -114,7 +114,7 @@
     const GOAL = 2500000;
     const RAISED = 1400000; 
 
-    const iqamaTimes = { Fajr: "6:00 AM", Dhuhr: "2:00 PM", Asr: "6:30 PM", Isha: "9:45 PM" };
+    const iqamaTimes = { Fajr: "6:00", Dhuhr: "2:00", Asr: "6:30", Isha: "9:45" };
     const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Sunrise',ar:'الشروق'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
 
     function updateProgressBar() {
@@ -157,7 +157,7 @@
             let html = '';
             salahList.forEach((s, i) => {
                 const active = (i === activeIdx) ? "active" : "";
-                let iqama = (s.id === 'Sunrise') ? 'Ishraq' : (s.id === 'Maghrib' ? 'Adhan + 3m' : iqamaTimes[s.id]);
+                let iqama = (s.id === 'Sunrise') ? 'Ishraq' : (s.id === 'Maghrib' ? '+ 3m' : iqamaTimes[s.id]);
                 html += `<tr class="prayer-row ${active}"><td class="col-en">${s.id}</td><td>${format12Hour(t[s.id])}</td><td style="color:var(--iqama-green)">${iqama}</td><td class="col-ar">${s.ar}</td></tr>`;
             });
             document.getElementById('prayer-body').innerHTML = html;
