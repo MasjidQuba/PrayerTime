@@ -22,19 +22,18 @@
         /* Header */
         .header-box { height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; background: var(--primary-blue); border-radius: 20px; border: 3px solid var(--gold); color: white; flex-shrink: 0; }
         .header-img { height: 65px; cursor: pointer; }
-        #clock-container { background-color: #000; color: #fff; width: 300px; height: 70px; border-radius: 15px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; }
-        #clock { font-size: 2.6rem; font-weight: 900; }
+        #clock-container { background-color: #000; color: #fff; width: 260px; height: 70px; border-radius: 15px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; }
+        #clock { font-size: 2.8rem; font-weight: 900; }
 
         /* Date Row */
         .date-row { display: flex; justify-content: space-around; align-items: center; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); margin-top: 8px; padding: 8px; border-radius: 15px; border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0; }
         .date-main { font-size: 2.2rem; font-weight: 900; color: #000; }
         body.theme-night .date-main { color: #fff; }
 
-        /* Prayer Table - ENLARGED FOR 40FT VIEWING */
+        /* Prayer Table */
         .prayer-table { width: 100%; margin-top: 8px; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; flex-grow: 1; }
         .table-header th { background: var(--primary-blue); color: #ffffff; font-size: 1.6rem; font-weight: 900; text-transform: uppercase; padding: 10px; border-bottom: 3px solid var(--gold); border-radius: 8px; }
         
-        /* Row height increased to accommodate massive fonts */
         .prayer-row td { background: white; height: 9vh; text-align: center; font-size: 3.8rem; font-weight: 900; border-bottom: 4px solid var(--gold); vertical-align: middle; }
         
         .prayer-row.active td { 
@@ -42,7 +41,7 @@
             color: #000; 
             border-top: 4px solid #b8860b; 
             border-bottom: 4px solid #b8860b;
-            transform: scale(1.01); /* Subtle pop for active prayer */
+            transform: scale(1.01); 
         }
 
         .col-en { text-align: left !important; padding-left: 45px !important; border-radius: 15px 0 0 15px; color: var(--primary-blue); font-size: 3.5rem !important; }
@@ -72,7 +71,7 @@
 <div class="header-box">
     <img src="Muhammad.png" class="header-img" onclick="location.reload()">
     <div style="display:flex; align-items:center; gap: 20px;">
-        <div id="clock-container"><div id="clock">00:00:00 AM</div></div>
+        <div id="clock-container"><div id="clock">00:00:00</div></div>
         <div style="text-align: left;">
             <div id="temp" style="font-size: 1.8rem; font-weight: 900;">--°C</div>
             <div id="city-name" style="font-size: 0.9rem; color: var(--gold); font-weight: 800;">WHITBY, ON</div>
@@ -126,9 +125,8 @@
     function format12Hour(timeStr) {
         if (!timeStr) return "--:--";
         let [h, m] = timeStr.split(':').map(Number);
-        const ampm = h >= 12 ? 'PM' : 'AM';
         h = h % 12 || 12;
-        return `${h}:${m.toString().padStart(2, '0')} ${ampm}`;
+        return `${h}:${m.toString().padStart(2, '0')}`;
     }
 
     async function updateData() {
@@ -166,7 +164,8 @@
 
     function runClock() {
         const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', second:'2-digit', hour12:true });
+        // Updated to remove dayPeriod (AM/PM)
+        document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', second:'2-digit', hour12:true, dayPeriod: undefined }).split(' ')[0];
         document.getElementById('big-day').innerText = now.toLocaleDateString('en-US', { weekday: 'long' });
         document.getElementById('big-greg').innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
