@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIC Digital Display - Unified Row Edition</title>
+    <title>LIC Digital Display - Fixed Hijri Alignment</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
         
@@ -24,44 +24,39 @@
         #clock-container { background-color: #000; color: #fff; width: 380px; height: 120px; border-radius: 20px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; }
         #clock { font-size: 5rem; font-weight: 900; letter-spacing: -2px; }
 
-        .main-content { display: grid; grid-template-columns: 1fr 380px; gap: 20px; flex-grow: 1; margin-top: 15px; min-height: 0; }
+        .main-content { display: grid; grid-template-columns: 1fr 400px; gap: 20px; flex-grow: 1; margin-top: 15px; min-height: 0; }
 
-        /* PRAYER TABLE - Fixed Row Spacing & Unified Highlight */
+        /* PRAYER TABLE */
         .prayer-table { width: 100%; border-collapse: separate; border-spacing: 0 12px; table-layout: fixed; }
         .table-header th { background: var(--primary-blue); color: #ffffff; font-size: 2.2rem; font-weight: 900; text-transform: uppercase; padding: 15px; border-bottom: 5px solid var(--gold); }
-        
-        .prayer-row td { 
-            background: white; height: 9vh; text-align: center; 
-            font-size: 3.8rem; font-weight: 900; 
-            vertical-align: middle; 
-            border-bottom: 4px solid var(--gold);
-        }
-
-        /* Unified Continuous Highlight for Active Row */
-        .prayer-row.active td { 
-            background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; 
-            color: #000 !important; 
-            border-top: 5px solid #b8860b; 
-            border-bottom: 5px solid #b8860b; 
-        }
-
+        .prayer-row td { background: white; height: 9vh; text-align: center; font-size: 3.8rem; font-weight: 900; vertical-align: middle; border-bottom: 4px solid var(--gold); }
+        .prayer-row.active td { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; color: #000 !important; border-top: 5px solid #b8860b; border-bottom: 5px solid #b8860b; }
         .col-name { text-align: left !important; padding-left: 40px !important; color: var(--primary-blue); border-radius: 20px 0 0 20px; }
         .col-iqama { color: var(--iqama-green); font-size: 4.2rem !important; border-radius: 0 20px 20px 0; }
 
         /* RIGHT INFO PANEL */
-        .side-info-panel { background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); display: flex; flex-direction: column; justify-content: space-between; padding: 25px; text-align: center; color: white; }
+        .side-info-panel { background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); display: flex; flex-direction: column; justify-content: space-between; padding: 20px; text-align: center; color: white; overflow: hidden; }
         
-        .weather-section { border-top: 2px solid rgba(255,255,255,0.2); padding-top: 15px; }
-        .weather-icon { font-size: 4.5rem; display: block; margin-bottom: -10px; }
+        .weather-section { border-top: 2px solid rgba(255,255,255,0.2); padding-top: 10px; }
+        .weather-icon { font-size: 4.5rem; display: block; }
         .temp-val { font-size: 4.5rem; font-weight: 900; color: #fff; line-height: 1; }
         .city-val { font-size: 1.8rem; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 3px; margin-top: 5px; }
 
-        .countdown-box { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; border: 2px solid var(--gold); margin: 10px 0; }
+        .countdown-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 15px; border: 2px solid var(--gold); margin: 5px 0; }
         .countdown-time { font-size: 3.2rem; font-weight: 900; color: var(--gold); display: block; }
         .countdown-name { font-size: 1.5rem; font-weight: 800; text-transform: uppercase; color: #fff; }
 
         .info-value { font-size: 2.2rem; font-weight: 900; line-height: 1.2; }
-        .info-hijri { font-family: 'Amiri', serif; font-size: 2.8rem; color: #fff; white-space: nowrap; }
+        
+        /* FIXED HIJRI DATE WRAPPING/ALIGNMENT */
+        .info-hijri { 
+            font-family: 'Amiri', serif; 
+            font-size: 2.5rem; /* Reduced slightly to fit year */
+            color: #fff; 
+            margin-top: 5px;
+            display: block;
+            line-height: 1.1;
+        }
 
         #donation-box { background: #1b5e20; color: white; padding: 10px 30px; border-radius: 20px; border: 4px solid var(--gold); margin-top: 15px; flex-shrink: 0; }
         .progress-container { width: 100%; background: rgba(255, 255, 255, 0.2); height: 35px; border-radius: 20px; border: 2px solid var(--gold); overflow: hidden; position: relative; margin-top: 5px; }
@@ -93,9 +88,9 @@
 
     <div class="side-info-panel">
         <div>
-            <div id="big-day" style="font-size: 2rem; font-weight: 900; color: var(--gold); text-transform: uppercase;">----</div>
+            <div id="big-day" style="font-size: 2.2rem; font-weight: 900; color: var(--gold); text-transform: uppercase;">----</div>
             <div id="big-greg" class="info-value">-- ---</div>
-            <div id="big-hijri" class="info-hijri">-- ---</div>
+            <div id="big-hijri" class="info-hijri">-- --- ----</div>
         </div>
 
         <div class="countdown-box">
@@ -188,11 +183,7 @@
             const name = useArabic ? s.ar : s.id;
             const fontStyle = useArabic ? "font-family:'Amiri',serif; font-size:4.2rem !important;" : "";
             let iqama = (s.id === 'Sunrise') ? 'Ishraq' : (s.id === 'Maghrib' ? '+ 3m' : iqamaTimes[s.id]);
-            html += `<tr class="prayer-row ${active}">
-                        <td class="col-name" style="${fontStyle}">${name}</td>
-                        <td>${format12Hour(prayerTimings[s.id])}</td>
-                        <td class="col-iqama">${iqama}</td>
-                    </tr>`;
+            html += `<tr class="prayer-row ${active}"><td class="col-name" style="${fontStyle}">${name}</td><td>${format12Hour(prayerTimings[s.id])}</td><td class="col-iqama">${iqama}</td></tr>`;
         });
         document.getElementById('prayer-body').innerHTML = html;
 
