@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIC Digital Display - Triple Column Layout</title>
+    <title>LIC Digital Display - Countdown Info Panel</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
         
@@ -24,39 +24,35 @@
         #clock-container { background-color: #000; color: #fff; width: 380px; height: 120px; border-radius: 20px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; }
         #clock { font-size: 5rem; font-weight: 900; letter-spacing: -2px; }
 
-        /* Main Content Grid */
-        .content-grid { display: grid; grid-template-columns: 280px 1fr 320px; gap: 20px; flex-grow: 1; margin-top: 15px; }
+        .main-content { display: grid; grid-template-columns: 1fr 360px; gap: 20px; flex-grow: 1; margin-top: 15px; min-height: 0; }
 
-        /* Left Column: Salah Name */
-        .col-salah-name { display: flex; flex-direction: column; justify-content: space-between; }
-        .name-box { 
-            background: white; border-radius: 20px; border-bottom: 4px solid var(--gold); 
-            height: 10vh; display: flex; align-items: center; justify-content: center;
-            font-size: 3.5rem; font-weight: 900; color: var(--primary-blue); text-transform: uppercase;
-        }
-        .name-box.active { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; color: #000; border-top: 4px solid #b8860b; }
-
-        /* Middle Column: Timings */
+        /* PRAYER TABLE */
         .prayer-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; }
         .table-header th { background: var(--primary-blue); color: #ffffff; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; padding: 12px; border-bottom: 3px solid var(--gold); border-radius: 12px; }
-        .prayer-row td { background: white; height: 10vh; text-align: center; border-bottom: 4px solid var(--gold); vertical-align: middle; font-size: 4rem; font-weight: 900; }
-        .prayer-row.active td { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; border-top: 4px solid #b8860b; border-bottom: 4px solid #b8860b; }
-        .col-iqama { color: var(--iqama-green); font-size: 4.5rem !important; border-radius: 0 20px 20px 0; }
-        .col-adhan { border-radius: 20px 0 0 20px; }
+        .prayer-row td { background: white; height: 9.5vh; text-align: center; border-bottom: 4px solid var(--gold); vertical-align: middle; font-size: 3.8rem; font-weight: 900; }
+        .prayer-row.active td { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; color: #000 !important; border-top: 5px solid #b8860b; border-bottom: 5px solid #b8860b; }
+        .col-name { text-align: left !important; padding-left: 40px !important; border-radius: 20px 0 0 20px; color: var(--primary-blue); }
+        .col-iqama { color: var(--iqama-green); font-size: 4.2rem !important; border-radius: 0 20px 20px 0; }
 
-        /* Right Column: Info Panel */
+        /* RIGHT INFO PANEL */
         .side-info-panel { 
             background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); 
-            display: flex; flex-direction: column; justify-content: space-around; padding: 20px; text-align: center; color: white;
+            display: flex; flex-direction: column; justify-content: space-between; padding: 20px; text-align: center; color: white;
         }
-        .info-label { font-size: 0.9rem; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
-        .info-value { font-size: 2.4rem; font-weight: 900; line-height: 1; margin-bottom: 10px; }
-        .info-hijri { font-family: 'Amiri', serif; font-size: 2.8rem; color: #fff; }
+        .info-label { font-size: 0.9rem; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .info-value { font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin-bottom: 5px; }
+        
+        /* NEW COUNTDOWN STYLING */
+        .countdown-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 15px; border: 2px solid var(--gold); }
+        .countdown-time { font-size: 2.8rem; font-weight: 900; color: var(--gold); display: block; }
+        .countdown-name { font-size: 1.2rem; font-weight: 800; text-transform: uppercase; color: #fff; }
+
+        .info-hijri { font-family: 'Amiri', serif; font-size: 2.6rem; color: #fff; }
 
         /* Donation Bar */
         #donation-box { background: #1b5e20; color: white; padding: 10px 30px; border-radius: 20px; border: 4px solid var(--gold); margin-top: 15px; flex-shrink: 0; }
         .progress-container { width: 100%; background: rgba(255, 255, 255, 0.2); height: 35px; border-radius: 20px; border: 2px solid var(--gold); overflow: hidden; position: relative; margin-top: 5px; }
-        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s ease-in-out; }
         .progress-text { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; }
     </style>
 </head>
@@ -68,16 +64,14 @@
     <img src="Allah.png" class="header-img">
 </div>
 
-<div class="content-grid">
-    <div class="col-salah-name" id="salah-names-col">
-        </div>
-
-    <div class="main-table-area">
+<div class="main-content">
+    <div style="flex-grow: 1;">
         <table class="prayer-table">
             <thead>
                 <tr class="table-header">
-                    <th class="col-adhan">Adhan</th>
-                    <th class="col-iqama">Iqamah</th>
+                    <th style="width: 35%; text-align: left; padding-left: 40px;">Salah</th>
+                    <th style="width: 32.5%;">Starting</th>
+                    <th style="width: 32.5%;">Iqamah</th>
                 </tr>
             </thead>
             <tbody id="prayer-body"></tbody>
@@ -86,27 +80,26 @@
 
     <div class="side-info-panel">
         <div>
-            <div class="info-label">Day</div>
-            <div id="big-day" class="info-value" style="color: var(--gold);">----</div>
-        </div>
-        <div>
-            <div class="info-label">Gregorian</div>
-            <div id="big-greg" class="info-value">-- ---</div>
-        </div>
-        <div>
-            <div class="info-label">Hijri</div>
+            <div id="big-day" style="font-size: 1.8rem; font-weight: 900; color: var(--gold); text-transform: uppercase;">----</div>
+            <div id="big-greg" class="info-value" style="font-size: 1.8rem;">-- ---</div>
             <div id="big-hijri" class="info-hijri">-- ---</div>
         </div>
+
+        <div class="countdown-box">
+            <div class="countdown-name">Next: <span id="next-salah-name">--</span></div>
+            <div id="countdown-timer" class="countdown-time">00:00</div>
+        </div>
+
         <div>
             <div class="info-label">Weather</div>
             <div id="temp" class="info-value">--°C</div>
-            <div style="font-size: 0.9rem; color: var(--gold);">WHITBY, ON</div>
+            <div style="font-size: 0.9rem; color: var(--gold); letter-spacing: 2px;">WHITBY, ON</div>
         </div>
     </div>
 </div>
 
 <div id="donation-box">
-    <div style="text-align: center; font-weight: 900; color: var(--gold); font-size: 1.1rem;">LOAN REPAYMENT: C$ 2.5M GOAL</div>
+    <div style="text-align: center; font-weight: 900; color: var(--gold); font-size: 1.1rem;">LOAN REPAYMENT GOAL: C$ 2.5M</div>
     <div class="progress-container">
         <div id="progress-text" class="progress-text">0% Raised</div>
         <div id="progress-fill" class="progress-fill"></div>
@@ -142,11 +135,11 @@
             const d = await pRes.json();
             prayerTimings = d.data.timings;
             document.getElementById('big-hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en}`;
-            renderUI();
+            renderTable();
         } catch (e) {}
     }
 
-    function renderUI() {
+    function renderTable() {
         if (!prayerTimings.Fajr) return;
         const now = new Date();
         const curMin = now.getHours() * 60 + now.getMinutes();
@@ -157,27 +150,30 @@
             if (curMin >= (h * 60 + m)) activeIdx = i;
         });
 
-        // Render Left Column (Names)
-        let namesHtml = '';
+        // Update Table
+        let html = '';
         salahList.forEach((s, i) => {
             const active = (i === activeIdx) ? "active" : "";
-            const displayName = useArabic ? s.ar : s.id;
-            const style = useArabic ? "font-family:'Amiri',serif; font-size:4rem;" : "";
-            namesHtml += `<div class="name-box ${active}" style="${style}">${displayName}</div>`;
-        });
-        document.getElementById('salah-names-col').innerHTML = namesHtml;
-
-        // Render Middle Table (Timings)
-        let tableHtml = '';
-        salahList.forEach((s, i) => {
-            const active = (i === activeIdx) ? "active" : "";
+            const name = useArabic ? s.ar : s.id;
+            const fontStyle = useArabic ? "font-family:'Amiri',serif; font-size:4.2rem !important;" : "";
             let iqama = (s.id === 'Sunrise') ? 'Ishraq' : (s.id === 'Maghrib' ? '+ 3m' : iqamaTimes[s.id]);
-            tableHtml += `<tr class="prayer-row ${active}">
-                <td class="col-adhan">${format12Hour(prayerTimings[s.id])}</td>
-                <td class="col-iqama">${iqama}</td>
-            </tr>`;
+            html += `<tr class="prayer-row ${active}"><td class="col-name" style="${fontStyle}">${name}</td><td>${format12Hour(prayerTimings[s.id])}</td><td class="col-iqama">${iqama}</td></tr>`;
         });
-        document.getElementById('prayer-body').innerHTML = tableHtml;
+        document.getElementById('prayer-body').innerHTML = html;
+
+        // Update Countdown
+        const nextIdx = (activeIdx + 1) % salahList.length;
+        const nextS = salahList[nextIdx];
+        const [nh, nm] = prayerTimings[nextS.id].split(':').map(Number);
+        let nextMin = nh * 60 + nm;
+        if (nextMin <= curMin) nextMin += 1440; // Handle rollover to next day
+
+        const diff = nextMin - curMin;
+        const dh = Math.floor(diff / 60);
+        const dm = diff % 60;
+        
+        document.getElementById('next-salah-name').innerText = nextS.id;
+        document.getElementById('countdown-timer').innerText = `${dh}h ${dm}m`;
     }
 
     function runClock() {
@@ -185,9 +181,10 @@
         document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', second:'2-digit', hour12:true }).split(' ')[0];
         document.getElementById('big-day').innerText = now.toLocaleDateString('en-US', { weekday: 'long' });
         document.getElementById('big-greg').innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        renderTable(); 
     }
 
-    setInterval(() => { useArabic = !useArabic; renderUI(); }, 3000);
+    setInterval(() => { useArabic = !useArabic; renderTable(); }, 3000);
     setInterval(runClock, 1000);
     setInterval(updateData, 300000);
     updateData(); runClock();
