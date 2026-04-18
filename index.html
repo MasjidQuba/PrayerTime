@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIC Digital Display - Continuous Countdown</title>
+    <title>LIC Digital Display - Weather Icon Edition</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
         
@@ -18,42 +18,39 @@
         body.theme-day { background: linear-gradient(180deg, #87CEEB 0%, #f4f7f9 100%); }
         body.theme-night { background: linear-gradient(180deg, #0a192f 0%, #1e4571 100%); }
 
-        /* Symmetrical Header */
         .header-box { height: 160px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); color: white; flex-shrink: 0; }
         .header-img { height: 130px; width: auto; cursor: pointer; }
         #clock-container { background-color: #000; color: #fff; width: 380px; height: 120px; border-radius: 20px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; }
         #clock { font-size: 5rem; font-weight: 900; letter-spacing: -2px; }
 
-        .main-content { display: grid; grid-template-columns: 1fr 360px; gap: 20px; flex-grow: 1; margin-top: 15px; min-height: 0; }
+        .main-content { display: grid; grid-template-columns: 1fr 380px; gap: 20px; flex-grow: 1; margin-top: 15px; min-height: 0; }
 
-        /* PRAYER TABLE */
-        .prayer-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; }
-        .table-header th { background: var(--primary-blue); color: #ffffff; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; padding: 12px; border-bottom: 3px solid var(--gold); border-radius: 12px; }
-        .prayer-row td { background: white; height: 9.5vh; text-align: center; border-bottom: 4px solid var(--gold); vertical-align: middle; font-size: 3.8rem; font-weight: 900; }
+        .prayer-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .table-header th { background: var(--primary-blue); color: #ffffff; font-size: 2.2rem; font-weight: 900; text-transform: uppercase; padding: 15px; border-bottom: 5px solid var(--gold); }
+        .prayer-row td { background: white; height: 9.5vh; text-align: center; font-size: 3.8rem; font-weight: 900; border-bottom: 10px solid transparent; vertical-align: middle; }
         .prayer-row.active td { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; color: #000 !important; border-top: 5px solid #b8860b; border-bottom: 5px solid #b8860b; }
-        .col-name { text-align: left !important; padding-left: 40px !important; border-radius: 20px 0 0 20px; color: var(--primary-blue); }
+        .col-name { text-align: left !important; padding-left: 40px !important; color: var(--primary-blue); border-radius: 20px 0 0 20px; }
         .col-iqama { color: var(--iqama-green); font-size: 4.2rem !important; border-radius: 0 20px 20px 0; }
 
         /* RIGHT INFO PANEL */
-        .side-info-panel { 
-            background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); 
-            display: flex; flex-direction: column; justify-content: space-between; padding: 20px; text-align: center; color: white;
-        }
-        .info-label { font-size: 0.9rem; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .side-info-panel { background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); display: flex; flex-direction: column; justify-content: space-between; padding: 25px; text-align: center; color: white; }
         
-        /* COUNTDOWN STYLING */
-        .countdown-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 15px; border: 2px solid var(--gold); margin: 10px 0; }
-        .countdown-time { font-size: 3rem; font-weight: 900; color: var(--gold); display: block; line-height: 1; margin-top: 5px; }
-        .countdown-name { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; color: #fff; letter-spacing: 1px; }
+        .weather-section { border-top: 2px solid rgba(255,255,255,0.2); padding-top: 15px; }
+        .weather-icon { font-size: 4.5rem; display: block; margin-bottom: -10px; }
+        .temp-val { font-size: 4.5rem; font-weight: 900; color: #fff; line-height: 1; }
+        .city-val { font-size: 1.8rem; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 3px; margin-top: 5px; }
 
-        .info-value { font-size: 2rem; font-weight: 900; line-height: 1.1; }
-        .info-hijri { font-family: 'Amiri', serif; font-size: 2.8rem; color: #fff; }
+        .countdown-box { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; border: 2px solid var(--gold); margin: 10px 0; }
+        .countdown-time { font-size: 3.2rem; font-weight: 900; color: var(--gold); display: block; }
+        .countdown-name { font-size: 1.5rem; font-weight: 800; text-transform: uppercase; color: #fff; }
 
-        /* Donation Bar */
+        .info-value { font-size: 2.2rem; font-weight: 900; line-height: 1.2; }
+        .info-hijri { font-family: 'Amiri', serif; font-size: 2.8rem; color: #fff; white-space: nowrap; }
+
         #donation-box { background: #1b5e20; color: white; padding: 10px 30px; border-radius: 20px; border: 4px solid var(--gold); margin-top: 15px; flex-shrink: 0; }
         .progress-container { width: 100%; background: rgba(255, 255, 255, 0.2); height: 35px; border-radius: 20px; border: 2px solid var(--gold); overflow: hidden; position: relative; margin-top: 5px; }
         .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s; }
-        .progress-text { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; }
+        .progress-text { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 1.4rem; }
     </style>
 </head>
 <body class="theme-day">
@@ -80,26 +77,26 @@
 
     <div class="side-info-panel">
         <div>
-            <div id="big-day" style="font-size: 1.8rem; font-weight: 900; color: var(--gold); text-transform: uppercase;">----</div>
+            <div id="big-day" style="font-size: 2rem; font-weight: 900; color: var(--gold); text-transform: uppercase;">----</div>
             <div id="big-greg" class="info-value">-- ---</div>
             <div id="big-hijri" class="info-hijri">-- ---</div>
         </div>
 
         <div class="countdown-box">
-            <div class="countdown-name">Next Adhan: <span id="next-salah-name" style="color:var(--gold)">--</span></div>
+            <div class="countdown-name">Next Salah: <span id="next-salah-name" style="color:var(--gold)">--</span></div>
             <div id="countdown-timer" class="countdown-time">0h 00m</div>
         </div>
 
-        <div>
-            <div class="info-label">Weather</div>
-            <div id="temp" class="info-value">--°C</div>
-            <div style="font-size: 0.9rem; color: var(--gold); letter-spacing: 2px;">WHITBY, ON</div>
+        <div class="weather-section">
+            <span id="w-icon" class="weather-icon">☀️</span>
+            <div id="temp" class="temp-val">--°C</div>
+            <div class="city-val">WHITBY, ON</div>
         </div>
     </div>
 </div>
 
 <div id="donation-box">
-    <div style="text-align: center; font-weight: 900; color: var(--gold); font-size: 1.1rem;">LOAN REPAYMENT GOAL: C$ 2.5M</div>
+    <div style="text-align: center; font-weight: 900; color: var(--gold); font-size: 1.3rem;">LOAN REPAYMENT GOAL: C$ 2.5M</div>
     <div class="progress-container">
         <div id="progress-text" class="progress-text">0% Raised</div>
         <div id="progress-fill" class="progress-fill"></div>
@@ -109,11 +106,21 @@
 <script>
     const GOAL = 2500000, RAISED = 1400000; 
     const iqamaTimes = { Fajr: "6:00", Dhuhr: "2:00", Asr: "6:30", Isha: "9:45" };
-    // We only countdown to these specific Adhan times
     const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Sunrise',ar:'الشروق'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
     
     let useArabic = false;
     let prayerTimings = {};
+
+    function getWeatherIcon(code) {
+        if (code <= 1) return "☀️"; // Clear
+        if (code <= 3) return "☁️"; // Cloudy
+        if (code <= 48) return "🌫️"; // Fog
+        if (code <= 67) return "🌧️"; // Rain
+        if (code <= 77) return "❄️"; // Snow
+        if (code <= 82) return "🌦️"; // Showers
+        if (code <= 99) return "⛈️"; // Storm
+        return "☀️";
+    }
 
     function format12Hour(timeStr) {
         if (!timeStr) return "--:--";
@@ -125,9 +132,10 @@
     async function updateData() {
         const lat = 43.8975, lng = -78.9429;
         try {
-            const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,is_day&timezone=America/Toronto`);
+            const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,is_day,weather_code&timezone=America/Toronto`);
             const wData = await wRes.json();
             document.getElementById('temp').innerText = Math.round(wData.current.temperature_2m) + "°C";
+            document.getElementById('w-icon').innerText = getWeatherIcon(wData.current.weather_code);
             document.body.className = wData.current.is_day ? 'theme-day' : 'theme-night';
         } catch (e) {}
 
@@ -135,7 +143,8 @@
             const pRes = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=99&methodSettings=15,null,17.5&school=1`);
             const d = await pRes.json();
             prayerTimings = d.data.timings;
-            document.getElementById('big-hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en}`;
+            const h = d.data.date.hijri;
+            document.getElementById('big-hijri').innerText = `${h.day} ${h.month.en} ${h.year}`;
             renderTable();
         } catch (e) {}
     }
@@ -144,28 +153,19 @@
         if (!prayerTimings.Fajr) return;
         const now = new Date();
         const curMin = now.getHours() * 60 + now.getMinutes();
-        
-        // Find which row is currently highlighted (the prayer that just started)
         let activeIdx = 0;
         salahList.forEach((s, i) => {
             const [h, m] = prayerTimings[s.id].split(':').map(Number);
             if (curMin >= (h * 60 + m)) activeIdx = i;
         });
 
-        // Find the absolute NEXT prayer for the countdown
         let nextS = null;
         for (let s of salahList) {
             const [h, m] = prayerTimings[s.id].split(':').map(Number);
-            if ((h * 60 + m) > curMin) {
-                nextS = s;
-                break;
-            }
+            if ((h * 60 + m) > curMin) { nextS = s; break; }
         }
-        
-        // If it's after Isha, the next prayer is Fajr tomorrow
         if (!nextS) nextS = salahList[0];
 
-        // Update Table UI
         let html = '';
         salahList.forEach((s, i) => {
             const active = (i === activeIdx) ? "active" : "";
@@ -176,26 +176,19 @@
         });
         document.getElementById('prayer-body').innerHTML = html;
 
-        // Calculate Countdown
         const [nh, nm] = prayerTimings[nextS.id].split(':').map(Number);
         let nextMinTotal = nh * 60 + nm;
-        
-        // If nextMinTotal is earlier than current, it means it's for tomorrow morning
         if (nextMinTotal <= curMin) nextMinTotal += 1440; 
-
         const diff = nextMinTotal - curMin;
-        const hRemaining = Math.floor(diff / 60);
-        const mRemaining = diff % 60;
-
         document.getElementById('next-salah-name').innerText = nextS.id;
-        document.getElementById('countdown-timer').innerText = `${hRemaining}h ${mRemaining}m`;
+        document.getElementById('countdown-timer').innerText = `${Math.floor(diff / 60)}h ${diff % 60}m`;
     }
 
     function runClock() {
         const now = new Date();
         document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', second:'2-digit', hour12:true }).split(' ')[0];
         document.getElementById('big-day').innerText = now.toLocaleDateString('en-US', { weekday: 'long' });
-        document.getElementById('big-greg').innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        document.getElementById('big-greg').innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         renderTable(); 
     }
 
