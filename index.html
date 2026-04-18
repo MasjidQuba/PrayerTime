@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIC Digital Display - Countdown Info Panel</title>
+    <title>LIC Digital Display - Continuous Countdown</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
         
@@ -40,19 +40,19 @@
             display: flex; flex-direction: column; justify-content: space-between; padding: 20px; text-align: center; color: white;
         }
         .info-label { font-size: 0.9rem; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
-        .info-value { font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin-bottom: 5px; }
         
-        /* NEW COUNTDOWN STYLING */
-        .countdown-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 15px; border: 2px solid var(--gold); }
-        .countdown-time { font-size: 2.8rem; font-weight: 900; color: var(--gold); display: block; }
-        .countdown-name { font-size: 1.2rem; font-weight: 800; text-transform: uppercase; color: #fff; }
+        /* COUNTDOWN STYLING */
+        .countdown-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 15px; border: 2px solid var(--gold); margin: 10px 0; }
+        .countdown-time { font-size: 3rem; font-weight: 900; color: var(--gold); display: block; line-height: 1; margin-top: 5px; }
+        .countdown-name { font-size: 1.3rem; font-weight: 800; text-transform: uppercase; color: #fff; letter-spacing: 1px; }
 
-        .info-hijri { font-family: 'Amiri', serif; font-size: 2.6rem; color: #fff; }
+        .info-value { font-size: 2rem; font-weight: 900; line-height: 1.1; }
+        .info-hijri { font-family: 'Amiri', serif; font-size: 2.8rem; color: #fff; }
 
         /* Donation Bar */
         #donation-box { background: #1b5e20; color: white; padding: 10px 30px; border-radius: 20px; border: 4px solid var(--gold); margin-top: 15px; flex-shrink: 0; }
         .progress-container { width: 100%; background: rgba(255, 255, 255, 0.2); height: 35px; border-radius: 20px; border: 2px solid var(--gold); overflow: hidden; position: relative; margin-top: 5px; }
-        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s ease-in-out; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s; }
         .progress-text { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; }
     </style>
 </head>
@@ -81,13 +81,13 @@
     <div class="side-info-panel">
         <div>
             <div id="big-day" style="font-size: 1.8rem; font-weight: 900; color: var(--gold); text-transform: uppercase;">----</div>
-            <div id="big-greg" class="info-value" style="font-size: 1.8rem;">-- ---</div>
+            <div id="big-greg" class="info-value">-- ---</div>
             <div id="big-hijri" class="info-hijri">-- ---</div>
         </div>
 
         <div class="countdown-box">
-            <div class="countdown-name">Next: <span id="next-salah-name">--</span></div>
-            <div id="countdown-timer" class="countdown-time">00:00</div>
+            <div class="countdown-name">Next Adhan: <span id="next-salah-name" style="color:var(--gold)">--</span></div>
+            <div id="countdown-timer" class="countdown-time">0h 00m</div>
         </div>
 
         <div>
@@ -109,6 +109,7 @@
 <script>
     const GOAL = 2500000, RAISED = 1400000; 
     const iqamaTimes = { Fajr: "6:00", Dhuhr: "2:00", Asr: "6:30", Isha: "9:45" };
+    // We only countdown to these specific Adhan times
     const salahList = [{id:'Fajr',ar:'الفجر'},{id:'Sunrise',ar:'الشروق'},{id:'Dhuhr',ar:'الظهر'},{id:'Asr',ar:'العصر'},{id:'Maghrib',ar:'المغرب'},{id:'Isha',ar:'العشاء'}];
     
     let useArabic = false;
@@ -143,14 +144,28 @@
         if (!prayerTimings.Fajr) return;
         const now = new Date();
         const curMin = now.getHours() * 60 + now.getMinutes();
+        
+        // Find which row is currently highlighted (the prayer that just started)
         let activeIdx = 0;
-
         salahList.forEach((s, i) => {
             const [h, m] = prayerTimings[s.id].split(':').map(Number);
             if (curMin >= (h * 60 + m)) activeIdx = i;
         });
 
-        // Update Table
+        // Find the absolute NEXT prayer for the countdown
+        let nextS = null;
+        for (let s of salahList) {
+            const [h, m] = prayerTimings[s.id].split(':').map(Number);
+            if ((h * 60 + m) > curMin) {
+                nextS = s;
+                break;
+            }
+        }
+        
+        // If it's after Isha, the next prayer is Fajr tomorrow
+        if (!nextS) nextS = salahList[0];
+
+        // Update Table UI
         let html = '';
         salahList.forEach((s, i) => {
             const active = (i === activeIdx) ? "active" : "";
@@ -161,19 +176,19 @@
         });
         document.getElementById('prayer-body').innerHTML = html;
 
-        // Update Countdown
-        const nextIdx = (activeIdx + 1) % salahList.length;
-        const nextS = salahList[nextIdx];
+        // Calculate Countdown
         const [nh, nm] = prayerTimings[nextS.id].split(':').map(Number);
-        let nextMin = nh * 60 + nm;
-        if (nextMin <= curMin) nextMin += 1440; // Handle rollover to next day
-
-        const diff = nextMin - curMin;
-        const dh = Math.floor(diff / 60);
-        const dm = diff % 60;
+        let nextMinTotal = nh * 60 + nm;
         
+        // If nextMinTotal is earlier than current, it means it's for tomorrow morning
+        if (nextMinTotal <= curMin) nextMinTotal += 1440; 
+
+        const diff = nextMinTotal - curMin;
+        const hRemaining = Math.floor(diff / 60);
+        const mRemaining = diff % 60;
+
         document.getElementById('next-salah-name').innerText = nextS.id;
-        document.getElementById('countdown-timer').innerText = `${dh}h ${dm}m`;
+        document.getElementById('countdown-timer').innerText = `${hRemaining}h ${mRemaining}m`;
     }
 
     function runClock() {
