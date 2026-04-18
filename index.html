@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIC Digital Display - Symmetrical Header Edition</title>
+    <title>LIC Digital Display - Symmetrical Repurposed Layout</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;700;900&display=swap');
         
@@ -15,78 +15,95 @@
 
         body { transition: background 2s ease-in-out; margin: 0; padding: 15px; height: 100vh; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; overflow: hidden; box-sizing: border-box; }
 
-        /* Themes */
         body.theme-day { background: linear-gradient(180deg, #87CEEB 0%, #f4f7f9 100%); }
         body.theme-night { background: linear-gradient(180deg, #0a192f 0%, #1e4571 100%); }
 
-        /* SYMMETRICAL HEADER - Fixed height for large images */
+        /* Symmetrical Header */
         .header-box { height: 160px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; background: var(--primary-blue); border-radius: 25px; border: 4px solid var(--gold); color: white; flex-shrink: 0; }
         .header-img { height: 130px; width: auto; cursor: pointer; }
         
-        /* CENTER CLOCK AREA */
-        .header-center { display: flex; align-items: center; gap: 30px; }
-        #clock-container { background-color: #000; color: #fff; width: 340px; height: 120px; border-radius: 20px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        #clock { font-size: 4.5rem; font-weight: 900; letter-spacing: -2px; }
+        #clock-container { background-color: #000; color: #fff; width: 380px; height: 120px; border-radius: 20px; border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; }
+        #clock { font-size: 5rem; font-weight: 900; letter-spacing: -2px; }
 
-        /* RIGHT INFO BLOCK (Dates & Temp) */
-        .header-right-info { text-align: right; min-width: 250px; }
-        .big-date { font-size: 1.8rem; font-weight: 900; color: #fff; line-height: 1.1; }
-        .hijri-date { font-size: 1.4rem; color: var(--gold); font-weight: 700; margin-top: 5px; }
-        .temp-text { font-size: 1.5rem; font-weight: 900; margin-top: 5px; color: #fff; }
+        /* Layout Container for Table + Info */
+        .main-container { display: flex; gap: 20px; flex-grow: 1; margin-top: 15px; }
 
-        /* PRAYER TABLE */
-        .prayer-table { width: 100%; margin-top: 15px; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; flex-grow: 1; }
-        .table-header th { background: var(--primary-blue); color: #ffffff; font-size: 1.6rem; font-weight: 900; text-transform: uppercase; padding: 10px; border-bottom: 3px solid var(--gold); border-radius: 8px; }
+        /* NEW LEFT INFO PANEL (Repurposed area) */
+        .side-info-panel { 
+            width: 300px; background: var(--primary-blue); border-radius: 25px; 
+            border: 4px solid var(--gold); display: flex; flex-direction: column; 
+            justify-content: space-around; padding: 20px; text-align: center; color: white;
+        }
+        .info-label { font-size: 1rem; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .info-value { font-size: 2.2rem; font-weight: 900; line-height: 1.1; margin-bottom: 10px; }
+        .info-hijri { font-family: 'Amiri', serif; font-size: 2.8rem; color: #fff; }
+
+        /* TWO-COLUMN PRAYER TABLE */
+        .prayer-table { flex-grow: 1; border-collapse: separate; border-spacing: 0 10px; table-layout: fixed; }
+        .table-header th { background: var(--primary-blue); color: #ffffff; font-size: 1.8rem; font-weight: 900; text-transform: uppercase; padding: 12px; border-bottom: 3px solid var(--gold); border-radius: 12px; }
         
-        .prayer-row td { background: white; height: 8vh; text-align: center; font-size: 3.5rem; font-weight: 900; border-bottom: 4px solid var(--gold); vertical-align: middle; }
-        .prayer-row.active td { background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; color: #000; border-top: 4px solid #b8860b; border-bottom: 4px solid #b8860b; }
+        .prayer-row td { background: white; height: 10vh; text-align: center; border-bottom: 4px solid var(--gold); vertical-align: middle; position: relative; }
+        
+        /* Cell containing both Name and Adhan */
+        .col-adhan { width: 60%; font-size: 4rem; font-weight: 900; color: #000; border-radius: 20px 0 0 20px; text-align: left !important; padding-left: 30px !important; }
+        .salah-label-overlay { font-size: 1.5rem; color: var(--primary-blue); display: block; text-transform: uppercase; opacity: 0.8; margin-bottom: -10px; }
 
-        .col-name { text-align: left !important; padding-left: 45px !important; border-radius: 15px 0 0 15px; color: var(--primary-blue); }
-        .col-iqama { color: var(--iqama-green); font-size: 4rem !important; border-radius: 0 15px 15px 0; }
+        .col-iqama { width: 40%; font-size: 4.5rem; font-weight: 900; color: var(--iqama-green); border-radius: 0 20px 20px 0; }
 
-        /* DONATION BOX */
-        #donation-box { background: #1b5e20; color: white; padding: 15px 30px; border-radius: 20px; text-align: center; margin-top: 10px; border: 4px solid var(--gold); min-height: 130px; }
-        .donate-title { font-size: 2.2rem; font-weight: 900; color: var(--gold); text-transform: uppercase; }
-        .progress-container { width: 100%; background: rgba(255, 255, 255, 0.2); height: 40px; border-radius: 20px; border: 2px solid var(--gold); overflow: hidden; position: relative; margin-top: 10px; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold) 0%, #fffde7 100%); width: 0%; transition: width 2s ease-in-out; }
-        .progress-text { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 1.6rem; z-index: 2; }
+        .prayer-row.active td { 
+            background: linear-gradient(90deg, #fff9c4 0%, #d4af37 100%) !important; 
+            border-top: 5px solid #b8860b; border-bottom: 5px solid #b8860b;
+        }
+
+        /* Donation Box */
+        #donation-box { background: #1b5e20; color: white; padding: 10px 30px; border-radius: 20px; border: 4px solid var(--gold); margin-top: 15px; }
+        .progress-container { width: 100%; background: rgba(255, 255, 255, 0.2); height: 35px; border-radius: 20px; border: 2px solid var(--gold); overflow: hidden; position: relative; margin-top: 5px; }
+        .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 2s; }
+        .progress-text { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; }
     </style>
 </head>
 <body class="theme-day">
 
 <div class="header-box">
     <img src="Muhammad.png" class="header-img" onclick="location.reload()">
-    
-    <div class="header-center">
-        <div style="text-align: center;">
-            <div id="big-day" style="font-size: 1.8rem; font-weight: 900; color: var(--gold); text-transform: uppercase;">----</div>
-            <div id="temp" class="temp-text">--°C</div>
-        </div>
-
-        <div id="clock-container"><div id="clock">00:00:00</div></div>
-
-        <div class="header-right-info">
-            <div id="big-greg" class="big-date">-- --- ----</div>
-            <div id="big-hijri" class="hijri-date">-- --- ----</div>
-        </div>
-    </div>
-
+    <div id="clock-container"><div id="clock">00:00:00</div></div>
     <img src="Allah.png" class="header-img">
 </div>
 
-<table class="prayer-table">
-    <thead>
-        <tr class="table-header">
-            <th style="width: 40%; text-align: left; padding-left: 45px;">Salah</th>
-            <th style="width: 30%;">Adhan</th>
-            <th style="width: 30%;">Iqamah</th>
-        </tr>
-    </thead>
-    <tbody id="prayer-body"></tbody>
-</table>
+<div class="main-container">
+    <div class="side-info-panel">
+        <div>
+            <div class="info-label">Current Day</div>
+            <div id="big-day" class="info-value" style="color: var(--gold);">----</div>
+        </div>
+        <div>
+            <div class="info-label">Gregorian</div>
+            <div id="big-greg" class="info-value">-- --- ----</div>
+        </div>
+        <div>
+            <div class="info-label">Hijri</div>
+            <div id="big-hijri" class="info-hijri">-- --- ----</div>
+        </div>
+        <div>
+            <div class="info-label">Weather</div>
+            <div id="temp" class="info-value">--°C</div>
+            <div style="font-size: 1rem; color: var(--gold);">WHITBY, ON</div>
+        </div>
+    </div>
+
+    <table class="prayer-table">
+        <thead>
+            <tr class="table-header">
+                <th>Adhan & Prayer</th>
+                <th>Iqamah</th>
+            </tr>
+        </thead>
+        <tbody id="prayer-body"></tbody>
+    </table>
+</div>
 
 <div id="donation-box">
-    <div class="donate-title">Donate Generously</div>
+    <div style="text-align: center; font-weight: 900; color: var(--gold); font-size: 1.2rem;">LOAN REPAYMENT GOAL: C$ 2.5M</div>
     <div class="progress-container">
         <div id="progress-text" class="progress-text">0% Raised</div>
         <div id="progress-fill" class="progress-fill"></div>
@@ -121,7 +138,7 @@
             const pRes = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=99&methodSettings=15,null,17.5&school=1`);
             const d = await pRes.json();
             prayerTimings = d.data.timings;
-            document.getElementById('big-hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en} ${d.data.date.hijri.year}`;
+            document.getElementById('big-hijri').innerText = `${d.data.date.hijri.day} ${d.data.date.hijri.month.en}`;
             renderTable();
         } catch (e) {}
     }
@@ -141,12 +158,13 @@
         salahList.forEach((s, i) => {
             const active = (i === activeIdx) ? "active" : "";
             const name = useArabic ? s.ar : s.id;
-            const fontStyle = useArabic ? "font-family:'Amiri',serif;" : "";
-            let iqama = (s.id === 'Sunrise') ? 'Ishraq' : (s.id === 'Maghrib' ? '+ 3m' : iqamaTimes[s.id]);
+            const iqama = (s.id === 'Sunrise') ? 'Ishraq' : (s.id === 'Maghrib' ? '+ 3m' : iqamaTimes[s.id]);
             
             html += `<tr class="prayer-row ${active}">
-                <td class="col-name" style="${fontStyle}">${name}</td>
-                <td>${format12Hour(prayerTimings[s.id])}</td>
+                <td class="col-adhan">
+                    <span class="salah-label-overlay">${name}</span>
+                    ${format12Hour(prayerTimings[s.id])}
+                </td>
                 <td class="col-iqama">${iqama}</td>
             </tr>`;
         });
@@ -155,13 +173,12 @@
 
     function runClock() {
         const now = new Date();
-        // Displays only numeric clock without AM/PM
         document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', second:'2-digit', hour12:true }).split(' ')[0];
         document.getElementById('big-day').innerText = now.toLocaleDateString('en-US', { weekday: 'long' });
         document.getElementById('big-greg').innerText = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
-    setInterval(() => { useArabic = !useArabic; renderTable(); }, 4000);
+    setInterval(() => { useArabic = !useArabic; renderTable(); }, 3000);
     setInterval(runClock, 1000);
     setInterval(updateData, 300000);
     updateData(); runClock();
