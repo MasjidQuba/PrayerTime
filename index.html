@@ -159,6 +159,7 @@
         return `${h}:${m.toString().padStart(2, '0')}`;
     }
 
+    
     async function updateData() {
         const lat = 43.8975, lng = -78.9429;
         try {
@@ -170,7 +171,7 @@
         } catch (e) {}
 
         try {
-            const pRes = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=99&methodSettings=15,null,17.5&school=1`);
+            const pRes = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=99&methodSettings=15,null,12.4&school=1`);
             const d = await pRes.json();
             prayerTimings = d.data.timings;
             const h = d.data.date.hijri;
