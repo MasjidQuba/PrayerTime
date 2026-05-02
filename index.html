@@ -40,12 +40,13 @@
         }
 
         /* NEW LIGHT HIGHLIGHT COLOR */
-        .prayer-row.active td { 
-            background: var(--active-light) !important; 
-            color: var(--primary-blue) !important; 
-            border-top: 6px solid #90caf9; 
-            border-bottom: 6px solid #90caf9; 
-        }
+       .prayer-row.active td { 
+    background: var(--gold) !important; /* Solid Gold highlight */
+    color: #000 !important;             /* High-contrast black text */
+    border-top: 6px solid #b8860b;      /* Darker gold border for depth */
+    border-bottom: 6px solid #b8860b; 
+    transition: all 0.5s ease-in-out;
+}
 
         .col-name { text-align: left !important; padding-left: 80px !important; color: var(--primary-blue); border-radius: 25px 0 0 25px; font-size: 5rem !important; }
         .prayer-row.active .col-name { color: var(--primary-blue) !important; }
